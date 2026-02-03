@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --molto-dark: #0f172a;
+  --molto-accent: #7c3aed;
+  --molto-text: #e2e8f0;
+}
+
+body {
+  background-color: var(--molto-dark);
+  color: var(--molto-text);
+}
