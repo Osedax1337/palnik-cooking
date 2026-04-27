@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Molto Studio - AI Art Portfolio',
-  description: 'Transforming AI-generated art into compelling narratives',
+  title: 'Palnik — gotowanie bez spiny',
+  description: 'Mobile-first strona o prostym, zmysłowym gotowaniu w domu. Mniej zadęcia, więcej smaku.',
 }
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   )
 }

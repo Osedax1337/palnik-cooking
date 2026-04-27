@@ -1,14 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --molto-dark: #0f172a;
-  --molto-accent: #7c3aed;
-  --molto-text: #e2e8f0;
+  --background: #fffaf3;
+  --foreground: #201714;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--molto-dark);
-  color: var(--molto-text);
+  background: radial-gradient(circle at top, #fff6ea 0%, #fffaf3 42%, #fffaf3 100%);
+  color: var(--foreground);
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
