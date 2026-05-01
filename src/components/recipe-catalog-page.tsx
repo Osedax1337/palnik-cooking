@@ -302,8 +302,14 @@ export function RecipeCatalogPage({
     searchQuery.trim().length > 0
 
   const collectionMeta = collectionDefs.find((c) => c.key === collectionFilter)
-  const atelierCount = recipes.filter((recipe) => recipe.collections.includes('atelier')).length
-  const atelierRecipes = recipes.filter((recipe) => recipe.collections.includes('atelier')).slice(0, 4)
+  const atelierAllRecipes = recipes.filter((recipe) => recipe.collections.includes('atelier'))
+  const atelierCount = atelierAllRecipes.length
+  const atelierRecipes = atelierAllRecipes.slice(0, 4)
+  const atelierEntryPoints = [
+    atelierAllRecipes.find((recipe) => recipe.slug === 'baklazan-miso-daktyle'),
+    atelierAllRecipes.find((recipe) => recipe.slug === 'przegrzebki-kimchi-beurre-blanc'),
+    atelierAllRecipes.find((recipe) => recipe.slug === 'kaczka-hibiskus-burak-sumak'),
+  ].filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
   const isAtelierPage = variant === 'atelier'
   const canUnsetCollection = forcedCollection === 'all'
 
@@ -547,7 +553,7 @@ export function RecipeCatalogPage({
       </>
       )}
 
-      {recentRecipes.length > 0 ? (
+      {!isAtelierPage && recentRecipes.length > 0 ? (
         <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="mb-3 flex items-end justify-between gap-3">
@@ -578,55 +584,57 @@ export function RecipeCatalogPage({
         </section>
       ) : null}
 
-      <section className="px-5 pt-6 sm:px-6 lg:px-8 lg:pt-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">zbiory</p>
-              <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em] sm:text-2xl">Co dziś gotujemy?</h2>
+      {!isAtelierPage ? (
+        <>
+          <section className="px-5 pt-6 sm:px-6 lg:px-8 lg:pt-10">
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">zbiory</p>
+                  <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em] sm:text-2xl">Co dziś gotujemy?</h2>
+                </div>
+                {canUnsetCollection && collectionFilter !== 'all' ? (
+                  <button
+                    type="button"
+                    onClick={() => setCollectionFilter('all')}
+                    className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline"
+                  >
+                    Wyczyść
+                  </button>
+                ) : null}
+              </div>
+              <div className="flex gap-3 overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {collectionDefs.map((collection) => {
+                  const active = collectionFilter === collection.key
+                  const count = recipes.filter((r) => r.collections.includes(collection.key)).length
+                  const isAtelier = collection.key === 'atelier'
+                  return (
+                    <button
+                      key={collection.key}
+                      type="button"
+                      onClick={() => setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)}
+                      className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
+                        active
+                          ? isAtelier
+                            ? 'border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_55%,#171217_100%)] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.24)]'
+                            : 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.18)]'
+                          : isAtelier
+                            ? 'border-[#8c3341]/12 bg-[linear-gradient(135deg,#fff3eb_0%,#fffaf3_55%,#f7edf4_100%)] text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.12)]'
+                            : 'border-[#201714]/10 bg-white text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]'
+                      }`}
+                    >
+                      <span className="text-2xl leading-none">{collection.emoji}</span>
+                      <span className="mt-3 text-base font-semibold tracking-[-0.02em]">{collection.label}</span>
+                      <span className={`mt-1 text-xs leading-snug ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#5e2b35]' : 'text-[#201714]/60'}`}>{collection.description}</span>
+                      <span className={`mt-3 text-[10px] uppercase tracking-[0.2em] ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>{count} przepisów</span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-            {canUnsetCollection && collectionFilter !== 'all' ? (
-              <button
-                type="button"
-                onClick={() => setCollectionFilter('all')}
-                className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline"
-              >
-                Wyczyść
-              </button>
-            ) : null}
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {collectionDefs.map((collection) => {
-              const active = collectionFilter === collection.key
-              const count = recipes.filter((r) => r.collections.includes(collection.key)).length
-              const isAtelier = collection.key === 'atelier'
-              return (
-                <button
-                  key={collection.key}
-                  type="button"
-                  onClick={() => setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)}
-                  className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
-                    active
-                      ? isAtelier
-                        ? 'border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_55%,#171217_100%)] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.24)]'
-                        : 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.18)]'
-                      : isAtelier
-                        ? 'border-[#8c3341]/12 bg-[linear-gradient(135deg,#fff3eb_0%,#fffaf3_55%,#f7edf4_100%)] text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.12)]'
-                        : 'border-[#201714]/10 bg-white text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]'
-                  }`}
-                >
-                  <span className="text-2xl leading-none">{collection.emoji}</span>
-                  <span className="mt-3 text-base font-semibold tracking-[-0.02em]">{collection.label}</span>
-                  <span className={`mt-1 text-xs leading-snug ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#5e2b35]' : 'text-[#201714]/60'}`}>{collection.description}</span>
-                  <span className={`mt-3 text-[10px] uppercase tracking-[0.2em] ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>{count} przepisów</span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <section id="lodowka" className="px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+          <section id="lodowka" className="px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10">
         <div className="mx-auto max-w-6xl">
           <div className="rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -709,32 +717,83 @@ export function RecipeCatalogPage({
           </div>
         </div>
       </section>
+        </>
+      ) : (
+        <section className="px-5 pb-3 pt-1 sm:px-6 lg:px-8 lg:pb-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)]">
+              <article className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#1b1519_0%,#231820_48%,#121116_100%)] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(15,10,16,0.24)] lg:p-7">
+                <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">jak w to wejść bez spiny</p>
+                <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Nie scrolluj wszystkiego. Wejdź z intencją.</h2>
+                <p className="mt-3 max-w-[58ch] text-sm leading-6 text-[#f3dfcf] sm:text-base">
+                  Atelier działa najlepiej, kiedy wybierasz klimat, nie tylko przepis. Najpierw lekki flex, morska precyzja albo ciemniejszy, cięższy talerz. Dopiero potem konkretny dish.
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {atelierEntryPoints.map((recipe, index) => (
+                    <button
+                      key={recipe.slug}
+                      type="button"
+                      onClick={() => {
+                        setOpenRecipe(recipe.slug)
+                        scrollToSection('przepis')
+                      }}
+                      className={`rounded-[1.35rem] border p-4 text-left transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-white/20 ${index === 1 ? 'border-[#ffcf9f]/18 bg-white/8' : 'border-white/10 bg-white/[0.03]'}`}
+                    >
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">{recipe.time} · {recipe.cuisine}</p>
+                      <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">{recipe.title}</p>
+                      <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{recipe.intro}</p>
+                    </button>
+                  ))}
+                </div>
+              </article>
 
-      <section id="katalog" className="px-5 py-10 sm:px-6 lg:px-8 lg:py-14">
+              <aside className="grid gap-4">
+                <div className="rounded-[1.7rem] border border-[#8c3341]/14 bg-[linear-gradient(145deg,#fff6ef_0%,#fffaf3_52%,#f7edf4_100%)] p-5 text-[#201714] shadow-[0_18px_50px_rgba(32,23,20,0.08)]">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[#8c3341]">smakowy brief</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-[#201714]/74">
+                    <li>— kwaśne cięcie zamiast ciężkiej oczywistości</li>
+                    <li>— owoce przy mięsie, ale z dyscypliną</li>
+                    <li>— dym, ferment, tłuszcz i mała przesada</li>
+                  </ul>
+                </div>
+                <div className="rounded-[1.7rem] border border-white/10 bg-[#201714] p-5 text-[#fff7ee] shadow-[0_18px_50px_rgba(32,23,20,0.14)]">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-[#ffcf9f]">dla kogo to jest</p>
+                  <p className="mt-3 text-sm leading-6 text-[#f3dfcf]">
+                    Dla człowieka, który chce ugotować coś trochę za dobrego na zwykły dzień. Mniej „meal prep”, więcej „coś, co robi scenę”.
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section id="katalog" className={`px-5 py-10 sm:px-6 lg:px-8 lg:py-14 ${isAtelierPage ? 'lg:pt-8' : ''}`}>
         <div className="mx-auto max-w-6xl">
           <div className="mb-6 flex flex-col gap-3 lg:mb-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">katalog</p>
-              <h2 className="max-w-[12ch] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">Przepisy na dziś.</h2>
+              <p className={`mb-2 text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>katalog</p>
+              <h2 className="max-w-[14ch] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">{isAtelierPage ? 'Kolekcja Atelier.' : 'Przepisy na dziś.'}</h2>
               {collectionMeta ? (
-                <p className="mt-2 text-sm text-[#201714]/65">{collectionMeta.emoji} Filtr <strong className="text-[#201714]">{collectionMeta.label}</strong> · {collectionMeta.description}</p>
+                <p className={`mt-2 text-sm ${isAtelierPage ? 'text-[#201714]/72' : 'text-[#201714]/65'}`}>{collectionMeta.emoji} {isAtelierPage ? 'Kolekcja' : 'Filtr'} <strong className="text-[#201714]">{collectionMeta.label}</strong> · {collectionMeta.description}</p>
               ) : null}
             </div>
-            <p className="max-w-[40ch] text-sm leading-6 text-[#201714]/62 sm:text-base">Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.</p>
+            <p className={`max-w-[46ch] text-sm leading-6 sm:text-base ${isAtelierPage ? 'text-[#201714]/72' : 'text-[#201714]/62'}`}>{isAtelierPage ? 'To nie jest sekcja od szybkiego domykania obiadu. Szukaj po składniku albo nastroju i tnij listę do rzeczy, które mają konkretny vibe.' : 'Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.'}</p>
           </div>
 
-          <label className="mb-2 block">
-            <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">szukaj</span>
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="np. cytryna, halloumi, makaron, brunch"
-              className="w-full rounded-[1.3rem] border border-[#201714]/10 bg-white px-4 py-3 text-sm text-[#201714] shadow-sm outline-none transition focus:border-[#8a4b2a] focus:ring-2 focus:ring-[#8a4b2a]/10"
-            />
-          </label>
+          <div className={`rounded-[2rem] ${isAtelierPage ? 'border border-[#8c3341]/10 bg-[linear-gradient(145deg,#fff6ef_0%,#fffaf3_58%,#f6edf3_100%)] p-4 shadow-[0_18px_60px_rgba(32,23,20,0.08)] sm:p-5 lg:p-6' : ''}`}>
+            <label className="mb-2 block">
+              <span className={`mb-2 block text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>szukaj</span>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder={isAtelierPage ? 'np. miso, yuzu, jagnięcina, dashi' : 'np. cytryna, halloumi, makaron, brunch'}
+                className={`w-full rounded-[1.3rem] px-4 py-3 text-sm text-[#201714] outline-none transition focus:ring-2 ${isAtelierPage ? 'border border-[#8c3341]/10 bg-white/92 shadow-[0_10px_30px_rgba(32,23,20,0.06)] focus:border-[#8c3341] focus:ring-[#8c3341]/10' : 'border border-[#201714]/10 bg-white shadow-sm focus:border-[#8a4b2a] focus:ring-[#8a4b2a]/10'}`}
+              />
+            </label>
 
-          <p className="mb-4 text-xs text-[#201714]/45">Adres strony aktualizuje się sam, więc filtry, lodówka i wyszukiwarka są shareowalne.</p>
+            <p className={`mb-4 text-xs ${isAtelierPage ? 'text-[#201714]/55' : 'text-[#201714]/45'}`}>{isAtelierPage ? 'Filtry dalej są shareowalne, ale tutaj ważniejszy jest klimat niż checkbox speedrun.' : 'Adres strony aktualizuje się sam, więc filtry, lodówka i wyszukiwarka są shareowalne.'}</p>
 
           <div className="mb-3 flex flex-wrap gap-2">
             {moodFilters.map((filter) => {
@@ -759,7 +818,7 @@ export function RecipeCatalogPage({
           </div>
 
           <div className="mb-6 flex flex-wrap gap-2">
-            <span className="self-center text-[11px] uppercase tracking-[0.22em] text-[#8a4b2a]">dieta:</span>
+            <span className={`self-center text-[11px] uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>dieta:</span>
             {dietTagFilters.map((tag) => {
               const active = dietFilters.includes(tag.key)
               return (
@@ -779,6 +838,8 @@ export function RecipeCatalogPage({
                 </button>
               )
             })}
+          </div>
+
           </div>
 
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3 text-sm text-[#201714]/55">
@@ -828,7 +889,7 @@ export function RecipeCatalogPage({
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
                 return (
-                  <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)] ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
+                  <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 hover:-translate-y-1.5 ${isAtelierPage ? 'border border-[#8c3341]/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_48%,#f7edf4_100%)] shadow-[0_20px_60px_rgba(32,23,20,0.10)] hover:shadow-[0_28px_70px_rgba(32,23,20,0.16)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Link
                         href={`/przepisy/${recipe.slug}`}
@@ -864,7 +925,7 @@ export function RecipeCatalogPage({
                         </div>
                       ) : null}
                     </div>
-                    <div className="flex flex-1 flex-col p-5 lg:p-6">
+                    <div className={`flex flex-1 flex-col p-5 lg:p-6 ${isAtelierPage ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_100%)]' : ''}`}>
                       <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#201714]/60">
                         <span className="rounded-full border border-current/10 px-3 py-1.5">{recipe.time}</span>
                         <span className="rounded-full border border-current/10 px-3 py-1.5">{recipe.cuisine}</span>
@@ -1021,7 +1082,7 @@ export function RecipeCatalogPage({
       <div className="fixed bottom-4 left-1/2 z-30 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 lg:hidden">
         <div className="flex items-center justify-between gap-2 rounded-full border border-[#201714]/10 bg-white/92 p-2 shadow-[0_18px_40px_rgba(32,23,20,0.12)] backdrop-blur">
           <a href="#katalog" className="inline-flex flex-1 items-center justify-center rounded-full px-3 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7]">
-            Filtry
+            {isAtelierPage ? 'Kolekcja' : 'Filtry'}
           </a>
           <button type="button" onClick={handleRandomRecipe} className={`inline-flex flex-1 items-center justify-center rounded-full bg-[#201714] px-3 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] ${isShuffling ? 'animate-shuffle-glow' : ''}`}>
             Losuj
