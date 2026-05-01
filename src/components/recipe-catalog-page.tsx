@@ -39,7 +39,13 @@ const recipeSlugs = new Set(recipes.map((recipe) => recipe.slug))
 
 const fridgePalette = buildFridgePalette()
 
-export function RecipeCatalogPage() {
+export function RecipeCatalogPage({
+  forcedCollection = 'all',
+  variant = 'default',
+}: {
+  forcedCollection?: Collection | 'all'
+  variant?: 'default' | 'atelier'
+} = {}) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -47,7 +53,7 @@ export function RecipeCatalogPage() {
   const [moodFilter, setMoodFilter] = useState<(typeof moodFilters)[number]['key']>('all')
   const [cuisineFilter, setCuisineFilter] = useState<(typeof cuisineFilters)[number]['key']>('all')
   const [dietFilters, setDietFilters] = useState<DietTag[]>([])
-  const [collectionFilter, setCollectionFilter] = useState<Collection | 'all'>('all')
+  const [collectionFilter, setCollectionFilter] = useState<Collection | 'all'>(forcedCollection)
   const [searchQuery, setSearchQuery] = useState('')
   const [openRecipe, setOpenRecipe] = useState(recipes[0].slug)
   const [isShuffling, setIsShuffling] = useState(false)
@@ -82,7 +88,11 @@ export function RecipeCatalogPage() {
     const nextCuisine = cuisineParam && cuisineKeys.has(cuisineParam as (typeof cuisineFilters)[number]['key']) ? (cuisineParam as (typeof cuisineFilters)[number]['key']) : 'all'
     const nextQuery = queryParam ?? ''
     const nextRecipe = recipeParam && recipeSlugs.has(recipeParam) ? recipeParam : recipes[0].slug
-    const nextCollection = collectionParam && collectionKeys.has(collectionParam as Collection) ? (collectionParam as Collection) : 'all'
+    const nextCollection = forcedCollection !== 'all'
+      ? forcedCollection
+      : collectionParam && collectionKeys.has(collectionParam as Collection)
+        ? (collectionParam as Collection)
+        : 'all'
     const nextDiet = (dietParam ?? '')
       .split(',')
       .filter((tag) => tag && dietKeys.has(tag as DietTag)) as DietTag[]
@@ -105,7 +115,7 @@ export function RecipeCatalogPage() {
         })
       }
     }
-  }, [searchParams])
+  }, [forcedCollection, searchParams])
 
   const baseFiltered = useMemo(() => {
     return recipes
@@ -156,7 +166,9 @@ export function RecipeCatalogPage() {
     if (cuisineFilter === 'all') params.delete('cuisine')
     else params.set('cuisine', cuisineFilter)
 
-    if (collectionFilter === 'all') params.delete('zbior')
+    if (forcedCollection !== 'all') {
+      params.delete('zbior')
+    } else if (collectionFilter === 'all') params.delete('zbior')
     else params.set('zbior', collectionFilter)
 
     if (dietFilters.length === 0) params.delete('diet')
@@ -177,7 +189,7 @@ export function RecipeCatalogPage() {
     if (nextQuery !== currentQuery) {
       router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false })
     }
-  }, [collectionFilter, cuisineFilter, dietFilters, fridgeMode, fridgeSelection, moodFilter, openRecipe, pathname, router, searchParams, searchQuery])
+  }, [collectionFilter, cuisineFilter, dietFilters, forcedCollection, fridgeMode, fridgeSelection, moodFilter, openRecipe, pathname, router, searchParams, searchQuery])
 
   const handleRandomRecipe = () => {
     if (filteredRecipes.length === 0) return
@@ -223,7 +235,7 @@ export function RecipeCatalogPage() {
   const clearFilters = () => {
     setMoodFilter('all')
     setCuisineFilter('all')
-    setCollectionFilter('all')
+    setCollectionFilter(forcedCollection)
     setDietFilters([])
     setSearchQuery('')
   }
@@ -292,9 +304,85 @@ export function RecipeCatalogPage() {
   const collectionMeta = collectionDefs.find((c) => c.key === collectionFilter)
   const atelierCount = recipes.filter((recipe) => recipe.collections.includes('atelier')).length
   const atelierRecipes = recipes.filter((recipe) => recipe.collections.includes('atelier')).slice(0, 4)
+  const isAtelierPage = variant === 'atelier'
+  const canUnsetCollection = forcedCollection === 'all'
 
   return (
-    <main className="min-h-screen bg-[#fffaf3] text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee]">
+    <main className={`min-h-screen text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
+      {isAtelierPage ? (
+        <section className="relative overflow-hidden px-5 pb-8 pt-5 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">
+          <div className="absolute left-[8%] top-8 h-48 w-48 rounded-full bg-[#8c3341]/35 blur-3xl" />
+          <div className="absolute right-[6%] top-16 h-56 w-56 rounded-full bg-[#d87c4a]/20 blur-3xl" />
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-8 flex items-center justify-between gap-4 lg:mb-10">
+              <Link href="/" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10">
+                Palnik / Atelier
+              </Link>
+              <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">oriental fine dining lane</span>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:items-start">
+              <article className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-[linear-gradient(135deg,#21141b_0%,#2c1620_44%,#151217_100%)] px-6 pb-7 pt-7 text-[#fff7ee] shadow-[0_28px_90px_rgba(10,6,12,0.34)] sm:px-7 lg:px-10 lg:pb-10 lg:pt-10">
+                <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#8c3341]/45 blur-3xl" />
+                <div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-[#d87c4a]/18 blur-3xl" />
+                <div className="relative max-w-3xl">
+                  <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">curated lane / oriental / chaos kontrolowany</p>
+                  <h1 className="mt-4 max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
+                    Atelier.
+                    <br />
+                    Rzeczy trochę zbyt dobre
+                    <br />
+                    na zwykły dzień.
+                  </h1>
+                  <p className="mt-5 max-w-[42ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
+                    Tu Palnik przestaje być tylko praktyczny. Wchodzą fermenty, owoce przy mięsie, palone nuty, kwaśne cięcia i małe talerze z ego. Nadal do ugotowania w domu — tylko już bardziej jak prywatny stunt niż zwykły obiad.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{atelierCount} dań</span>
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">fine dining energy</span>
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">ferment / dym / kwas</span>
+                  </div>
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => scrollToSection('katalog')}
+                      className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
+                    >
+                      Wejdź do kolekcji
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRandomRecipe}
+                      className={`inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] ${isShuffling ? 'animate-shuffle-glow' : ''}`}
+                    >
+                      Wylosuj coś chorego
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
+                {atelierRecipes.map((recipe, index) => (
+                  <button
+                    key={recipe.slug}
+                    type="button"
+                    onClick={() => {
+                      setOpenRecipe(recipe.slug)
+                      scrollToSection('przepis')
+                    }}
+                    className={`rounded-[1.5rem] border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,10,16,0.18)] focus:outline-none focus:ring-2 focus:ring-white/20 ${index === 0 ? 'border-white/10 bg-white/8 text-[#fff7ee]' : 'border-[#201714]/10 bg-white/88 text-[#201714]'}`}
+                  >
+                    <p className={`text-[10px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
+                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">{recipe.title}</p>
+                    <p className={`mt-2 text-sm leading-6 ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+      <>
       <section className="relative overflow-hidden px-5 pb-10 pt-5 sm:px-6 lg:px-8 lg:pb-14 lg:pt-8">
         <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-[#ffd7b5]/70 blur-3xl lg:left-[22%] lg:top-12 lg:h-96 lg:w-96" />
         <div className="absolute right-0 top-24 h-56 w-56 rounded-full bg-[#e66a3d]/20 blur-3xl lg:h-80 lg:w-80" />
@@ -456,6 +544,8 @@ export function RecipeCatalogPage() {
           </div>
         </div>
       </section>
+      </>
+      )}
 
       {recentRecipes.length > 0 ? (
         <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
@@ -495,7 +585,7 @@ export function RecipeCatalogPage() {
               <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">zbiory</p>
               <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em] sm:text-2xl">Co dziś gotujemy?</h2>
             </div>
-            {collectionFilter !== 'all' ? (
+            {canUnsetCollection && collectionFilter !== 'all' ? (
               <button
                 type="button"
                 onClick={() => setCollectionFilter('all')}
@@ -514,7 +604,7 @@ export function RecipeCatalogPage() {
                 <button
                   key={collection.key}
                   type="button"
-                  onClick={() => setCollectionFilter(active ? 'all' : collection.key)}
+                  onClick={() => setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)}
                   className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                     active
                       ? isAtelier
