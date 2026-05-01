@@ -2,7 +2,9 @@ node_modules
 .next
 out
 .vercel
+.vercel.bak*
 .DS_Store
 *.log
 .env
 .env.local
+tsconfig.tsbuildinfo
