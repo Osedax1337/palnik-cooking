@@ -237,7 +237,7 @@ export function RecipeCatalogPage() {
   }, [])
 
   const runHeroScenario = useCallback(
-    (scenario: '15-min' | 'po-pracy' | 'lodowka' | 'meal-prep') => {
+    (scenario: '15-min' | 'po-pracy' | 'lodowka' | 'meal-prep' | 'atelier') => {
       clearFilters()
 
       if (scenario === 'lodowka') {
@@ -260,6 +260,10 @@ export function RecipeCatalogPage() {
 
       if (scenario === 'meal-prep') {
         setCollectionFilter('meal-prep')
+      }
+
+      if (scenario === 'atelier') {
+        setCollectionFilter('atelier')
       }
 
       scrollToSection('katalog')
@@ -286,6 +290,8 @@ export function RecipeCatalogPage() {
     searchQuery.trim().length > 0
 
   const collectionMeta = collectionDefs.find((c) => c.key === collectionFilter)
+  const atelierCount = recipes.filter((recipe) => recipe.collections.includes('atelier')).length
+  const atelierRecipes = recipes.filter((recipe) => recipe.collections.includes('atelier')).slice(0, 4)
 
   return (
     <main className="min-h-screen bg-[#fffaf3] text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee]">
@@ -353,6 +359,20 @@ export function RecipeCatalogPage() {
                     <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Na dziś i na jutro</p>
                     <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Przepisy, które działają też z lodówki następnego dnia. Mniej gotowania, więcej odzyskanego czasu.</p>
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => runHeroScenario('atelier')}
+                    className="group rounded-[1.5rem] border border-[#ffcf9f]/18 bg-gradient-to-br from-[#6e1f1f] via-[#2e1a26] to-[#161317] p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.24)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] sm:col-span-2"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffd7b5]">mam ochotę na flex</p>
+                        <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Atelier — orientalne sztosy</p>
+                        <p className="mt-1 max-w-[50ch] text-sm leading-6 text-[#f3dfcf]">Dziwne kontrasty, fine dining energy, małe dania z ego. Nie na “coś szybkiego”, tylko na “coś chorego, ale w dobry sposób”.</p>
+                      </div>
+                      <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">{atelierCount} dań</span>
+                    </div>
+                  </button>
                 </div>
                 <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <a href="#katalog" className="inline-flex items-center justify-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition duration-200 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
@@ -387,6 +407,51 @@ export function RecipeCatalogPage() {
                 <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Potem compare, shopping i przepis.</p>
                 <p className="mt-1 text-sm leading-6 text-[#201714]/62">Najpierw decyzja. Dopiero potem dokładanie kolejnych narzędzi — w tej kolejności to ma sens.</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 pb-2 pt-1 sm:px-6 lg:px-8 lg:pb-4">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-4 rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff4ea_0%,#fffaf3_42%,#f2e6ef_100%)] p-5 shadow-[0_20px_60px_rgba(32,23,20,0.08)] lg:grid-cols-[1.05fr_0.95fr] lg:p-7">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.24em] text-[#8c3341]">wyróżniony zbiór</p>
+              <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Atelier nie udaje grzecznego katalogu.</h2>
+              <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[#201714]/72 sm:text-base">
+                To jest warstwa “mam dziś ochotę na coś za dobrego jak na zwykły wtorek”: ferment, kwas, owoc z mięsem, dym, tłuszcz i dziwne rzeczy, które zaskakują, ale nadal mają sens.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => runHeroScenario('atelier')}
+                  className="inline-flex items-center rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:-translate-y-0.5 hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
+                >
+                  Otwórz Atelier
+                </button>
+                <span className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white/75 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#8c3341]">
+                  fine dining / oriental / chaos kontrolowany
+                </span>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {atelierRecipes.map((recipe, index) => (
+                <button
+                  key={recipe.slug}
+                  type="button"
+                  onClick={() => {
+                    setCollectionFilter('atelier')
+                    setOpenRecipe(recipe.slug)
+                    scrollToSection('przepis')
+                  }}
+                  className={`group rounded-[1.5rem] border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_32px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#8c3341]/18 bg-[#201714] text-[#fff7ee] sm:col-span-2' : 'border-[#201714]/8 bg-white/78 text-[#201714]'}`}
+                >
+                  <p className={`text-[10px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
+                  <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">{recipe.title}</p>
+                  <p className={`mt-2 text-sm leading-6 ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -444,6 +509,7 @@ export function RecipeCatalogPage() {
             {collectionDefs.map((collection) => {
               const active = collectionFilter === collection.key
               const count = recipes.filter((r) => r.collections.includes(collection.key)).length
+              const isAtelier = collection.key === 'atelier'
               return (
                 <button
                   key={collection.key}
@@ -451,14 +517,18 @@ export function RecipeCatalogPage() {
                   onClick={() => setCollectionFilter(active ? 'all' : collection.key)}
                   className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                     active
-                      ? 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.18)]'
-                      : 'border-[#201714]/10 bg-white text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]'
+                      ? isAtelier
+                        ? 'border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_55%,#171217_100%)] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.24)]'
+                        : 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_18px_40px_rgba(32,23,20,0.18)]'
+                      : isAtelier
+                        ? 'border-[#8c3341]/12 bg-[linear-gradient(135deg,#fff3eb_0%,#fffaf3_55%,#f7edf4_100%)] text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.12)]'
+                        : 'border-[#201714]/10 bg-white text-[#201714] hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]'
                   }`}
                 >
                   <span className="text-2xl leading-none">{collection.emoji}</span>
                   <span className="mt-3 text-base font-semibold tracking-[-0.02em]">{collection.label}</span>
-                  <span className={`mt-1 text-xs leading-snug ${active ? 'text-[#ffcf9f]' : 'text-[#201714]/60'}`}>{collection.description}</span>
-                  <span className={`mt-3 text-[10px] uppercase tracking-[0.2em] ${active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{count} przepisów</span>
+                  <span className={`mt-1 text-xs leading-snug ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#5e2b35]' : 'text-[#201714]/60'}`}>{collection.description}</span>
+                  <span className={`mt-3 text-[10px] uppercase tracking-[0.2em] ${active ? 'text-[#ffcf9f]' : isAtelier ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>{count} przepisów</span>
                 </button>
               )
             })}
@@ -666,6 +736,7 @@ export function RecipeCatalogPage() {
                 const active = openRecipe === recipe.slug
                 const isInCompare = compareSlugs.includes(recipe.slug)
                 const compareDisabled = !isInCompare && compareCount >= 3
+                const isAtelier = recipe.collections.includes('atelier')
                 return (
                   <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] bg-white shadow-sm transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)] ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -696,6 +767,12 @@ export function RecipeCatalogPage() {
                       >
                         {isInCompare ? '✓ porównaj' : '+ porównaj'}
                       </button>
+                      {isAtelier ? (
+                        <div className="pointer-events-none absolute bottom-3 left-3 z-20 inline-flex items-center gap-1.5 rounded-full bg-[#201714]/88 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] backdrop-blur">
+                          <span className="text-xs">🦂</span>
+                          Atelier
+                        </div>
+                      ) : null}
                     </div>
                     <div className="flex flex-1 flex-col p-5 lg:p-6">
                       <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#201714]/60">
@@ -710,6 +787,9 @@ export function RecipeCatalogPage() {
                       <div className="mt-3">
                         <DietTags tags={recipe.dietTags.slice(0, 3)} />
                       </div>
+                      {isAtelier ? (
+                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[#8c3341]">fine dining energy · nieoczywiste połączenia</p>
+                      ) : null}
                       {match && match.total > 0 && match.missing.length > 0 ? (
                         <p className="mt-3 text-xs text-[#201714]/55">
                           {match.score === 1
