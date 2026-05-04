@@ -3769,6 +3769,12 @@ export const recipes: Recipe[] = [
       'Bakłażany posyp czarną limonką i skrop melasą daktylową.',
       'Połóż na jogurcie i dodaj pistacje.',
     ],
+    stepImages: [
+      '/recipes/steps/baklazan-czarna-limonka-melasa-step-1.png',
+      '/recipes/steps/baklazan-czarna-limonka-melasa-step-2.png',
+      '/recipes/steps/baklazan-czarna-limonka-melasa-step-3.png',
+      '/recipes/steps/baklazan-czarna-limonka-melasa-step-4.png',
+    ],
     tip: 'Czarna limonka ma być jak cień w tle, nie główny wokalista.',
   },
   {
@@ -3799,6 +3805,12 @@ export const recipes: Recipe[] = [
       'Duś pod przykryciem do miękkości.',
       'Na końcu dodaj masło i szałwię.',
     ],
+    stepImages: [
+      '/recipes/steps/krolik-miso-morela-szalwia-step-1.png',
+      '/recipes/steps/krolik-miso-morela-szalwia-step-2.png',
+      '/recipes/steps/krolik-miso-morela-szalwia-step-3.png',
+      '/recipes/steps/krolik-miso-morela-szalwia-step-4.png',
+    ],
     tip: 'Niech sos zostanie gęsty i szklisty, nie rób z tego zupy przypadkiem.',
   },
   {
@@ -3826,6 +3838,11 @@ export const recipes: Recipe[] = [
       'Tofu osusz i obsmaż na złoto.',
       'Fenkuł pokrój bardzo cienko i wymieszaj z yuzu.',
       'Podaj tofu z fenkułem i koperkiem na wierzchu.',
+    ],
+    stepImages: [
+      '/recipes/steps/tofu-yuzu-koper-fenkul-step-1.png',
+      '/recipes/steps/tofu-yuzu-koper-fenkul-step-2.png',
+      '/recipes/steps/tofu-yuzu-koper-fenkul-step-3.png',
     ],
     tip: 'Fenkuł ma być cienki jak plotka. Grube kawałki zabiją lekkość.',
   },
@@ -3857,6 +3874,11 @@ export const recipes: Recipe[] = [
       'Dodaj drobno posiekane daktyle, sos sojowy i szczyptę kawy.',
       'Redukuj chwilę, aż wszystko się oblepi.',
     ],
+    stepImages: [
+      '/recipes/steps/wolowina-kawa-shiitake-date-step-1.png',
+      '/recipes/steps/wolowina-kawa-shiitake-date-step-2.png',
+      '/recipes/steps/wolowina-kawa-shiitake-date-step-3.png',
+    ],
     tip: 'Kawa ma podbić ciemność sosu, nie robić z niego espresso z mięsem.',
   },
   {
@@ -3886,6 +3908,12 @@ export const recipes: Recipe[] = [
       'Chałwę pokrusz bardzo drobno.',
       'Połącz skórkę z limonki z drobno posiekanym liściem kaffir.',
       'Wykończ kalafior chałwą i limonką.',
+    ],
+    stepImages: [
+      '/recipes/steps/halva-kalafior-lime-leaf-step-1.png',
+      '/recipes/steps/halva-kalafior-lime-leaf-step-2.png',
+      '/recipes/steps/halva-kalafior-lime-leaf-step-3.png',
+      '/recipes/steps/halva-kalafior-lime-leaf-step-4.png',
     ],
     tip: 'Chałwa ma być detalem. Za dużo i zrobi się deser z warzywem.',
   },
