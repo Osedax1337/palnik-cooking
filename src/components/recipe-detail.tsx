@@ -14,6 +14,7 @@ import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
 import {
   getCompare,
+  getFavorites,
   getPortions,
   getShopping,
   pushRecent,
@@ -22,6 +23,7 @@ import {
   setShoppingFor,
   STORAGE_KEYS,
   toggleCompare as toggleCompareStorage,
+  toggleFavorite as toggleFavoriteStorage,
 } from '@/lib/storage'
 import { useStorageValue } from '@/lib/use-storage'
 
@@ -96,7 +98,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
 
   const ratio = portions / recipe.servings
   const compareSlugs = useStorageValue<string[]>(STORAGE_KEYS.COMPARE, getCompare)
+  const favoriteSlugs = useStorageValue<string[]>(STORAGE_KEYS.FAVORITES, getFavorites)
   const isInCompare = compareSlugs.includes(recipe.slug)
+  const isFavorite = favoriteSlugs.includes(recipe.slug)
 
   const ingredientLines = useMemo(
     () =>
@@ -128,6 +132,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     persistCompare(toggleCompareStorage(recipe.slug))
   }
 
+  const toggleFavorite = () => {
+    toggleFavoriteStorage(recipe.slug)
+  }
+
   return (
     <main className="min-h-screen bg-[#fffaf3] px-5 py-5 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8">
       <div className="mx-auto max-w-6xl">
@@ -136,6 +144,16 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             ← Wróć do katalogu
           </Link>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleFavorite}
+              aria-pressed={isFavorite}
+              className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
+                isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7]'
+              }`}
+            >
+              {isFavorite ? '♥ zapisane' : '♡ zapisz'}
+            </button>
             <button
               type="button"
               onClick={toggleCompare}

@@ -22,12 +22,14 @@ import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
 import {
   getCompare,
+  getFavorites,
   getFridge,
   getRecent,
   setCompare as persistCompare,
   setFridge as persistFridge,
   STORAGE_KEYS,
   toggleCompare as toggleCompareStorage,
+  toggleFavorite as toggleFavoriteStorage,
 } from '@/lib/storage'
 import { useStorageValue } from '@/lib/use-storage'
 
@@ -73,6 +75,7 @@ export function RecipeCatalogPage({
 
   // Hydrated client state for compare + recent.
   const compareSlugs = useStorageValue<string[]>(STORAGE_KEYS.COMPARE, getCompare)
+  const favoriteSlugs = useStorageValue<string[]>(STORAGE_KEYS.FAVORITES, getFavorites)
   const recentSlugs = useStorageValue<string[]>(STORAGE_KEYS.RECENT, getRecent)
 
   useEffect(() => {
@@ -287,8 +290,15 @@ export function RecipeCatalogPage({
     persistCompare(toggleCompareStorage(slug))
   }
 
+  const toggleFavorite = (slug: string) => {
+    toggleFavoriteStorage(slug)
+  }
+
   const compareCount = compareSlugs.length
   const recentRecipes = recentSlugs
+    .map((slug) => recipes.find((recipe) => recipe.slug === slug))
+    .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
+  const favoriteRecipes = favoriteSlugs
     .map((slug) => recipes.find((recipe) => recipe.slug === slug))
     .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
 
@@ -552,6 +562,38 @@ export function RecipeCatalogPage({
       </section>
       </>
       )}
+
+      {!isAtelierPage && favoriteRecipes.length > 0 ? (
+        <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#c9572d]/15 bg-[#fff3e7] p-5 shadow-sm">
+            <div className="mb-3 flex items-end justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">ulubione</p>
+                <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em] sm:text-2xl">Twoja szybka półka</h2>
+              </div>
+              <span className="rounded-full bg-white/75 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a]">{favoriteRecipes.length}</span>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {favoriteRecipes.slice(0, 8).map((recipe) => (
+                <Link
+                  key={recipe.slug}
+                  href={`/przepisy/${recipe.slug}`}
+                  className="group flex w-[260px] shrink-0 items-stretch overflow-hidden rounded-[1.4rem] border border-[#201714]/8 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
+                >
+                  <div className="relative h-[96px] w-[106px] shrink-0 overflow-hidden">
+                    <RecipeVisual recipe={recipe} />
+                  </div>
+                  <div className="flex flex-1 flex-col justify-center px-3 py-2">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#8a4b2a]">♥ {recipe.time} · {recipe.cuisine}</p>
+                    <p className="mt-1 line-clamp-2 text-sm font-semibold leading-tight tracking-[-0.02em]">{recipe.title}</p>
+                    <p className="mt-1 text-[11px] text-[#201714]/55">Otwórz →</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {!isAtelierPage && recentRecipes.length > 0 ? (
         <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
@@ -886,6 +928,7 @@ export function RecipeCatalogPage({
               {filteredRecipes.map(({ recipe, match }) => {
                 const active = openRecipe === recipe.slug
                 const isInCompare = compareSlugs.includes(recipe.slug)
+                const isFavorite = favoriteSlugs.includes(recipe.slug)
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
                 return (
@@ -905,6 +948,16 @@ export function RecipeCatalogPage({
                           {match.matched}/{match.total} masz
                         </div>
                       ) : null}
+                      <button
+                        type="button"
+                        onClick={() => toggleFavorite(recipe.slug)}
+                        aria-pressed={isFavorite}
+                        className={`absolute left-3 top-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${
+                          isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'bg-white/95 text-[#201714] hover:bg-white'
+                        }`}
+                      >
+                        {isFavorite ? '♥ zapisane' : '♡ zapisz'}
+                      </button>
                       <button
                         type="button"
                         onClick={() => toggleCompare(recipe.slug)}

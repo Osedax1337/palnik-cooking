@@ -3,6 +3,7 @@
 const RECENT_KEY = 'palnik:recent'
 const FRIDGE_KEY = 'palnik:fridge'
 const COMPARE_KEY = 'palnik:compare'
+const FAVORITES_KEY = 'palnik:favorites'
 const SHOPPING_KEY = 'palnik:shopping'
 const COMPARE_SHOPPING_KEY = 'palnik:compare-shopping'
 const PORTIONS_KEY = 'palnik:portions'
@@ -65,6 +66,18 @@ export function toggleCompare(slug: string) {
   return next
 }
 
+export function getFavorites(): string[] {
+  return safeRead<string[]>(FAVORITES_KEY, [])
+}
+
+export function toggleFavorite(slug: string) {
+  const current = getFavorites()
+  const next = current.includes(slug) ? current.filter((entry) => entry !== slug) : [slug, ...current]
+  safeWrite(FAVORITES_KEY, next)
+  notify(FAVORITES_KEY)
+  return next
+}
+
 export type ShoppingState = Record<string, Record<string, boolean>>
 
 export function getShopping(): ShoppingState {
@@ -119,6 +132,7 @@ export const STORAGE_KEYS = {
   RECENT: RECENT_KEY,
   FRIDGE: FRIDGE_KEY,
   COMPARE: COMPARE_KEY,
+  FAVORITES: FAVORITES_KEY,
   SHOPPING: SHOPPING_KEY,
   COMPARE_SHOPPING: COMPARE_SHOPPING_KEY,
   PORTIONS: PORTIONS_KEY,
