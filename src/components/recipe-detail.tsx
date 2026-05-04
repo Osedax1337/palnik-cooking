@@ -1,5 +1,6 @@
 "use client"
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -290,12 +291,29 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Kroki</h3>
                 <ol className="mt-3 space-y-3 text-sm leading-6 text-[#f3dfcf]">
-                  {recipe.steps.map((step, index) => (
-                    <li key={step} className="flex gap-3 rounded-[1rem] border border-white/8 bg-white/5 p-3">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
-                      <span>{step}</span>
-                    </li>
-                  ))}
+                  {recipe.steps.map((step, index) => {
+                    const stepImage = recipe.stepImages?.[index]
+
+                    return (
+                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 ${stepImage ? 'p-0' : 'p-3'}`}>
+                        {stepImage ? (
+                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
+                            <Image
+                              src={stepImage}
+                              alt={`${recipe.title} — krok ${index + 1}`}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 1024px) 100vw, 420px"
+                            />
+                          </div>
+                        ) : null}
+                        <div className="flex gap-3 p-3">
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
+                          <span>{step}</span>
+                        </div>
+                      </li>
+                    )
+                  })}
                 </ol>
               </div>
             </div>

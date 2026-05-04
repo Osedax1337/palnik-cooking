@@ -33,6 +33,7 @@ export type Recipe = {
   collections: Collection[]
   ingredients: Ingredient[]
   steps: string[]
+  stepImages?: string[]
   tip: string
 }
 
@@ -3604,6 +3605,13 @@ export const recipes: Recipe[] = [
       'Wmontuj zimne masło, żeby zrobić błyszczący sos.',
       'Polej nim przegrzebki i wykończ szczypiorkiem.',
     ],
+    stepImages: [
+      '/recipes/steps/przegrzebki-kimchi-beurre-blanc-step-1.png',
+      '/recipes/steps/przegrzebki-kimchi-beurre-blanc-step-2.png',
+      '/recipes/steps/przegrzebki-kimchi-beurre-blanc-step-3.png',
+      '/recipes/steps/przegrzebki-kimchi-beurre-blanc-step-4.png',
+      '/recipes/steps/przegrzebki-kimchi-beurre-blanc-step-5.png',
+    ],
     tip: 'Patelnia musi być bezlitosnie gorąca. Inaczej zamiast searu będzie gotowanie smutku.',
   },
   {
@@ -3809,6 +3817,11 @@ export const recipes: Recipe[] = [
       'Groszek krótko zblanszuj.',
       'Na talerz wylej cienką warstwę ciepłego dashi.',
       'Połóż burratę, dodaj groszek i kilka kropli chilli oil.',
+    ],
+    stepImages: [
+      '/recipes/steps/burrata-dashi-groszek-chili-oil-step-1.png',
+      '/recipes/steps/burrata-dashi-groszek-chili-oil-step-2.png',
+      '/recipes/steps/burrata-dashi-groszek-chili-oil-step-3.png',
     ],
     tip: 'Dashi ma być oszczędne. To ma podbić burratę, nie ją utopić.',
   },
@@ -4156,6 +4169,11 @@ export const recipes: Recipe[] = [
       'Kaczkę przygotuj jak zwykle: skóra najpierw, potem krótko dopiecz.',
       'Buraka zetrzyj i krótko podduś z hibiskusem oraz odrobiną wody.',
       'Dopraw sumakiem i podaj jako sos pod kaczkę.',
+    ],
+    stepImages: [
+      '/recipes/steps/kaczka-hibiskus-burak-sumak-step-1.png',
+      '/recipes/steps/kaczka-hibiskus-burak-sumak-step-2.png',
+      '/recipes/steps/kaczka-hibiskus-burak-sumak-step-3.png',
     ],
     tip: 'Hibiskus daje fantastyczny kolor i kwas, ale trzymaj go krótko, bo zrobi się zbyt cierpki.',
   },
