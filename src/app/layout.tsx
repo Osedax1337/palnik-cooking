@@ -6,9 +6,35 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://palnik-cooking-fresh.vercel.app'),
-  title: 'Palnik — gotowanie bez spiny',
+  title: {
+    default: 'Palnik — gotowanie bez spiny',
+    template: '%s',
+  },
   description: 'Mobile-first strona o prostym, zmysłowym gotowaniu w domu. Mniej zadęcia, więcej smaku.',
+  openGraph: {
+    title: 'Palnik — co dziś realnie ugotować?',
+    description: 'Przepisy, tryb lodówki, Atelier i szybkie decyzje bez scrollowania w nieskończoność.',
+    url: '/',
+    siteName: 'Palnik',
+    locale: 'pl_PL',
+    type: 'website',
+    images: [
+      {
+        url: '/og-palnik.png',
+        width: 1200,
+        height: 630,
+        alt: 'Palnik — co dziś realnie ugotować?',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Palnik — co dziś realnie ugotować?',
+    description: 'Przepisy, tryb lodówki, Atelier i szybkie decyzje bez scrollowania w nieskończoność.',
+    images: ['/og-palnik.png'],
+  },
 }
+
 
 export default function RootLayout({
   children,
