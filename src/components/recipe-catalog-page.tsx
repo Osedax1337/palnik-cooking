@@ -255,6 +255,11 @@ export function RecipeCatalogPage({
     (scenario: '15-min' | 'po-pracy' | 'lodowka' | 'meal-prep' | 'atelier') => {
       clearFilters()
 
+      if (scenario === 'atelier') {
+        router.push('/atelier')
+        return
+      }
+
       if (scenario === 'lodowka') {
         setFridgeMode(true)
         scrollToSection('lodowka')
@@ -277,13 +282,9 @@ export function RecipeCatalogPage({
         setCollectionFilter('meal-prep')
       }
 
-      if (scenario === 'atelier') {
-        setCollectionFilter('atelier')
-      }
-
       scrollToSection('katalog')
     },
-    [scrollToSection],
+    [router, scrollToSection],
   )
 
   const toggleCompare = (slug: string) => {
@@ -342,20 +343,20 @@ export function RecipeCatalogPage({
                 <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#8c3341]/45 blur-3xl" />
                 <div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-[#d87c4a]/18 blur-3xl" />
                 <div className="relative max-w-3xl">
-                  <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">curated lane / oriental / chaos kontrolowany</p>
+                  <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">curated selection / michelin-ish / oriental precision</p>
                   <h1 className="mt-4 max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
                     Atelier.
                     <br />
-                    Rzeczy trochę zbyt dobre
+                    Dania wyselekcjonowane
                     <br />
-                    na zwykły dzień.
+                    dla ludzi z gustem.
                   </h1>
                   <p className="mt-5 max-w-[42ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                    Tu Palnik przestaje być tylko praktyczny. Wchodzą fermenty, owoce przy mięsie, palone nuty, kwaśne cięcia i małe talerze z ego. Nadal do ugotowania w domu — tylko już bardziej jak prywatny stunt niż zwykły obiad.
+                    To jest selekcja dań w duchu współczesnej kuchni Michelin: precyzyjne kontrasty, ferment, dym, kwas, owoce przy mięsie i sosy, które robią robotę ciszej niż krzykliwe dekoracje. Nadal do ugotowania w domu — tylko z ambicją, żeby talerz miał charakter, nie tylko kalorie.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
                     <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{atelierCount} dań</span>
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">fine dining energy</span>
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">Michelin-coded</span>
                     <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">ferment / dym / kwas</span>
                   </div>
                   <div className="mt-7 flex flex-wrap gap-3">
@@ -573,7 +574,13 @@ export function RecipeCatalogPage({
                     <button
                       key={collection.key}
                       type="button"
-                      onClick={() => setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)}
+                      onClick={() => {
+                        if (isAtelier) {
+                          router.push('/atelier')
+                          return
+                        }
+                        setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)
+                      }}
                       className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                         active
                           ? isAtelier
@@ -921,7 +928,10 @@ export function RecipeCatalogPage({
                         </p>
                       ) : null}
                       <div className="mt-auto flex flex-wrap gap-2 pt-5">
-                        <button type="button" onClick={() => setOpenRecipe(recipe.slug)} aria-pressed={active} className={`inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
+                        <button type="button" onClick={() => {
+                          setOpenRecipe(recipe.slug)
+                          scrollToSection('przepis')
+                        }} aria-pressed={active} className={`inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
                           {active ? 'Przepis otwarty ↓' : 'Podejrzyj niżej'}
                         </button>
                         <Link href={`/przepisy/${recipe.slug}`} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
