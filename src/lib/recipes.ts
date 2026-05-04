@@ -3356,6 +3356,13 @@ export const recipes: Recipe[] = [
       'Tahini rozrzedź cytryną i odrobiną wody.',
       'Podaj rybę na sosie tahini z palonymi winogronami.',
     ],
+    stepImages: [
+      '/recipes/steps/halibut-zatar-winogrona-tahini-step-1.png',
+      '/recipes/steps/halibut-zatar-winogrona-tahini-step-2.png',
+      '/recipes/steps/halibut-zatar-winogrona-tahini-step-3.png',
+      '/recipes/steps/halibut-zatar-winogrona-tahini-step-4.png',
+      '/recipes/steps/halibut-zatar-winogrona-tahini-step-5.png',
+    ],
     tip: 'To ma być kwaśniejsze, niż intuicja podpowiada. Wtedy wszystko siada na miejsce.',
   },
   {
@@ -3387,6 +3394,12 @@ export const recipes: Recipe[] = [
       'Dodaj wiśnie i chwilę redukuj na patelni.',
       'Wrzuć tofu z powrotem i obtocz w sosie.',
     ],
+    stepImages: [
+      '/recipes/steps/tofu-czarny-czosnek-wisnia-step-1.png',
+      '/recipes/steps/tofu-czarny-czosnek-wisnia-step-2.png',
+      '/recipes/steps/tofu-czarny-czosnek-wisnia-step-3.png',
+      '/recipes/steps/tofu-czarny-czosnek-wisnia-step-4.png',
+    ],
     tip: 'Świeża wiśnia jest top, ale mrożona też da radę, jeśli ją wcześniej rozmrozisz.',
   },
   {
@@ -3416,6 +3429,12 @@ export const recipes: Recipe[] = [
       'Wymieszaj kefir z kardamonem i solą.',
       'Połącz z ryżem, dodaj drobną kostkę ogórka i koperek.',
       'Podawaj letnie albo chłodne.',
+    ],
+    stepImages: [
+      '/recipes/steps/ryz-jasminowy-kefir-kardamon-ogorek-step-1.png',
+      '/recipes/steps/ryz-jasminowy-kefir-kardamon-ogorek-step-2.png',
+      '/recipes/steps/ryz-jasminowy-kefir-kardamon-ogorek-step-3.png',
+      '/recipes/steps/ryz-jasminowy-kefir-kardamon-ogorek-step-4.png',
     ],
     tip: 'To ma mieć balans. Kardamon ma pachnieć, nie dominować jak perfumeria w galerii.',
   },
@@ -3448,6 +3467,12 @@ export const recipes: Recipe[] = [
       'Wlej sos na patelnię i szybko zredukuj.',
       'Dodaj dymkę i podawaj od razu.',
     ],
+    stepImages: [
+      '/recipes/steps/wolowina-tamarynd-pieprz-szeczuan-step-1.png',
+      '/recipes/steps/wolowina-tamarynd-pieprz-szeczuan-step-2.png',
+      '/recipes/steps/wolowina-tamarynd-pieprz-szeczuan-step-3.png',
+      '/recipes/steps/wolowina-tamarynd-pieprz-szeczuan-step-4.png',
+    ],
     tip: 'Pieprz syczuański lekko podpraż przed roztarciem. Wtedy naprawdę zaczyna gadać.',
   },
   {
@@ -3476,6 +3501,11 @@ export const recipes: Recipe[] = [
       'Dynię pokrój w grube półksiężyce i obtocz w shio koji z olejem sezamowym.',
       'Piecz 25 minut w 220°C.',
       'Posyp czarnym makiem i skrop limonką.',
+    ],
+    stepImages: [
+      '/recipes/steps/dynia-shio-koji-mak-step-1.png',
+      '/recipes/steps/dynia-shio-koji-mak-step-2.png',
+      '/recipes/steps/dynia-shio-koji-mak-step-3.png',
     ],
     tip: 'Bez shio koji to nadal wyjdzie, ale z nim robi się naprawdę głęboko.',
   },
