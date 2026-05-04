@@ -389,9 +389,9 @@ export function RecipeCatalogPage({
                     <button
                       type="button"
                       onClick={handleRandomRecipe}
-                      className={`inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] ${isShuffling ? 'animate-shuffle-glow' : ''}`}
+                      className={`inline-flex items-center rounded-full border border-white/16 px-4 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] sm:px-5 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
                     >
-                      Wylosuj coś chorego
+                      Losuj danie
                     </button>
                   </div>
                 </div>
