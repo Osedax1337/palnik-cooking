@@ -52,8 +52,6 @@ export const recipes: Recipe[] = [
     cuisine: 'włoska',
     tag: 'comfort hit',
     image: '/recipes/makaron-cytryna.png',
-    gallery: ['/recipes/makaron-cytryna.png', '/recipes/makaron-cytryna-2.png', '/recipes/makaron-cytryna-3.png', '/recipes/makaron-cytryna-4.png'],
-
     intro: 'Maślany, pieprzny, cytrynowy. Szybki makaron, który robi więcej niż obiecuje.',
     whenToMake: 'Środowy wieczór, zimny dzień, brak energii na kombinowanie. 15 minut i siadasz do stołu.',
     servings: 2,
@@ -2956,7 +2954,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'silk smoke',
     image: '/recipes/baklazan-miso-daktyle.png',
-    gallery: ['/recipes/baklazan-miso-daktyle.png', '/recipes/baklazan-miso-daktyle-2.png', '/recipes/baklazan-miso-daktyle-3.png', '/recipes/baklazan-miso-daktyle-4.png'],
     intro: 'Dymny bakłażan, słodki daktyl, słone miso i chłodny labneh. Bardzo bezwstydnie dobry układ.',
     whenToMake: 'Kolacja dla ludzi, którym chcesz pokazać, że warzywo też może mieć ego.',
     servings: 2,
@@ -2989,8 +2986,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'citrus velvet',
     image: '/recipes/krewetki-yuzu-maslo-palona-cytryna.png',
-    gallery: ['/recipes/krewetki-yuzu-maslo-palona-cytryna.png', '/recipes/krewetki-yuzu-maslo-palona-cytryna-2.png', '/recipes/krewetki-yuzu-maslo-palona-cytryna-3.png', '/recipes/krewetki-yuzu-maslo-palona-cytryna-4.png'],
-
     intro: 'Kwaśne, słone, maślane i bardzo precyzyjne. Smak jakby ktoś miał zbyt dobry gust.',
     whenToMake: 'Krótka kolacja, która ma wyglądać jak popis, a nie jak sprint.',
     servings: 2,
@@ -3023,8 +3018,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'lacquered duck',
     image: '/recipes/kaczka-hoisin-sliwka-five-spice.png',
-    gallery: ['/recipes/kaczka-hoisin-sliwka-five-spice.png', '/recipes/kaczka-hoisin-sliwka-five-spice-2.png', '/recipes/kaczka-hoisin-sliwka-five-spice-3.png', '/recipes/kaczka-hoisin-sliwka-five-spice-4.png'],
-
     intro: 'Tłusta kaczka, ciemna śliwka, pięć przypraw i błyszczący sos. Bardzo duża energia restauracji.',
     whenToMake: 'Goście, randka albo własne ego domaga się czegoś efektownego.',
     servings: 2,
@@ -3057,8 +3050,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'sweet umami',
     image: '/recipes/sablefish-miso-biala-czekolada.png',
-    gallery: ['/recipes/sablefish-miso-biala-czekolada.png', '/recipes/sablefish-miso-biala-czekolada-2.png', '/recipes/sablefish-miso-biala-czekolada-3.png', '/recipes/sablefish-miso-biala-czekolada-4.png'],
-
     intro: 'Brzmi podejrzanie, smakuje absurdalnie dobrze. Słodycz tylko podbija głębię miso.',
     whenToMake: 'Chcesz zrobić coś, o czym ludzie będą gadać dłużej niż powinni.',
     servings: 2,
@@ -3089,8 +3080,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'earth spark',
     image: '/recipes/marchewka-kawa-dukkah-pomarancza.png',
-    gallery: ['/recipes/marchewka-kawa-dukkah-pomarancza.png', '/recipes/marchewka-kawa-dukkah-pomarancza-2.png', '/recipes/marchewka-kawa-dukkah-pomarancza-3.png', '/recipes/marchewka-kawa-dukkah-pomarancza-4.png'],
-
     intro: 'Marchew dostaje tu gorycz, chrupkość i cytrus. Warzywo przestaje być tłem.',
     whenToMake: 'Jako przystawka albo dziwnie dobra ciepła sałatka na stół.',
     servings: 2,
@@ -3122,8 +3111,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'perfume broth',
     image: '/recipes/pho-kokos-kolendra-limonka.png',
-    gallery: ['/recipes/pho-kokos-kolendra-limonka.png', '/recipes/pho-kokos-kolendra-limonka-2.png', '/recipes/pho-kokos-kolendra-limonka-3.png', '/recipes/pho-kokos-kolendra-limonka-4.png'],
-
     intro: 'Pho, ale bardziej miękkie i perfumowane. Bardzo luksusowe ciepło w misce.',
     whenToMake: 'Wieczór, kiedy chcesz zupy, ale takiej z charakterem i warstwami.',
     servings: 2,
@@ -3157,8 +3144,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'cold blade',
     image: '/recipes/tatar-losos-wasabi-gruszka.png',
-    gallery: ['/recipes/tatar-losos-wasabi-gruszka.png', '/recipes/tatar-losos-wasabi-gruszka-2.png', '/recipes/tatar-losos-wasabi-gruszka-3.png', '/recipes/tatar-losos-wasabi-gruszka-4.png'],
-
     intro: 'Słodycz gruszki i ostrość wasabi robią z łososia coś dużo bardziej wyrafinowanego.',
     whenToMake: 'Przystawka na wieczór, kiedy chcesz wejść od razu z mocnym otwarciem.',
     servings: 2,
@@ -3190,8 +3175,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'perfumed lamb',
     image: '/recipes/jagniecina-roza-pistacja-bulgur.png',
-    gallery: ['/recipes/jagniecina-roza-pistacja-bulgur.png', '/recipes/jagniecina-roza-pistacja-bulgur-2.png', '/recipes/jagniecina-roza-pistacja-bulgur-3.png', '/recipes/jagniecina-roza-pistacja-bulgur-4.png'],
-
     intro: 'Róża tylko szepcze, pistacja chrupie, jagnięcina robi resztę. Bardzo duża klasa.',
     whenToMake: 'Kolacja, która ma zostać w pamięci, a nie tylko zniknąć z talerza.',
     servings: 2,
@@ -3223,8 +3206,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'acid jewel',
     image: '/recipes/burak-shiso-ponzu-kozi-ser.png',
-    gallery: ['/recipes/burak-shiso-ponzu-kozi-ser.png', '/recipes/burak-shiso-ponzu-kozi-ser-2.png', '/recipes/burak-shiso-ponzu-kozi-ser-3.png', '/recipes/burak-shiso-ponzu-kozi-ser-4.png'],
-
     intro: 'Ziemisty burak, elektryczne ponzu i ziołowy twist. Bardzo czysta, nowoczesna rzecz.',
     whenToMake: 'Przystawka albo lunch, kiedy ma być pięknie i nieoczywiście.',
     servings: 2,
@@ -3256,8 +3237,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'golden fusion',
     image: '/recipes/pierozki-szafran-kimchi-ricotta.png',
-    gallery: ['/recipes/pierozki-szafran-kimchi-ricotta.png', '/recipes/pierozki-szafran-kimchi-ricotta-2.png', '/recipes/pierozki-szafran-kimchi-ricotta-3.png', '/recipes/pierozki-szafran-kimchi-ricotta-4.png'],
-
     intro: 'Ricotta i kimchi nie mają prawa tak dobrze działać razem, a jednak działa to bezczelnie.',
     whenToMake: 'Chcesz zrobić coś totalnie własnego, na pograniczu comfortu i szaleństwa.',
     servings: 2,
@@ -3290,8 +3269,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'smoke silk',
     image: '/recipes/halibut-zatar-winogrona-tahini.png',
-    gallery: ['/recipes/halibut-zatar-winogrona-tahini.png', '/recipes/halibut-zatar-winogrona-tahini-2.png', '/recipes/halibut-zatar-winogrona-tahini-3.png', '/recipes/halibut-zatar-winogrona-tahini-4.png'],
-
     intro: 'Ryba, sezam i ciepłe winogrona robią tu ten dziwny luksusowy moment.',
     whenToMake: 'Na kolację, która ma być subtelna, ale zapamiętywalna.',
     servings: 2,
@@ -3324,8 +3301,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'dark gloss',
     image: '/recipes/tofu-czarny-czosnek-wisnia.png',
-    gallery: ['/recipes/tofu-czarny-czosnek-wisnia.png', '/recipes/tofu-czarny-czosnek-wisnia-2.png', '/recipes/tofu-czarny-czosnek-wisnia-3.png', '/recipes/tofu-czarny-czosnek-wisnia-4.png'],
-
     intro: 'Tofu dostaje tu głęboki, prawie mięsny klimat dzięki czarnemu czosnkowi i wiśni.',
     whenToMake: 'Masz ochotę na roślinne danie, które nie zachowuje się jak substytut.',
     servings: 2,
@@ -3357,8 +3332,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'cool perfume',
     image: '/recipes/ryz-jasminowy-kefir-kardamon-ogorek.png',
-    gallery: ['/recipes/ryz-jasminowy-kefir-kardamon-ogorek.png', '/recipes/ryz-jasminowy-kefir-kardamon-ogorek-2.png', '/recipes/ryz-jasminowy-kefir-kardamon-ogorek-3.png', '/recipes/ryz-jasminowy-kefir-kardamon-ogorek-4.png'],
-
     intro: 'Chłodny, pachnący, totalnie niecodzienny. Bardziej jak restauracyjny interludium niż zwykły dodatek.',
     whenToMake: 'Obok mocniejszego dania albo samodzielnie w upał z dużą ilością ziół.',
     servings: 2,
@@ -3389,8 +3362,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'electric glaze',
     image: '/recipes/wolowina-tamarynd-pieprz-szeczuan.png',
-    gallery: ['/recipes/wolowina-tamarynd-pieprz-szeczuan.png', '/recipes/wolowina-tamarynd-pieprz-szeczuan-2.png', '/recipes/wolowina-tamarynd-pieprz-szeczuan-3.png', '/recipes/wolowina-tamarynd-pieprz-szeczuan-4.png'],
-
     intro: 'Kwaśny tamaryndowiec i mrowiący pieprz robią z tego bardzo agresywnie pyszny sos.',
     whenToMake: 'Chcesz mięso z kopem i nie zamierzasz przepraszać za intensywność.',
     servings: 2,
@@ -3422,8 +3393,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'fermented glow',
     image: '/recipes/dynia-shio-koji-mak.png',
-    gallery: ['/recipes/dynia-shio-koji-mak.png', '/recipes/dynia-shio-koji-mak-2.png', '/recipes/dynia-shio-koji-mak-3.png', '/recipes/dynia-shio-koji-mak-4.png'],
-
     intro: 'Fermentowana słoność shio koji robi z dyni coś bardzo głębokiego i dorosłego.',
     whenToMake: 'Jako starter albo warzywny akcent obok czegoś bardziej konkretnego.',
     servings: 2,
@@ -3453,8 +3422,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'sweet ember',
     image: '/recipes/cebula-konfitowana-sumak-miso.png',
-    gallery: ['/recipes/cebula-konfitowana-sumak-miso.png', '/recipes/cebula-konfitowana-sumak-miso-2.png', '/recipes/cebula-konfitowana-sumak-miso-3.png', '/recipes/cebula-konfitowana-sumak-miso-4.png'],
-
     intro: 'Cebula jako główna bohaterka, nie żart. Miękka, słodka, kwaśna i bardzo głęboka.',
     whenToMake: 'Gdy chcesz zagrać warzywem w sposób totalnie nieoczywisty.',
     servings: 2,
@@ -3487,8 +3454,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'forest noodle',
     image: '/recipes/mazesoba-grzyby-kasztan-pieprz.png',
-    gallery: ['/recipes/mazesoba-grzyby-kasztan-pieprz.png', '/recipes/mazesoba-grzyby-kasztan-pieprz-2.png', '/recipes/mazesoba-grzyby-kasztan-pieprz-3.png', '/recipes/mazesoba-grzyby-kasztan-pieprz-4.png'],
-
     intro: 'Bez bulionu, za to z bardzo gęstym umami i leśnym klimatem.',
     whenToMake: 'Wieczór, kiedy zwykły makaron to za mało, a pełny ramen to za dużo roboty.',
     servings: 2,
@@ -3522,8 +3487,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'stone fruit sea',
     image: '/recipes/pstrag-kefir-szafran-morela.png',
-    gallery: ['/recipes/pstrag-kefir-szafran-morela.png', '/recipes/pstrag-kefir-szafran-morela-2.png', '/recipes/pstrag-kefir-szafran-morela-3.png', '/recipes/pstrag-kefir-szafran-morela-4.png'],
-
     intro: 'Ryba, ferment i owoc. Bardzo delikatny balans na granicy klasyki i dziwności.',
     whenToMake: 'Letnia kolacja, kiedy masz ochotę na coś naprawdę innego.',
     servings: 2,
@@ -3554,8 +3517,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'sweet heat',
     image: '/recipes/ryz-crispy-chili-ananas-shrimp.png',
-    gallery: ['/recipes/ryz-crispy-chili-ananas-shrimp.png', '/recipes/ryz-crispy-chili-ananas-shrimp-2.png', '/recipes/ryz-crispy-chili-ananas-shrimp-3.png', '/recipes/ryz-crispy-chili-ananas-shrimp-4.png'],
-
     intro: 'Tłuste, chrupiące, kwaśne i pikantne jednocześnie. Bardzo imprezowe w najlepszym sensie.',
     whenToMake: 'Na małe talerzyki do dzielenia albo kolację, kiedy ma być fun i charakter.',
     servings: 2,
@@ -3593,8 +3554,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'cream crunch',
     image: '/recipes/polenta-miso-granat-grzyby.png',
-    gallery: ['/recipes/polenta-miso-granat-grzyby.png', '/recipes/polenta-miso-granat-grzyby-2.png', '/recipes/polenta-miso-granat-grzyby-3.png', '/recipes/polenta-miso-granat-grzyby-4.png'],
-
     intro: 'Kremowa baza, umami z miso i soczyste pęknięcia granatu. Mega dziwne, mega dobre.',
     whenToMake: 'Gdy chcesz comfort food, ale nie kolejny przewidywalny kremowy garnek.',
     servings: 2,
@@ -3625,8 +3584,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'acid butter',
     image: '/recipes/przegrzebki-kimchi-beurre-blanc.png',
-    gallery: ['/recipes/przegrzebki-kimchi-beurre-blanc.png', '/recipes/przegrzebki-kimchi-beurre-blanc-2.png', '/recipes/przegrzebki-kimchi-beurre-blanc-3.png', '/recipes/przegrzebki-kimchi-beurre-blanc-4.png'],
-
     intro: 'Maślane przegrzebki dostają kwaśny, fermentowany pazur. Bardzo czysta, bardzo arogancka elegancja.',
     whenToMake: 'Na start kolacji, która ma od razu ustawić standard za wysoko.',
     servings: 2,
@@ -3658,8 +3615,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'bitter glow',
     image: '/recipes/baklazan-czarna-limonka-melasa.png',
-    gallery: ['/recipes/baklazan-czarna-limonka-melasa.png', '/recipes/baklazan-czarna-limonka-melasa-2.png', '/recipes/baklazan-czarna-limonka-melasa-3.png', '/recipes/baklazan-czarna-limonka-melasa-4.png'],
-
     intro: 'Dym, gorycz, słodycz i głęboki kwas. Smak jak dobrze napisany plot twist.',
     whenToMake: 'Kiedy chcesz pokazać, że bakłażan może być bardziej złożony niż pół karty win.',
     servings: 2,
@@ -3690,8 +3645,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'soft game',
     image: '/recipes/krolik-miso-morela-szalwia.png',
-    gallery: ['/recipes/krolik-miso-morela-szalwia.png', '/recipes/krolik-miso-morela-szalwia-2.png', '/recipes/krolik-miso-morela-szalwia-3.png', '/recipes/krolik-miso-morela-szalwia-4.png'],
-
     intro: 'Delikatne mięso, słone miso i morelowa słodycz. Bardzo cichy luksus.',
     whenToMake: 'Kolacja dla ludzi, którzy jarają się niuansami, nie tylko efektem wow.',
     servings: 2,
@@ -3722,8 +3675,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'anise spark',
     image: '/recipes/tofu-yuzu-koper-fenkul.png',
-    gallery: ['/recipes/tofu-yuzu-koper-fenkul.png', '/recipes/tofu-yuzu-koper-fenkul-2.png', '/recipes/tofu-yuzu-koper-fenkul-3.png', '/recipes/tofu-yuzu-koper-fenkul-4.png'],
-
     intro: 'Anis, cytrus i delikatne tofu. Bardzo lekka, bardzo dopracowana rzecz.',
     whenToMake: 'Lunch albo mały talerz, gdy chcesz czegoś precyzyjnego, a nie ciężkiego.',
     servings: 2,
@@ -3752,8 +3703,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'dark lacquer',
     image: '/recipes/wolowina-kawa-shiitake-date.png',
-    gallery: ['/recipes/wolowina-kawa-shiitake-date.png', '/recipes/wolowina-kawa-shiitake-date-2.png', '/recipes/wolowina-kawa-shiitake-date-3.png', '/recipes/wolowina-kawa-shiitake-date-4.png'],
-
     intro: 'Gorzka kawa, grzybowe umami i lepka słodycz daktyla. Mroczne i bardzo dobre.',
     whenToMake: 'Wieczór, kiedy masz ochotę na coś ciemnego, bogatego i trochę niepokojącego.',
     servings: 2,
@@ -3784,8 +3733,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'sweet mineral',
     image: '/recipes/halva-kalafior-lime-leaf.png',
-    gallery: ['/recipes/halva-kalafior-lime-leaf.png', '/recipes/halva-kalafior-lime-leaf-2.png', '/recipes/halva-kalafior-lime-leaf-3.png', '/recipes/halva-kalafior-lime-leaf-4.png'],
-
     intro: 'Słona chałwa i cytrusowy aromat robią z kalafiora coś bardzo niespodziewanego.',
     whenToMake: 'Na stół do dzielenia, gdy chcesz lekko zagiąć ludziom rzeczywistość.',
     servings: 2,
@@ -3816,8 +3763,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'pink heat',
     image: '/recipes/losos-garam-masala-rabarbar.png',
-    gallery: ['/recipes/losos-garam-masala-rabarbar.png', '/recipes/losos-garam-masala-rabarbar-2.png', '/recipes/losos-garam-masala-rabarbar-3.png', '/recipes/losos-garam-masala-rabarbar-4.png'],
-
     intro: 'Rabarbar daje kwas i kolor, garam masala daje ciepło. Łosoś ma tu naprawdę dobre życie.',
     whenToMake: 'Szybki obiad, który ma wyglądać jak coś znacznie droższego.',
     servings: 2,
@@ -3847,8 +3792,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'soft ocean',
     image: '/recipes/burrata-dashi-groszek-chili-oil.png',
-    gallery: ['/recipes/burrata-dashi-groszek-chili-oil.png', '/recipes/burrata-dashi-groszek-chili-oil-2.png', '/recipes/burrata-dashi-groszek-chili-oil-3.png', '/recipes/burrata-dashi-groszek-chili-oil-4.png'],
-
     intro: 'Kremowa burrata spotyka morski bulion i zieloną słodycz groszku. Bardzo delikatny flex.',
     whenToMake: 'Starter na ciepły wieczór, kiedy ma być subtelnie i trochę bezczelnie.',
     servings: 2,
@@ -3878,8 +3821,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'smoke velvet',
     image: '/recipes/jagniecina-figa-urfa-jogurt.png',
-    gallery: ['/recipes/jagniecina-figa-urfa-jogurt.png', '/recipes/jagniecina-figa-urfa-jogurt-2.png', '/recipes/jagniecina-figa-urfa-jogurt-3.png', '/recipes/jagniecina-figa-urfa-jogurt-4.png'],
-
     intro: 'Figa daje aksamit, urfa daje dym, jagnięcina robi resztę bez wysiłku.',
     whenToMake: 'Na kolację, która ma być ciemna, ciepła i trochę niebezpiecznie dobra.',
     servings: 2,
@@ -3910,8 +3851,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'inky fruit',
     image: '/recipes/makaron-ryzowy-sezam-borowka.png',
-    gallery: ['/recipes/makaron-ryzowy-sezam-borowka.png', '/recipes/makaron-ryzowy-sezam-borowka-2.png', '/recipes/makaron-ryzowy-sezam-borowka-3.png', '/recipes/makaron-ryzowy-sezam-borowka-4.png'],
-
     intro: 'Borówka brzmi jak sabotaż, ale daje świetny kwas i ciemną owocowość do tamari.',
     whenToMake: 'Lekka miska na lato, kiedy chcesz czegoś totalnie nieoczywistego.',
     servings: 2,
@@ -3941,8 +3880,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'spring cut',
     image: '/recipes/pstrag-miso-rzodkiewka-sliwka.png',
-    gallery: ['/recipes/pstrag-miso-rzodkiewka-sliwka.png', '/recipes/pstrag-miso-rzodkiewka-sliwka-2.png', '/recipes/pstrag-miso-rzodkiewka-sliwka-3.png', '/recipes/pstrag-miso-rzodkiewka-sliwka-4.png'],
-
     intro: 'Rybny tłuszcz, chrupiąca ostrość i kwaśna śliwka. Bardzo świeże cięcie.',
     whenToMake: 'Wiosenna kolacja, kiedy ma być lekko, jasno i bez banału.',
     servings: 2,
@@ -3972,8 +3909,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'root lacquer',
     image: '/recipes/burak-kawa-yakitori-kozi.png',
-    gallery: ['/recipes/burak-kawa-yakitori-kozi.png', '/recipes/burak-kawa-yakitori-kozi-2.png', '/recipes/burak-kawa-yakitori-kozi-3.png', '/recipes/burak-kawa-yakitori-kozi-4.png'],
-
     intro: 'Burak wchodzi tu w ciemny, lekko gorzki świat i surprisingly pasuje jak cholera.',
     whenToMake: 'Jako mały talerz albo warzywna gwiazda wieczoru.',
     servings: 2,
@@ -4004,8 +3939,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'bright smoke',
     image: '/recipes/kurczak-lemongrass-smoked-butter.png',
-    gallery: ['/recipes/kurczak-lemongrass-smoked-butter.png', '/recipes/kurczak-lemongrass-smoked-butter-2.png', '/recipes/kurczak-lemongrass-smoked-butter-3.png', '/recipes/kurczak-lemongrass-smoked-butter-4.png'],
-
     intro: 'Klasyczne mięso, ale zrobione z dużo większą finezją niż zwykle na weekday.',
     whenToMake: 'Po pracy, kiedy chcesz coś prostego, ale już nie basic.',
     servings: 2,
@@ -4034,8 +3967,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'clean line',
     image: '/recipes/dorsz-ponzu-bialy-asparagus.png',
-    gallery: ['/recipes/dorsz-ponzu-bialy-asparagus.png', '/recipes/dorsz-ponzu-bialy-asparagus-2.png', '/recipes/dorsz-ponzu-bialy-asparagus-3.png', '/recipes/dorsz-ponzu-bialy-asparagus-4.png'],
-
     intro: 'Minimalizm, ale taki z klasą. Delikatna ryba i bardzo precyzyjny kwas.',
     whenToMake: 'Wiosenna kolacja dla ludzi, którzy lubią czyste smaki bardziej niż chaos.',
     servings: 2,
@@ -4065,8 +3996,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'forest jewel',
     image: '/recipes/shiitake-kasztan-granat-miso.png',
-    gallery: ['/recipes/shiitake-kasztan-granat-miso.png', '/recipes/shiitake-kasztan-granat-miso-2.png', '/recipes/shiitake-kasztan-granat-miso-3.png', '/recipes/shiitake-kasztan-granat-miso-4.png'],
-
     intro: 'Leśne, słodkie, ciemne i chrupiące. Mały talerz z bardzo dużym charakterem.',
     whenToMake: 'Jako starter albo dodatek do większego setu Atelier.',
     servings: 2,
@@ -4096,8 +4025,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'gold chill',
     image: '/recipes/krewetki-szafran-kefir-koper.png',
-    gallery: ['/recipes/krewetki-szafran-kefir-koper.png', '/recipes/krewetki-szafran-kefir-koper-2.png', '/recipes/krewetki-szafran-kefir-koper-3.png', '/recipes/krewetki-szafran-kefir-koper-4.png'],
-
     intro: 'Szafran i kefir brzmią delikatnie, ale razem robią bardzo wyraźny luksusowy ton.',
     whenToMake: 'Na mały talerz albo przystawkę, gdy chcesz czegoś chłodno-ciepłego i dziwnego.',
     servings: 2,
@@ -4126,8 +4053,6 @@ export const recipes: Recipe[] = [
     cuisine: 'azjatycka',
     tag: 'salty summer',
     image: '/recipes/sardynki-ponzu-brzoskwinia-sezam.png',
-    gallery: ['/recipes/sardynki-ponzu-brzoskwinia-sezam.png', '/recipes/sardynki-ponzu-brzoskwinia-sezam-2.png', '/recipes/sardynki-ponzu-brzoskwinia-sezam-3.png', '/recipes/sardynki-ponzu-brzoskwinia-sezam-4.png'],
-
     intro: 'Tłusta ryba, miękki owoc i kwaśno-słony dressing. Brzmi ryzykownie, smakuje genialnie.',
     whenToMake: 'Na toast albo mały talerz, kiedy chcesz czegoś szybkiego i bezczelnego.',
     servings: 2,
@@ -4156,8 +4081,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'soft shadow',
     image: '/recipes/cielęcina-czarny-czosnek-morelowa-skor.png',
-    gallery: ['/recipes/cielęcina-czarny-czosnek-morelowa-skor.png', '/recipes/cielęcina-czarny-czosnek-morelowa-skor-2.png', '/recipes/cielęcina-czarny-czosnek-morelowa-skor-3.png', '/recipes/cielęcina-czarny-czosnek-morelowa-skor-4.png'],
-
     intro: 'Delikatna cielęcina i ciemny fermentowany czosnek tworzą bardzo miękki, głęboki luksus.',
     whenToMake: 'Gdy ma być bardzo elegancko, ale bez krzyczących smaków.',
     servings: 2,
@@ -4187,8 +4110,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'green lacquer',
     image: '/recipes/szparagi-miso-hazelnut-date.png',
-    gallery: ['/recipes/szparagi-miso-hazelnut-date.png', '/recipes/szparagi-miso-hazelnut-date-2.png', '/recipes/szparagi-miso-hazelnut-date-3.png', '/recipes/szparagi-miso-hazelnut-date-4.png'],
-
     intro: 'Szparag dostaje tu ciemniejszy, słodszy i dużo ciekawszy profil niż zwykle.',
     whenToMake: 'Wiosenny mały talerz, kiedy chcesz coś prostego, ale nie banalnego.',
     servings: 2,
@@ -4218,8 +4139,6 @@ export const recipes: Recipe[] = [
     cuisine: 'bliskowschodnia',
     tag: 'crimson duck',
     image: '/recipes/kaczka-hibiskus-burak-sumak.png',
-    gallery: ['/recipes/kaczka-hibiskus-burak-sumak.png', '/recipes/kaczka-hibiskus-burak-sumak-2.png', '/recipes/kaczka-hibiskus-burak-sumak-3.png', '/recipes/kaczka-hibiskus-burak-sumak-4.png'],
-
     intro: 'Kwaśny hibiskus i ziemisty burak budują wokół kaczki bardzo teatralny, ale mądry sos.',
     whenToMake: 'Wieczór, kiedy chcesz iść full drama, ale w elegancki sposób.',
     servings: 2,
