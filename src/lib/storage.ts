@@ -70,12 +70,20 @@ export function getFavorites(): string[] {
   return safeRead<string[]>(FAVORITES_KEY, [])
 }
 
+export function setFavorites(slugs: string[]) {
+  safeWrite(FAVORITES_KEY, slugs)
+  notify(FAVORITES_KEY)
+}
+
 export function toggleFavorite(slug: string) {
   const current = getFavorites()
   const next = current.includes(slug) ? current.filter((entry) => entry !== slug) : [slug, ...current]
-  safeWrite(FAVORITES_KEY, next)
-  notify(FAVORITES_KEY)
+  setFavorites(next)
   return next
+}
+
+export function clearFavorites() {
+  setFavorites([])
 }
 
 export type ShoppingState = Record<string, Record<string, boolean>>
