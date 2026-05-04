@@ -443,50 +443,67 @@ export function CompareView() {
                 </>
               ) : null}
 
-              <ul className="mt-5 grid gap-3 lg:grid-cols-2">
-                {combinedShopping.map((item) => {
-                  const isChecked = !!shopping[item.id]
-                  const headline = item.canSum && item.totalAmount != null
-                    ? `${formatAmount(item.totalAmount)}${item.unit ? ` ${item.unit}` : ''} ${item.name}`
-                    : item.name
-
-                  return (
-                    <li key={item.id}>
-                      {shoppingMode ? (
-                        <button
-                          type="button"
-                          onClick={() => toggleShopping(item.id)}
-                          className="group flex w-full items-start gap-3 rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4 text-left transition hover:bg-[#fff3e7]"
-                        >
-                          <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-white' : 'border-[#201714]/20 bg-white text-transparent group-hover:border-[#201714]/45'}`}>
-                            ✓
-                          </span>
-                          <span className="flex-1">
-                            <span className={`block text-sm font-semibold leading-6 ${isChecked ? 'text-[#201714]/40 line-through' : 'text-[#201714]'}`}>{headline}</span>
-                            <span className="mt-1 block text-xs leading-5 text-[#201714]/55">
-                              {item.lines.map((line) => line.recipeTitle).join(' • ')}
-                            </span>
-                            {!item.canSum ? (
-                              <span className="mt-2 block text-xs leading-5 text-[#8a4b2a]">
-                                {item.lines.map((line) => line.text).join(' · ')}
-                              </span>
-                            ) : null}
-                          </span>
-                          {item.pantry ? <span className="rounded-full bg-white px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#8a4b2a]">spiżarnia</span> : null}
-                        </button>
-                      ) : (
-                        <div className="rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4">
-                          <p className="text-sm font-semibold leading-6 text-[#201714]">{headline}</p>
-                          <p className="mt-1 text-xs leading-5 text-[#201714]/55">{item.lines.map((line) => line.recipeTitle).join(' • ')}</p>
-                          {!item.canSum ? (
-                            <p className="mt-2 text-xs leading-5 text-[#8a4b2a]">{item.lines.map((line) => line.text).join(' · ')}</p>
-                          ) : null}
+              <div className="mt-5 grid gap-5 lg:grid-cols-2">
+                {[
+                  { title: 'Do kupienia', hint: 'rzeczy, które zwykle lądują w koszyku', items: combinedShopping.filter((item) => !item.pantry) },
+                  { title: 'Spiżarnia', hint: 'prawdopodobnie masz, ale warto sprawdzić', items: combinedShopping.filter((item) => item.pantry) },
+                ].map((section) => (
+                  section.items.length > 0 ? (
+                    <section key={section.title} className="rounded-[1.5rem] border border-[#201714]/8 bg-white/60 p-3">
+                      <div className="mb-3 flex items-end justify-between gap-3 px-1">
+                        <div>
+                          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">{section.title}</h3>
+                          <p className="mt-1 text-xs leading-5 text-[#201714]/55">{section.hint}</p>
                         </div>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
+                        <span className="rounded-full bg-[#fff3e7] px-2.5 py-1 text-xs font-semibold text-[#8a4b2a]">{section.items.length}</span>
+                      </div>
+                      <ul className="grid gap-3">
+                        {section.items.map((item) => {
+                          const isChecked = !!shopping[item.id]
+                          const headline = item.canSum && item.totalAmount != null
+                            ? `${formatAmount(item.totalAmount)}${item.unit ? ` ${item.unit}` : ''} ${item.name}`
+                            : item.name
+
+                          return (
+                            <li key={item.id}>
+                              {shoppingMode ? (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleShopping(item.id)}
+                                  className="group flex w-full items-start gap-3 rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4 text-left transition hover:bg-[#fff3e7]"
+                                >
+                                  <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-white' : 'border-[#201714]/20 bg-white text-transparent group-hover:border-[#201714]/45'}`}>
+                                    ✓
+                                  </span>
+                                  <span className="flex-1">
+                                    <span className={`block text-sm font-semibold leading-6 ${isChecked ? 'text-[#201714]/40 line-through' : 'text-[#201714]'}`}>{headline}</span>
+                                    <span className="mt-1 block text-xs leading-5 text-[#201714]/55">
+                                      {item.lines.map((line) => line.recipeTitle).join(' • ')}
+                                    </span>
+                                    {!item.canSum ? (
+                                      <span className="mt-2 block text-xs leading-5 text-[#8a4b2a]">
+                                        {item.lines.map((line) => line.text).join(' · ')}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </button>
+                              ) : (
+                                <div className="rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4">
+                                  <p className="text-sm font-semibold leading-6 text-[#201714]">{headline}</p>
+                                  <p className="mt-1 text-xs leading-5 text-[#201714]/55">{item.lines.map((line) => line.recipeTitle).join(' • ')}</p>
+                                  {!item.canSum ? (
+                                    <p className="mt-2 text-xs leading-5 text-[#8a4b2a]">{item.lines.map((line) => line.text).join(' · ')}</p>
+                                  ) : null}
+                                </div>
+                              )}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </section>
+                  ) : null
+                ))}
+              </div>
             </section>
 
             {verdict ? (
