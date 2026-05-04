@@ -140,10 +140,17 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     <main className="min-h-screen bg-[#fffaf3] px-5 py-5 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+          <Link href="/" className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 print:hidden">
             ← Wróć do katalogu
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 print:hidden">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
+            >
+              Druk / PDF
+            </button>
             <button
               type="button"
               onClick={toggleFavorite}

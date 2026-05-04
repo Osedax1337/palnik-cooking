@@ -88,3 +88,40 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+@media print {
+  @page {
+    margin: 16mm;
+  }
+
+  html,
+  body {
+    background: #fffaf3 !important;
+    color: #201714 !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+
+  section,
+  article,
+  div {
+    box-shadow: none !important;
+  }
+}
