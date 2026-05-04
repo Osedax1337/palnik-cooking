@@ -3944,6 +3944,11 @@ export const recipes: Recipe[] = [
       'Łososia dopraw garam masalą i usmaż albo upiecz.',
       'Polej glazurą rabarbarową tuż przed podaniem.',
     ],
+    stepImages: [
+      '/recipes/steps/losos-garam-masala-rabarbar-step-1.png',
+      '/recipes/steps/losos-garam-masala-rabarbar-step-2.png',
+      '/recipes/steps/losos-garam-masala-rabarbar-step-3.png',
+    ],
     tip: 'Rabarbar ma zostać kwaśny. Nie słodź go na kompot jak ciocia na działce.',
   },
   {
@@ -4008,6 +4013,12 @@ export const recipes: Recipe[] = [
       'Jogurt dopraw urfą i szczyptą soli.',
       'Podaj mięso na jogurcie z figami.',
     ],
+    stepImages: [
+      '/recipes/steps/jagniecina-figa-urfa-jogurt-step-1.png',
+      '/recipes/steps/jagniecina-figa-urfa-jogurt-step-2.png',
+      '/recipes/steps/jagniecina-figa-urfa-jogurt-step-3.png',
+      '/recipes/steps/jagniecina-figa-urfa-jogurt-step-4.png',
+    ],
     tip: 'Urfa ma fajny dym i rodzynkowy klimat. Zwykłe chilli tego nie podrobi.',
   },
   {
@@ -4036,6 +4047,11 @@ export const recipes: Recipe[] = [
       'Makaron przygotuj według opakowania.',
       'Tahini wymieszaj z tamari i limonką.',
       'Dodaj makaron, borówki i sezam.',
+    ],
+    stepImages: [
+      '/recipes/steps/makaron-ryzowy-sezam-borowka-step-1.png',
+      '/recipes/steps/makaron-ryzowy-sezam-borowka-step-2.png',
+      '/recipes/steps/makaron-ryzowy-sezam-borowka-step-3.png',
     ],
     tip: 'Nie rozgniataj borówek całkiem. Chodzi o punktowe eksplozje smaku.',
   },
@@ -4066,6 +4082,11 @@ export const recipes: Recipe[] = [
       'Rzodkiewkę i śliwkę pokrój cienko.',
       'Podaj rybę z chrupiącą sałatką na wierzchu.',
     ],
+    stepImages: [
+      '/recipes/steps/pstrag-miso-rzodkiewka-sliwka-step-1.png',
+      '/recipes/steps/pstrag-miso-rzodkiewka-sliwka-step-2.png',
+      '/recipes/steps/pstrag-miso-rzodkiewka-sliwka-step-3.png',
+    ],
     tip: 'Miso naprawdę cienko. To ma błysnąć, nie zabić rybę solą.',
   },
   {
@@ -4095,6 +4116,12 @@ export const recipes: Recipe[] = [
       'Glazurę zrób z sosu i szczypty kawy.',
       'Posmaruj buraki, dopiecz 5 minut.',
       'Podaj z kozim serem.',
+    ],
+    stepImages: [
+      '/recipes/steps/burak-kawa-yakitori-kozi-step-1.png',
+      '/recipes/steps/burak-kawa-yakitori-kozi-step-2.png',
+      '/recipes/steps/burak-kawa-yakitori-kozi-step-3.png',
+      '/recipes/steps/burak-kawa-yakitori-kozi-step-4.png',
     ],
     tip: 'Znów: kawa ma tylko podbić cień i głębię. Bez espresso performance.',
   },
