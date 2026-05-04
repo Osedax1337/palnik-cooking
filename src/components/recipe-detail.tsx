@@ -120,6 +120,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const allDone = checked === total && total > 0
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
+  const isAtelierRecipe = recipe.collections.includes('atelier')
 
   const toggleItem = (id: string) => {
     setShopping((current) => ({ ...current, [id]: !current[id] }))
@@ -138,11 +139,11 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#fffaf3] px-5 py-5 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8">
+    <main className={`min-h-screen px-4 py-4 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8 ${isAtelierRecipe ? 'bg-[radial-gradient(circle_at_top,#25131d_0%,#171317_24%,#fffaf3_62%)]' : 'bg-[#fffaf3]'}`}>
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 print:hidden">
-            ← Wróć do katalogu
+          <Link href={isAtelierRecipe ? '/atelier' : '/'} className={`inline-flex items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 print:hidden ${isAtelierRecipe ? 'border border-white/10 bg-white/8 text-[#fff7ee] hover:bg-white/12 focus:ring-[#ffcf9f]/35' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/15'}`}>
+            ← {isAtelierRecipe ? 'Wróć do Atelier' : 'Wróć do katalogu'}
           </Link>
           <div className="flex items-center gap-2 print:hidden">
             <button
@@ -172,14 +173,19 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             >
               {isInCompare ? '✓ w porównaniu' : '+ porównaj'}
             </button>
-            <span className="rounded-full border border-[#201714]/10 bg-white/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">Palnik / przepis</span>
+            <span className={`hidden rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] backdrop-blur sm:inline-flex ${isAtelierRecipe ? 'border-[#ffcf9f]/18 bg-[#ffcf9f]/8 text-[#ffcf9f]' : 'border-[#201714]/10 bg-white/85 text-[#8a4b2a]'}`}>{isAtelierRecipe ? 'Palnik / Atelier' : 'Palnik / przepis'}</span>
           </div>
         </div>
 
         <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="overflow-hidden rounded-[2.2rem] bg-white shadow-[0_18px_60px_rgba(32,23,20,0.08)]">
+          <div className={`overflow-hidden rounded-[2rem] shadow-[0_18px_60px_rgba(32,23,20,0.08)] sm:rounded-[2.2rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'bg-white'}`}>
             <div className="relative aspect-[4/3] w-full">
               <RecipeVisual recipe={recipe} large />
+              {isAtelierRecipe ? (
+                <div className="absolute left-4 top-4 rounded-full border border-[#ffcf9f]/25 bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f] backdrop-blur">
+                  Atelier selection
+                </div>
+              ) : null}
             </div>
             <div className="p-6 lg:p-8">
               {compareContext ? (
@@ -195,8 +201,14 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <EffortDots effort={recipe.effort} />
                 </span>
               </div>
-              <h1 className="mt-4 max-w-[14ch] text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-5xl">{recipe.title}</h1>
+              <h1 className="mt-4 max-w-[14ch] text-[2.65rem] font-semibold leading-[0.93] tracking-[-0.055em] sm:text-5xl">{recipe.title}</h1>
               <p className="mt-4 max-w-[48ch] text-sm leading-6 text-[#201714]/72 sm:text-base">{recipe.intro}</p>
+              {isAtelierRecipe ? (
+                <p className="mt-5 rounded-[1.15rem] border border-[#8c3341]/10 bg-white/70 px-4 py-4 text-sm leading-6 text-[#201714]/82 shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
+                  <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8c3341]">chef note</span>
+                  <span className="mt-1 block">Tu chodzi o balans: słodycz ma podbić umami, kwas ma przeciąć tłuszcz, a chrupnięcie ma zamknąć talerz. Nie dekoruj na siłę — lepiej zostawić jedną mocną decyzję niż pięć ozdobników.</span>
+                </p>
+              ) : null}
               <p className="mt-5 rounded-[1rem] bg-[#fffaf3] px-4 py-3.5 text-sm leading-6 text-[#201714]/85">
                 <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">kiedy to robić</span>
                 <span className="mt-1 block">{recipe.whenToMake}</span>
@@ -208,7 +220,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             </div>
           </div>
 
-          <div className="rounded-[2.2rem] bg-[#201714] p-6 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.18)] lg:p-8">
+          <div className={`rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.18)] sm:rounded-[2.2rem] sm:p-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold tracking-[-0.03em]">Tryb gotowania</h2>
@@ -295,14 +307,14 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     const stepImage = recipe.stepImages?.[index]
 
                     return (
-                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 ${stepImage ? 'p-0' : 'p-3'}`}>
+                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 transition hover:border-white/15 ${stepImage ? 'p-0' : 'p-3'}`}>
                         {stepImage ? (
                           <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
                             <Image
                               src={stepImage}
                               alt={`${recipe.title} — krok ${index + 1}`}
                               fill
-                              className="object-cover"
+                              className="object-cover transition duration-500 hover:scale-[1.025]"
                               sizes="(max-width: 1024px) 100vw, 420px"
                             />
                           </div>

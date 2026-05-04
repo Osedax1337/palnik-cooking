@@ -321,40 +321,59 @@ export function RecipeCatalogPage({
     atelierAllRecipes.find((recipe) => recipe.slug === 'przegrzebki-kimchi-beurre-blanc'),
     atelierAllRecipes.find((recipe) => recipe.slug === 'kaczka-hibiskus-burak-sumak'),
   ].filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
+  const atelierSignatureMoves = [
+    {
+      label: 'kontrast',
+      title: 'Słodkie nie znaczy deserowe',
+      body: 'Daktyl, śliwka, rabarbar albo brzoskwinia pracują tu jak sos: podbijają tłuszcz, kwas i umami, nie robią cukierni.',
+    },
+    {
+      label: 'precyzja',
+      title: 'Kwas tnie, dym zostaje',
+      body: 'Yuzu, czarna limonka, ponzu i ferment są od tego, żeby talerz miał napięcie. Bez ciężkiej restauracyjnej pompy.',
+    },
+    {
+      label: 'tekstura',
+      title: 'Miękkie potrzebuje chrupnięcia',
+      body: 'Sezam, orzech, crispy rice, przypalone brzegi. Mały ruch, który sprawia, że danie nie jest jedną miękką chmurą.',
+    },
+  ]
   const isAtelierPage = variant === 'atelier'
   const canUnsetCollection = forcedCollection === 'all'
 
   return (
     <main className={`min-h-screen text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
       {isAtelierPage ? (
-        <section className="relative overflow-hidden px-5 pb-8 pt-5 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">
+        <section className="relative overflow-hidden px-4 pb-8 pt-4 sm:px-6 lg:px-8 lg:pb-14 lg:pt-8">
           <div className="absolute left-[8%] top-8 h-48 w-48 rounded-full bg-[#8c3341]/35 blur-3xl" />
           <div className="absolute right-[6%] top-16 h-56 w-56 rounded-full bg-[#d87c4a]/20 blur-3xl" />
+          <div className="absolute left-1/2 top-[22rem] hidden h-px w-[70%] -translate-x-1/2 bg-gradient-to-r from-transparent via-white/18 to-transparent lg:block" />
           <div className="relative mx-auto max-w-6xl">
-            <div className="mb-8 flex items-center justify-between gap-4 lg:mb-10">
-              <Link href="/" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10">
+            <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
+              <Link href="/" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:text-xs">
                 Palnik / Atelier
               </Link>
-              <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">oriental fine dining lane</span>
+              <span className="hidden text-[11px] uppercase tracking-[0.22em] text-white/45 sm:inline">oriental fine dining lane</span>
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:items-start">
-              <article className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-[linear-gradient(135deg,#21141b_0%,#2c1620_44%,#151217_100%)] px-6 pb-7 pt-7 text-[#fff7ee] shadow-[0_28px_90px_rgba(10,6,12,0.34)] sm:px-7 lg:px-10 lg:pb-10 lg:pt-10">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-stretch">
+              <article className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#21141b_0%,#2c1620_44%,#151217_100%)] px-5 pb-6 pt-6 text-[#fff7ee] shadow-[0_28px_90px_rgba(10,6,12,0.34)] sm:rounded-[2.4rem] sm:px-7 lg:px-10 lg:pb-10 lg:pt-10">
                 <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#8c3341]/45 blur-3xl" />
                 <div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-[#d87c4a]/18 blur-3xl" />
+                <div className="absolute right-6 top-6 hidden rounded-full border border-[#ffcf9f]/20 bg-[#ffcf9f]/8 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f] lg:block">selected 40</div>
                 <div className="relative max-w-3xl">
-                  <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">curated selection / michelin-ish / oriental precision</p>
-                  <h1 className="mt-4 max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
+                  <p className="text-[10px] uppercase tracking-[0.24em] text-[#ffcf9f] sm:text-[11px]">curated selection / michelin-ish / oriental precision</p>
+                  <h1 className="mt-4 max-w-[11ch] text-[3.35rem] font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl lg:text-7xl">
                     Atelier.
                     <br />
                     Dania wyselekcjonowane
                     <br />
                     dla ludzi z gustem.
                   </h1>
-                  <p className="mt-5 max-w-[42ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
+                  <p className="mt-5 max-w-[44ch] text-[15px] leading-7 text-[#f3dfcf] sm:text-lg">
                     To jest selekcja dań w duchu współczesnej kuchni Michelin: precyzyjne kontrasty, ferment, dym, kwas, owoce przy mięsie i sosy, które robią robotę ciszej niż krzykliwe dekoracje. Nadal do ugotowania w domu — tylko z ambicją, żeby talerz miał charakter, nie tylko kalorie.
                   </p>
-                  <div className="mt-6 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
+                  <div className="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f] sm:text-[11px]">
                     <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{atelierCount} dań</span>
                     <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">Michelin-coded</span>
                     <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">ferment / dym / kwas</span>
@@ -387,14 +406,30 @@ export function RecipeCatalogPage({
                       setOpenRecipe(recipe.slug)
                       scrollToSection('przepis')
                     }}
-                    className={`rounded-[1.5rem] border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,10,16,0.18)] focus:outline-none focus:ring-2 focus:ring-white/20 ${index === 0 ? 'border-white/10 bg-white/8 text-[#fff7ee]' : 'border-[#201714]/10 bg-white/88 text-[#201714]'}`}
+                    className={`group grid grid-cols-[76px_minmax(0,1fr)] gap-3 overflow-hidden rounded-[1.5rem] border p-2.5 text-left transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,10,16,0.18)] focus:outline-none focus:ring-2 focus:ring-white/20 sm:grid-cols-[92px_minmax(0,1fr)] ${index === 0 ? 'border-white/10 bg-white/8 text-[#fff7ee]' : 'border-[#201714]/10 bg-white/88 text-[#201714]'}`}
                   >
-                    <p className={`text-[10px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">{recipe.title}</p>
-                    <p className={`mt-2 text-sm leading-6 ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
+                    <div className="relative aspect-square overflow-hidden rounded-[1.1rem] bg-[#201714]">
+                      <RecipeVisual recipe={recipe} />
+                      <span className="absolute inset-0 bg-gradient-to-t from-[#201714]/30 to-transparent opacity-70" />
+                    </div>
+                    <div className="min-w-0 py-1 pr-1">
+                      <p className={`text-[9px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
+                      <p className="mt-1 line-clamp-2 text-base font-semibold leading-tight tracking-[-0.03em]">{recipe.title}</p>
+                      <p className={`mt-1 line-clamp-2 text-xs leading-5 sm:text-sm ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
+                    </div>
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:mt-6">
+              {atelierSignatureMoves.map((move, index) => (
+                <article key={move.label} className={`rounded-[1.6rem] border p-4 shadow-[0_18px_50px_rgba(10,6,12,0.14)] ${index === 1 ? 'border-[#ffcf9f]/18 bg-[#fff7ee] text-[#201714]' : 'border-white/10 bg-white/[0.06] text-[#fff7ee] backdrop-blur'}`}>
+                  <p className={`text-[10px] uppercase tracking-[0.22em] ${index === 1 ? 'text-[#8c3341]' : 'text-[#ffcf9f]'}`}>{move.label}</p>
+                  <h2 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.04em]">{move.title}</h2>
+                  <p className={`mt-2 text-sm leading-6 ${index === 1 ? 'text-[#201714]/70' : 'text-[#f3dfcf]'}`}>{move.body}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -687,14 +722,14 @@ export function RecipeCatalogPage({
       </section>
         </>
       ) : (
-        <section className="px-5 pb-3 pt-1 sm:px-6 lg:px-8 lg:pb-6">
+        <section className="px-4 pb-3 pt-1 sm:px-6 lg:px-8 lg:pb-6">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)]">
               <article className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#1b1519_0%,#231820_48%,#121116_100%)] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(15,10,16,0.24)] lg:p-7">
                 <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">jak w to wejść bez spiny</p>
                 <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Nie scrolluj wszystkiego. Wejdź z intencją.</h2>
                 <p className="mt-3 max-w-[58ch] text-sm leading-6 text-[#f3dfcf] sm:text-base">
-                  Atelier działa najlepiej, kiedy wybierasz klimat, nie tylko przepis. Najpierw lekki flex, morska precyzja albo ciemniejszy, cięższy talerz. Dopiero potem konkretny dish.
+                  Atelier działa najlepiej, kiedy wybierasz intencję, nie tylko składnik. Najpierw lekki flex, morska precyzja albo ciemniejszy, cięższy talerz. Dopiero potem konkretny dish.
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   {atelierEntryPoints.map((recipe, index) => (
@@ -727,7 +762,7 @@ export function RecipeCatalogPage({
                 <div className="rounded-[1.7rem] border border-white/10 bg-[#201714] p-5 text-[#fff7ee] shadow-[0_18px_50px_rgba(32,23,20,0.14)]">
                   <p className="text-[11px] uppercase tracking-[0.22em] text-[#ffcf9f]">dla kogo to jest</p>
                   <p className="mt-3 text-sm leading-6 text-[#f3dfcf]">
-                    Dla człowieka, który chce ugotować coś trochę za dobrego na zwykły dzień. Mniej „meal prep”, więcej „coś, co robi scenę”.
+                    Dla człowieka, który chce ugotować coś trochę za dobrego na zwykły dzień. Mniej „meal prep”, więcej „mała prywatna degustacja”.
                   </p>
                 </div>
               </aside>
