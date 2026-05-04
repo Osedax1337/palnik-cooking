@@ -17,7 +17,7 @@ for block in blocks:
 
     def get(pattern):
         match = re.search(pattern, block, re.S)
-        return match.group(1) if match else ''
+        return match.group(1).replace("\\'", "'") if match else ''
 
     items.append({
         'slug': get(r"slug: '([^']+)'"),
