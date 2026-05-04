@@ -1,7 +1,12 @@
 import Image from 'next/image'
 import { categoryStyles, type Recipe } from '@/lib/recipes'
+import { RecipeGallery } from '@/components/recipe-gallery'
 
 export function RecipeVisual({ recipe, large = false }: { recipe: Recipe; large?: boolean }) {
+  if (recipe.gallery && recipe.gallery.length > 0) {
+    return <RecipeGallery images={recipe.gallery} alt={recipe.title} large={large} />
+  }
+
   if (recipe.image) {
     return (
       <Image
