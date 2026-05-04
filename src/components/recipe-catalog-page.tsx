@@ -571,7 +571,7 @@ export function RecipeCatalogPage({
                 <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">ulubione</p>
                 <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em] sm:text-2xl">Twoja szybka półka</h2>
               </div>
-              <span className="rounded-full bg-white/75 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a]">{favoriteRecipes.length}</span>
+              <Link href="/ulubione" className="rounded-full bg-white/75 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Wszystkie · {favoriteRecipes.length}</Link>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {favoriteRecipes.slice(0, 8).map((recipe) => (
