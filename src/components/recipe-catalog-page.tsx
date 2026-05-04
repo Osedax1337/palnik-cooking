@@ -415,7 +415,7 @@ export function RecipeCatalogPage({
               <div className="absolute bottom-0 right-0 h-24 w-24 rounded-full bg-[#e66a3d]/50 blur-2xl lg:h-36 lg:w-36" />
 
               <div className="relative max-w-2xl space-y-6">
-                <p className="max-w-[34ch] text-sm uppercase tracking-[0.24em] text-[#ffcf9f]">najpierw decyzja, potem przepis — wybierz sytuację i wejdź od razu w sensowny shortlist</p>
+                <p className="max-w-[34ch] text-sm uppercase tracking-[0.24em] text-[#ffcf9f]">wybierz sytuację — Palnik zawęzi przepisy</p>
                 <div className="space-y-4">
                   <h1 className="max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:max-w-[12ch] lg:text-7xl">
                     Co dziś
@@ -423,7 +423,7 @@ export function RecipeCatalogPage({
                     realnie ugotować?
                   </h1>
                   <p className="max-w-[38ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                    Nie kolejny katalog do scrollowania. Wybierasz scenariusz, dostajesz krótszą listę i szybciej domykasz decyzję: z lodówki, w 15 minut, po pracy albo na jutro.
+                    Zamiast scrollować setkę dań, zaczynasz od tego, co realne: czas, lodówka, energia albo ochota na coś bardziej popisowego.
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -433,8 +433,8 @@ export function RecipeCatalogPage({
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">mam składniki</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Start z lodówki</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Zaznaczasz, co masz. Palnik układa shortlistę od najlepszego dopasowania.</p>
+                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Mam składniki</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Zaznacz, co masz. Dostajesz shortlistę od najlepszego dopasowania.</p>
                   </button>
                   <button
                     type="button"
@@ -442,8 +442,8 @@ export function RecipeCatalogPage({
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">mam mało czasu</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Pokaż 15 minut</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Odcinamy wszystko, co za długie. Zostaje szybki obiad bez negocjacji z życiem.</p>
+                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">15 minut</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Tylko szybkie rzeczy. Bez negocjacji z życiem.</p>
                   </button>
                   <button
                     type="button"
@@ -451,8 +451,8 @@ export function RecipeCatalogPage({
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">jestem padnięty</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Coś po pracy</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Maksymalnie mało tarcia: krótsze przepisy, mniej ruchów, szybciej do jedzenia.</p>
+                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Po pracy</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Mało ruchów, mało naczyń, szybciej do jedzenia.</p>
                   </button>
                   <button
                     type="button"
@@ -460,8 +460,8 @@ export function RecipeCatalogPage({
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">chcę spokój jutro</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Na dziś i na jutro</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Przepisy, które działają też z lodówki następnego dnia. Mniej gotowania, więcej odzyskanego czasu.</p>
+                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Na jutro też</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Dania, które mają sens też następnego dnia.</p>
                   </button>
                   <button
                     type="button"
@@ -472,7 +472,7 @@ export function RecipeCatalogPage({
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffd7b5]">mam ochotę na flex</p>
                         <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Atelier — orientalne sztosy</p>
-                        <p className="mt-1 max-w-[50ch] text-sm leading-6 text-[#f3dfcf]">Dziwne kontrasty, fine dining energy, małe dania z ego. Nie na “coś szybkiego”, tylko na “coś chorego, ale w dobry sposób”.</p>
+                        <p className="mt-1 max-w-[50ch] text-sm leading-6 text-[#f3dfcf]">Fine dining energy w domu: kwas, dym, ferment, owoc z mięsem.</p>
                       </div>
                       <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">{atelierCount} dań</span>
                     </div>
@@ -489,7 +489,7 @@ export function RecipeCatalogPage({
                 <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
                   <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{recipes.length} przepisów</span>
                   <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">lodówka → shortlist</span>
-                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">porównaj 2–3 opcje</span>
+                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">porównaj opcje</span>
                   <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">1 / 2 / 4 porcje</span>
                 </div>
               </div>
@@ -498,18 +498,18 @@ export function RecipeCatalogPage({
             <div className="grid grid-cols-1 gap-3 text-[#201714] lg:gap-4">
               <div className="rounded-[1.5rem] bg-white px-4 py-4 shadow-sm lg:p-5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">jak to działa</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Najpierw zawężenie, potem wybór.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Hero nie pyta „czy chcesz oglądać przepisy?”, tylko „w jakiej jesteś sytuacji?”. To jest właściwy pierwszy krok.</p>
+                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Trzy wejścia, mniej chaosu.</p>
+                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Startujesz od sytuacji: lodówka, czas albo ambicja. Dopiero potem katalog.</p>
               </div>
               <div className="rounded-[1.5rem] bg-[#ffd9b7] px-4 py-4 shadow-sm lg:p-5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">dla człowieka po pracy</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Mniej myślenia, mniej pustych klików.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Scenariusze robią za skrót poznawczy: nie musisz znać systemu, żeby wejść w sensowny flow.</p>
+                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Dobre dla zmęczonego mózgu.</p>
+                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Klikasz scenariusz i od razu widzisz sensowniejszą listę.</p>
               </div>
               <div className="rounded-[1.5rem] bg-[#f2eee8] px-4 py-4 shadow-sm lg:p-5">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">dalej w lejku</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Potem compare, shopping i przepis.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Najpierw decyzja. Dopiero potem dokładanie kolejnych narzędzi — w tej kolejności to ma sens.</p>
+                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Potem porównaj i gotuj.</p>
+                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Podejrzyj, porównaj 2–3 opcje, otwórz przepis. Bez rytuałów.</p>
               </div>
             </div>
           </div>
