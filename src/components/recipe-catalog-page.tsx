@@ -1132,18 +1132,18 @@ export function RecipeCatalogPage({
         </div>
       ) : null}
 
-      <div className="fixed bottom-4 left-1/2 z-30 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 lg:hidden">
-        <div className="flex items-center justify-between gap-2 rounded-full border border-[#201714]/10 bg-white/92 p-2 shadow-[0_18px_40px_rgba(32,23,20,0.12)] backdrop-blur">
-          <a href="#katalog" className="inline-flex flex-1 items-center justify-center rounded-full px-3 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7]">
+      <div className="fixed bottom-3 right-3 z-30 w-auto lg:hidden">
+        <nav aria-label="Szybka nawigacja Palnika" className="flex items-center gap-1.5 rounded-full border border-[#201714]/10 bg-white/88 p-1.5 shadow-[0_14px_34px_rgba(32,23,20,0.16)] backdrop-blur-md supports-[backdrop-filter]:bg-white/78">
+          <a href="#katalog" className="inline-flex h-11 items-center justify-center rounded-full px-3 text-xs font-bold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
             {isAtelierPage ? 'Kolekcja' : 'Filtry'}
           </a>
-          <button type="button" onClick={handleRandomRecipe} className={`inline-flex flex-1 items-center justify-center rounded-full bg-[#201714] px-3 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] ${isShuffling ? 'animate-shuffle-glow' : ''}`}>
-            Losuj
+          <button type="button" onClick={handleRandomRecipe} aria-label="Wylosuj przepis" className={`inline-flex h-11 min-w-12 items-center justify-center rounded-full bg-[#201714] px-3 text-xs font-bold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/25 ${isShuffling ? 'animate-shuffle-glow' : ''}`}>
+            Los
           </button>
-          <a href="#przepis" className="inline-flex flex-1 items-center justify-center rounded-full px-3 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7]">
+          <a href="#przepis" className="inline-flex h-11 items-center justify-center rounded-full px-3 text-xs font-bold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
             Przepis
           </a>
-        </div>
+        </nav>
       </div>
     </main>
   )
