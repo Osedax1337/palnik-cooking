@@ -399,24 +399,24 @@ export function RecipeCatalogPage({
         </section>
       ) : (
       <>
-      <section className="relative overflow-hidden px-5 pb-10 pt-5 sm:px-6 lg:px-8 lg:pb-14 lg:pt-8">
+      <section className="relative overflow-hidden px-5 pb-8 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-8">
         <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-[#ffd7b5]/70 blur-3xl lg:left-[22%] lg:top-12 lg:h-96 lg:w-96" />
         <div className="absolute right-0 top-24 h-56 w-56 rounded-full bg-[#e66a3d]/20 blur-3xl lg:h-80 lg:w-80" />
 
         <div className="relative mx-auto max-w-6xl">
-          <div className="mb-8 flex items-center justify-between gap-4 lg:mb-12">
+          <div className="mb-6 flex items-center justify-between gap-4 lg:mb-8">
             <span className="rounded-full border border-[#201714]/10 bg-white/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">Palnik</span>
             <span className="text-[11px] uppercase tracking-[0.22em] text-[#201714]/45">co dziś realnie ugotować</span>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
-            <article className="relative overflow-hidden rounded-[2rem] bg-[#201714] px-6 pb-6 pt-7 text-[#fff7ee] shadow-[0_25px_90px_rgba(32,23,20,0.18)] sm:px-7 sm:pb-7 sm:pt-8 lg:rounded-[2.75rem] lg:px-10 lg:pb-10 lg:pt-10">
+          <div className="grid gap-5">
+            <article className="relative overflow-hidden rounded-[2rem] bg-[#201714] px-6 pb-6 pt-7 text-[#fff7ee] shadow-[0_25px_90px_rgba(32,23,20,0.18)] sm:px-7 sm:pb-7 sm:pt-8 lg:rounded-[2.75rem] lg:px-12 lg:pb-12 lg:pt-12">
               <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#ffb36b] blur-2xl lg:h-40 lg:w-40" />
               <div className="absolute bottom-0 right-0 h-24 w-24 rounded-full bg-[#e66a3d]/50 blur-2xl lg:h-36 lg:w-36" />
 
-              <div className="relative max-w-2xl space-y-6">
-                <p className="max-w-[34ch] text-sm uppercase tracking-[0.24em] text-[#ffcf9f]">wybierz sytuację — Palnik zawęzi przepisy</p>
-                <div className="space-y-4">
+              <div className="relative space-y-7">
+                <div className="max-w-2xl space-y-4">
+                  <p className="max-w-[34ch] text-sm uppercase tracking-[0.24em] text-[#ffcf9f]">wybierz sytuację — Palnik zawęzi przepisy</p>
                   <h1 className="max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:max-w-[12ch] lg:text-7xl">
                     Co dziś
                     <br />
@@ -425,56 +425,43 @@ export function RecipeCatalogPage({
                   <p className="max-w-[38ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
                     Zamiast scrollować setkę dań, zaczynasz od tego, co realne: czas, lodówka, energia albo ochota na coś bardziej popisowego.
                   </p>
+                  <div className="flex flex-wrap gap-2 pt-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{recipes.length} przepisów</span>
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">lodówka</span>
+                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">atelier</span>
+                  </div>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-3">
                   <button
                     type="button"
                     onClick={() => runHeroScenario('lodowka')}
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">mam składniki</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Mam składniki</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Zaznacz, co masz. Dostajesz shortlistę od najlepszego dopasowania.</p>
+                    <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Lodówka</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Zaznacz, co masz. Palnik skróci listę.</p>
                   </button>
                   <button
                     type="button"
                     onClick={() => runHeroScenario('15-min')}
                     className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">mam mało czasu</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">15 minut</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Tylko szybkie rzeczy. Bez negocjacji z życiem.</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => runHeroScenario('po-pracy')}
-                    className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                  >
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">jestem padnięty</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Po pracy</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Mało ruchów, mało naczyń, szybciej do jedzenia.</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => runHeroScenario('meal-prep')}
-                    className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                  >
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">chcę spokój jutro</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">Na jutro też</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Dania, które mają sens też następnego dnia.</p>
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">nie mam czasu</p>
+                    <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Szybko</p>
+                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">15–20 minut, mało tarcia, zero poezji.</p>
                   </button>
                   <button
                     type="button"
                     onClick={() => runHeroScenario('atelier')}
-                    className="group rounded-[1.5rem] border border-[#ffcf9f]/18 bg-gradient-to-br from-[#6e1f1f] via-[#2e1a26] to-[#161317] p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.24)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] sm:col-span-2"
+                    className="group rounded-[1.5rem] border border-[#ffcf9f]/18 bg-gradient-to-br from-[#6e1f1f] via-[#2e1a26] to-[#161317] p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.24)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffd7b5]">mam ochotę na flex</p>
-                        <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Atelier — orientalne sztosy</p>
-                        <p className="mt-1 max-w-[50ch] text-sm leading-6 text-[#f3dfcf]">Fine dining energy w domu: kwas, dym, ferment, owoc z mięsem.</p>
+                        <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Atelier</p>
+                        <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Orientalne sztosy, kwas, dym, ego.</p>
                       </div>
-                      <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">{atelierCount} dań</span>
+                      <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">{atelierCount}</span>
                     </div>
                   </button>
                 </div>
@@ -486,80 +473,12 @@ export function RecipeCatalogPage({
                     Zaskocz mnie
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
-                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{recipes.length} przepisów</span>
-                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">lodówka → shortlist</span>
-                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">porównaj opcje</span>
-                  <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">1 / 2 / 4 porcje</span>
-                </div>
               </div>
             </article>
-
-            <div className="grid grid-cols-1 gap-3 text-[#201714] lg:gap-4">
-              <div className="rounded-[1.5rem] bg-white px-4 py-4 shadow-sm lg:p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">jak to działa</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Trzy wejścia, mniej chaosu.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Startujesz od sytuacji: lodówka, czas albo ambicja. Dopiero potem katalog.</p>
-              </div>
-              <div className="rounded-[1.5rem] bg-[#ffd9b7] px-4 py-4 shadow-sm lg:p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">dla człowieka po pracy</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Dobre dla zmęczonego mózgu.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Klikasz scenariusz i od razu widzisz sensowniejszą listę.</p>
-              </div>
-              <div className="rounded-[1.5rem] bg-[#f2eee8] px-4 py-4 shadow-sm lg:p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">dalej w lejku</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">Potem porównaj i gotuj.</p>
-                <p className="mt-1 text-sm leading-6 text-[#201714]/62">Podejrzyj, porównaj 2–3 opcje, otwórz przepis. Bez rytuałów.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      <section className="px-5 pb-2 pt-1 sm:px-6 lg:px-8 lg:pb-4">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-4 rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff4ea_0%,#fffaf3_42%,#f2e6ef_100%)] p-5 shadow-[0_20px_60px_rgba(32,23,20,0.08)] lg:grid-cols-[1.05fr_0.95fr] lg:p-7">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.24em] text-[#8c3341]">wyróżniony zbiór</p>
-              <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Atelier nie udaje grzecznego katalogu.</h2>
-              <p className="mt-3 max-w-[52ch] text-sm leading-6 text-[#201714]/72 sm:text-base">
-                To jest warstwa “mam dziś ochotę na coś za dobrego jak na zwykły wtorek”: ferment, kwas, owoc z mięsem, dym, tłuszcz i dziwne rzeczy, które zaskakują, ale nadal mają sens.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => runHeroScenario('atelier')}
-                  className="inline-flex items-center rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:-translate-y-0.5 hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
-                >
-                  Otwórz Atelier
-                </button>
-                <span className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white/75 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#8c3341]">
-                  fine dining / oriental / chaos kontrolowany
-                </span>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {atelierRecipes.map((recipe, index) => (
-                <button
-                  key={recipe.slug}
-                  type="button"
-                  onClick={() => {
-                    setCollectionFilter('atelier')
-                    setOpenRecipe(recipe.slug)
-                    scrollToSection('przepis')
-                  }}
-                  className={`group rounded-[1.5rem] border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_32px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#8c3341]/18 bg-[#201714] text-[#fff7ee] sm:col-span-2' : 'border-[#201714]/8 bg-white/78 text-[#201714]'}`}
-                >
-                  <p className={`text-[10px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
-                  <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">{recipe.title}</p>
-                  <p className={`mt-2 text-sm leading-6 ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
       </>
       )}
 
