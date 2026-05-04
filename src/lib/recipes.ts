@@ -4151,6 +4151,11 @@ export const recipes: Recipe[] = [
       'Masło podgrzej z rozbitą trawą cytrynową.',
       'Polej nim mięso i duś jeszcze chwilę na małym ogniu.',
     ],
+    stepImages: [
+      '/recipes/steps/kurczak-lemongrass-smoked-butter-step-1.png',
+      '/recipes/steps/kurczak-lemongrass-smoked-butter-step-2.png',
+      '/recipes/steps/kurczak-lemongrass-smoked-butter-step-3.png',
+    ],
     tip: 'Jeśli masz wędzoną sól, to tutaj jest jej moment celebry.',
   },
   {
@@ -4179,6 +4184,11 @@ export const recipes: Recipe[] = [
       'Szparagi obierz i ugotuj albo upiecz do miękkości.',
       'Dorsza usmaż na maśle.',
       'Podaj z ponzu rozlanym dookoła i szparagami obok.',
+    ],
+    stepImages: [
+      '/recipes/steps/dorsz-ponzu-bialy-asparagus-step-1.png',
+      '/recipes/steps/dorsz-ponzu-bialy-asparagus-step-2.png',
+      '/recipes/steps/dorsz-ponzu-bialy-asparagus-step-3.png',
     ],
     tip: 'Ponzu wylej na talerz, nie na patelnię. Nie marnuj jego świeżości.',
   },
@@ -4209,6 +4219,11 @@ export const recipes: Recipe[] = [
       'Dodaj odrobinę miso rozmieszanego z wodą.',
       'Przełóż na talerz i posyp granatem.',
     ],
+    stepImages: [
+      '/recipes/steps/shiitake-kasztan-granat-miso-step-1.png',
+      '/recipes/steps/shiitake-kasztan-granat-miso-step-2.png',
+      '/recipes/steps/shiitake-kasztan-granat-miso-step-3.png',
+    ],
     tip: 'Miso łatwo spalić. Dodaj je na sam koniec, nie kozacz za wcześnie.',
   },
   {
@@ -4237,6 +4252,11 @@ export const recipes: Recipe[] = [
       'Krewetki usmaż krótko na maśle.',
       'Na talerzu rozlej kefir, dodaj krewetki i koperek.',
     ],
+    stepImages: [
+      '/recipes/steps/krewetki-szafran-kefir-koper-step-1.png',
+      '/recipes/steps/krewetki-szafran-kefir-koper-step-2.png',
+      '/recipes/steps/krewetki-szafran-kefir-koper-step-3.png',
+    ],
     tip: 'Kefir ma być chłodny, krewetki gorące. Ten kontrast jest całym numerem.',
   },
   {
@@ -4264,6 +4284,11 @@ export const recipes: Recipe[] = [
       'Brzoskwinię pokrój cienko.',
       'Sardynki ułóż na talerzu albo toście.',
       'Dodaj brzoskwinię, skrop ponzu, posyp sezamem.',
+    ],
+    stepImages: [
+      '/recipes/steps/sardynki-ponzu-brzoskwinia-sezam-step-1.png',
+      '/recipes/steps/sardynki-ponzu-brzoskwinia-sezam-step-2.png',
+      '/recipes/steps/sardynki-ponzu-brzoskwinia-sezam-step-3.png',
     ],
     tip: 'To musi być dobra puszka. Tanie sardynki zabiją cały vibe w 8 sekund.',
   },
@@ -4294,6 +4319,11 @@ export const recipes: Recipe[] = [
       'Czarny czosnek rozgnieć z odrobiną masła.',
       'Morele pokrój bardzo cienko i dodaj jako akcent na wierzch.',
     ],
+    stepImages: [
+      '/recipes/steps/cielęcina-czarny-czosnek-morelowa-skor-step-1.png',
+      '/recipes/steps/cielęcina-czarny-czosnek-morelowa-skor-step-2.png',
+      '/recipes/steps/cielęcina-czarny-czosnek-morelowa-skor-step-3.png',
+    ],
     tip: 'Morela ma tu być bardziej skórką zapachową niż pełnym słodkim elementem.',
   },
   {
@@ -4322,6 +4352,11 @@ export const recipes: Recipe[] = [
       'Szparagi usmaż albo upiecz, aż będą jędrne.',
       'Miso rozetrzyj z odrobiną ciepłej wody.',
       'Dodaj posiekane daktyle i orzechy laskowe na wierzch.',
+    ],
+    stepImages: [
+      '/recipes/steps/szparagi-miso-hazelnut-date-step-1.png',
+      '/recipes/steps/szparagi-miso-hazelnut-date-step-2.png',
+      '/recipes/steps/szparagi-miso-hazelnut-date-step-3.png',
     ],
     tip: 'Szparag ma zostać sprężysty. Nie rób z niego zmęczonej szmaty.',
   },
