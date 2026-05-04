@@ -5,9 +5,10 @@
   "description": "Molto Studio portfolio site",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run check:images && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:images": "node scripts/check-recipe-images.mjs"
   },
   "keywords": [],
   "author": "",
