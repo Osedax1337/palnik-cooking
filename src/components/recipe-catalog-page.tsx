@@ -366,7 +366,7 @@ export function RecipeCatalogPage({
                   <h1 className="mt-4 max-w-[11ch] text-[3.35rem] font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl lg:text-7xl">
                     Atelier.
                     <br />
-                    Dania wyselekcjonowane
+                    Wybrane dania
                     <br />
                     dla ludzi z gustem.
                   </h1>
