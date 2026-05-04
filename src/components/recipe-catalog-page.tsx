@@ -848,6 +848,7 @@ export function RecipeCatalogPage({
               }}
               suggestions={recipes.slice(0, 3)}
               setOpenRecipe={setOpenRecipe}
+              scrollToRecipe={() => scrollToSection('przepis')}
             />
           ) : (
             <div className="grid gap-4 lg:grid-cols-3">
@@ -1085,6 +1086,7 @@ function EmptyState({
   clearFridge,
   suggestions,
   setOpenRecipe,
+  scrollToRecipe,
 }: {
   fridgeMode: boolean
   fridgeSelectionSize: number
@@ -1092,6 +1094,7 @@ function EmptyState({
   clearFridge: () => void
   suggestions: typeof recipes
   setOpenRecipe: (slug: string) => void
+  scrollToRecipe: () => void
 }) {
   return (
     <div className="rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/60 p-8 text-center sm:p-12">
@@ -1130,7 +1133,10 @@ function EmptyState({
             <button
               key={recipe.slug}
               type="button"
-              onClick={() => setOpenRecipe(recipe.slug)}
+              onClick={() => {
+                setOpenRecipe(recipe.slug)
+                scrollToRecipe()
+              }}
               className="group flex items-center gap-3 rounded-[1.4rem] border border-[#201714]/8 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]"
             >
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
