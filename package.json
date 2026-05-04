@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "check:images": "node scripts/check-recipe-images.mjs",
-    "qa:atelier-sheet": "python3 scripts/make-atelier-contact-sheet.py"
+    "qa:atelier-sheet": "python3 scripts/make-atelier-contact-sheet.py",
+    "qa:all-images": "python3 scripts/make-recipe-contact-sheet.py"
   },
   "keywords": [],
   "author": "",
