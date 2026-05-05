@@ -542,21 +542,21 @@ export function RecipeCatalogPage({
                   key={card.eyebrow}
                   type="button"
                   onClick={() => runHeroScenario(card.scenario)}
-                  className={`group relative min-h-[260px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${card.accent}`}
+                  className={`group relative min-h-[300px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[285px] ${card.accent}`}
                 >
-                  <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
-                  <div className="absolute inset-x-3 bottom-3 top-[8.2rem] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025]">
+                  <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
+                  <div className="absolute inset-x-3 bottom-3 h-[118px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[110px]">
                     <RecipeVisual recipe={card.recipe} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/55 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/78 via-[#201714]/18 to-transparent" />
                     <div className="absolute bottom-3 left-3 right-3">
                       <p className="line-clamp-1 text-sm font-semibold tracking-[-0.02em] text-white drop-shadow">{card.recipe.title}</p>
-                      <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-white/75">{card.recipe.time} · {card.recipe.cuisine}</p>
+                      <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-white/78">{card.recipe.time} · {card.recipe.cuisine}</p>
                     </div>
                   </div>
                   <div className="relative z-10 pr-10">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-60">{card.eyebrow}</p>
                     <h3 className="mt-2 text-2xl font-semibold leading-[0.98] tracking-[-0.055em]">{card.title}</h3>
-                    <p className="mt-3 text-sm leading-6 opacity-70">{card.body}</p>
+                    <p className="mt-3 line-clamp-2 text-sm leading-6 opacity-70">{card.body}</p>
                   </div>
                 </button>
               ))}
