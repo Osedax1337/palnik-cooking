@@ -113,6 +113,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
       })),
     [recipe.ingredients, ratio],
   )
+  const pantryLines = ingredientLines.filter((line) => line.pantry)
+  const freshLines = ingredientLines.filter((line) => !line.pantry)
 
   const checked = ingredientLines.filter((line) => shopping[line.id]).length
   const total = ingredientLines.length
@@ -203,20 +205,26 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               </div>
               <h1 className="mt-4 max-w-[14ch] text-[2.85rem] font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl">{recipe.title}</h1>
               <p className="mt-4 max-w-[48ch] text-base leading-7 text-[#201714]/72">{recipe.intro}</p>
-              {isAtelierRecipe ? (
-                <p className="mt-5 rounded-[1.15rem] border border-[#8c3341]/10 bg-white/70 px-4 py-4 text-sm leading-6 text-[#201714]/82 shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
-                  <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8c3341]">chef note</span>
-                  <span className="mt-1 block">Tu chodzi o balans: słodycz ma podbić umami, kwas ma przeciąć tłuszcz, a chrupnięcie ma zamknąć talerz. Nie dekoruj na siłę — lepiej zostawić jedną mocną decyzję niż pięć ozdobników.</span>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {isAtelierRecipe ? (
+                  <p className="rounded-[1.15rem] border border-[#8c3341]/10 bg-white/70 px-4 py-4 text-sm leading-6 text-[#201714]/82 shadow-[0_12px_34px_rgba(32,23,20,0.06)] sm:col-span-2">
+                    <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8c3341]">chef note</span>
+                    <span className="mt-1 block">Tu chodzi o balans: słodycz ma podbić umami, kwas ma przeciąć tłuszcz, a chrupnięcie ma zamknąć talerz. Nie dekoruj na siłę — lepiej zostawić jedną mocną decyzję niż pięć ozdobników.</span>
+                  </p>
+                ) : null}
+                <p className="rounded-[1rem] bg-[#fffaf3] px-4 py-3.5 text-sm leading-6 text-[#201714]/85">
+                  <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">kiedy to robić</span>
+                  <span className="mt-1 block">{recipe.whenToMake}</span>
                 </p>
-              ) : null}
-              <p className="mt-5 rounded-[1rem] bg-[#fffaf3] px-4 py-3.5 text-sm leading-6 text-[#201714]/85">
-                <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">kiedy to robić</span>
-                <span className="mt-1 block">{recipe.whenToMake}</span>
-              </p>
+                <p className="rounded-[1rem] bg-[#fff3e7] px-4 py-3.5 text-sm leading-6 text-[#201714]/80">
+                  <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">dlaczego działa</span>
+                  <span className="mt-1 block">Kontrast robi robotę: baza daje komfort, akcent robi napięcie, a tekstura pilnuje, żeby talerz nie był nudny.</span>
+                </p>
+              </div>
               <div className="mt-4">
                 <DietTags tags={recipe.dietTags} />
               </div>
-              <p className="mt-5 rounded-[1rem] bg-[#fff3e7] px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {recipe.tip}</p>
+              <p className="mt-5 rounded-[1rem] border border-[#201714]/8 bg-white px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {recipe.tip}</p>
             </div>
           </div>
 
@@ -268,60 +276,81 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
 
             <div className="grid gap-6 xl:grid-cols-[0.86fr_1.14fr]">
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Składniki</h3>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-[#f3dfcf]">
-                  {ingredientLines.map((line) => {
-                    const isChecked = !!shopping[line.id]
-                    if (shoppingMode) {
-                      return (
-                        <li key={line.id}>
-                          <button
-                            type="button"
-                            onClick={() => toggleItem(line.id)}
-                            className="group flex w-full items-start gap-3 rounded-[0.9rem] border border-white/8 bg-white/5 p-3 text-left transition hover:bg-white/10"
-                          >
-                            <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
-                              ✓
-                            </span>
-                            <span className={`flex-1 ${isChecked ? 'text-[#ffcf9f]/55 line-through' : 'text-[#f3dfcf]'}`}>{line.text}</span>
-                            {line.pantry ? (
-                              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f]">spiżarnia</span>
-                            ) : null}
-                          </button>
-                        </li>
-                      )
-                    }
-                    return (
-                      <li key={line.id} className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ffcf9f]" />
-                        <span>{line.text}</span>
-                      </li>
-                    )
-                  })}
-                </ul>
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]/75">mise en place</p>
+                    <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Składniki</h3>
+                  </div>
+                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f]">{total} pozycji</span>
+                </div>
+                {[
+                  ['świeże / główne', freshLines],
+                  ['spiżarnia', pantryLines],
+                ].map(([label, lines]) =>
+                  Array.isArray(lines) && lines.length > 0 ? (
+                    <div key={label as string} className="mt-4 rounded-[1.2rem] border border-white/8 bg-white/[0.045] p-3">
+                      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]/80">{label as string}</p>
+                      <ul className="space-y-2 text-sm leading-6 text-[#f3dfcf]">
+                        {lines.map((line) => {
+                          const isChecked = !!shopping[line.id]
+                          if (shoppingMode) {
+                            return (
+                              <li key={line.id}>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleItem(line.id)}
+                                  className="group flex w-full items-start gap-3 rounded-[0.9rem] border border-white/8 bg-white/5 p-3 text-left transition hover:bg-white/10"
+                                >
+                                  <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
+                                    ✓
+                                  </span>
+                                  <span className={`flex-1 ${isChecked ? 'text-[#ffcf9f]/55 line-through' : 'text-[#f3dfcf]'}`}>{line.text}</span>
+                                </button>
+                              </li>
+                            )
+                          }
+                          return (
+                            <li key={line.id} className="flex gap-3 rounded-[0.85rem] px-2 py-1.5">
+                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ffcf9f]" />
+                              <span>{line.text}</span>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  ) : null,
+                )}
               </div>
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Kroki</h3>
-                <ol className="mt-3 space-y-3 text-sm leading-6 text-[#f3dfcf]">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]/75">prowadzenie</p>
+                  <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Kroki</h3>
+                </div>
+                <ol className="mt-4 space-y-4 text-sm leading-6 text-[#f3dfcf]">
                   {recipe.steps.map((step, index) => {
                     const stepImage = recipe.stepImages?.[index]
 
                     return (
-                      <li key={step} className={`overflow-hidden rounded-[1.25rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075] ${stepImage ? 'p-0' : 'p-3'}`}>
+                      <li key={step} className="group overflow-hidden rounded-[1.45rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075]">
                         {stepImage ? (
-                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
+                          <div className="relative aspect-[5/4] w-full overflow-hidden bg-[#120c0a] sm:aspect-[16/10] xl:aspect-[5/4]">
                             <Image
                               src={stepImage}
                               alt={`${recipe.title} — krok ${index + 1}`}
                               fill
-                              className="object-cover transition duration-500 hover:scale-[1.025]"
-                              sizes="(max-width: 1024px) 100vw, 420px"
+                              className="object-cover transition duration-700 group-hover:scale-[1.025]"
+                              sizes="(max-width: 1024px) 100vw, 520px"
                             />
+                            <div className="absolute left-3 top-3 rounded-full bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] backdrop-blur">
+                              krok {String(index + 1).padStart(2, '0')}
+                            </div>
                           </div>
                         ) : null}
-                        <div className="flex gap-3 p-3">
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
-                          <span>{step}</span>
+                        <div className="flex gap-3 p-4">
+                          {!stepImage ? (
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{String(index + 1).padStart(2, '0')}</span>
+                          ) : null}
+                          <span className="text-[15px] leading-7">{step}</span>
                         </div>
                       </li>
                     )
