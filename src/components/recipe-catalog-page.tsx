@@ -556,7 +556,7 @@ export function RecipeCatalogPage({
                   <div className="relative z-10 pr-10">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-60">{card.eyebrow}</p>
                     <h3 className="mt-2 text-2xl font-semibold leading-[0.98] tracking-[-0.055em]">{card.title}</h3>
-                    <p className="mt-3 line-clamp-1 text-xs leading-5 opacity-62">{card.body}</p>
+                    <p className="sr-only">{card.body}</p>
                   </div>
                 </button>
               ))}
