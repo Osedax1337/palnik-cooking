@@ -545,7 +545,7 @@ export function RecipeCatalogPage({
                   className={`group relative min-h-[315px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[300px] ${card.accent}`}
                 >
                   <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
-                  <div className="absolute inset-x-3 bottom-3 h-[118px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[110px]">
+                  <div className="absolute inset-x-3 bottom-3 h-[92px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[88px]">
                     <RecipeVisual recipe={card.recipe} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/78 via-[#201714]/18 to-transparent" />
                     <div className="absolute bottom-3 left-3 right-3">
