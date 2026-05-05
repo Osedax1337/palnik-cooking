@@ -458,7 +458,7 @@ export function RecipeCatalogPage({
                       setOpenRecipe(recipe.slug)
                       scrollToSection('przepis')
                     }}
-                    className={`group relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#151016] text-left shadow-[0_24px_70px_rgba(10,6,12,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(10,6,12,0.36)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 ${index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''}`}
+                    className={`group sheen-on-hover relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#151016] text-left shadow-[0_24px_70px_rgba(10,6,12,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(10,6,12,0.36)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 ${index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''}`}
                   >
                     <RecipeVisual recipe={recipe} large={index === 0} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0e0a0c]/92 via-[#151016]/18 to-transparent" />
@@ -918,32 +918,32 @@ export function RecipeCatalogPage({
         </section>
       )}
 
-      <section id="katalog" className={`px-5 py-10 sm:px-6 lg:px-8 lg:py-14 ${isAtelierPage ? 'lg:pt-8' : ''}`}>
+      <section id="katalog" className={`px-5 py-10 sm:px-6 lg:px-8 lg:py-14 ${isAtelierPage ? 'bg-[linear-gradient(180deg,#181116_0%,#261821_44%,#fffaf3_100%)] text-[#fff7ee] lg:pt-12' : ''}`}>
         <div className="mx-auto max-w-6xl">
           <div className="mb-6 flex flex-col gap-3 lg:mb-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className={`mb-2 text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>katalog</p>
-              <h2 className="max-w-[14ch] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">{isAtelierPage ? 'Kolekcja Atelier.' : 'Przepisy na dziś.'}</h2>
+              <p className={`mb-2 text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{isAtelierPage ? 'menu degustacyjne' : 'katalog'}</p>
+              <h2 className="max-w-[14ch] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">{isAtelierPage ? 'Wybierz napięcie na talerzu.' : 'Przepisy na dziś.'}</h2>
               {collectionMeta ? (
-                <p className={`mt-2 text-sm ${isAtelierPage ? 'text-[#201714]/72' : 'text-[#201714]/65'}`}>{collectionMeta.emoji} {isAtelierPage ? 'Kolekcja' : 'Filtr'} <strong className="text-[#201714]">{collectionMeta.label}</strong> · {collectionMeta.description}</p>
+                <p className={`mt-2 text-sm ${isAtelierPage ? 'text-[#f3dfcf]/72' : 'text-[#201714]/65'}`}>{collectionMeta.emoji} {isAtelierPage ? 'Kolekcja' : 'Filtr'} <strong className={isAtelierPage ? 'text-[#ffcf9f]' : 'text-[#201714]'}>{collectionMeta.label}</strong> · {collectionMeta.description}</p>
               ) : null}
             </div>
-            <p className={`max-w-[46ch] text-sm leading-6 sm:text-base ${isAtelierPage ? 'text-[#201714]/72' : 'text-[#201714]/62'}`}>{isAtelierPage ? 'To nie jest sekcja od szybkiego domykania obiadu. Szukaj po składniku albo nastroju i tnij listę do rzeczy, które mają konkretny vibe.' : 'Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.'}</p>
+            <p className={`max-w-[46ch] text-sm leading-6 sm:text-base ${isAtelierPage ? 'text-[#f3dfcf]/78' : 'text-[#201714]/62'}`}>{isAtelierPage ? 'Tu filtrujesz jak kartę win: składnik, nastrój, kuchnia. Mniej checkboxów, więcej decyzji o tym, jaki ma być wieczór.' : 'Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.'}</p>
           </div>
 
-          <div className={`rounded-[2rem] ${isAtelierPage ? 'border border-[#8c3341]/10 bg-[linear-gradient(145deg,#fff6ef_0%,#fffaf3_58%,#f6edf3_100%)] p-4 shadow-[0_18px_60px_rgba(32,23,20,0.08)] sm:p-5 lg:p-6' : ''}`}>
+          <div className={`rounded-[2rem] ${isAtelierPage ? 'border border-white/10 bg-white/[0.055] p-4 shadow-[0_24px_70px_rgba(10,6,12,0.22)] backdrop-blur sm:p-5 lg:p-6' : ''}`}>
             <label className="mb-2 block">
-              <span className={`mb-2 block text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#8c3341]' : 'text-[#8a4b2a]'}`}>szukaj</span>
+              <span className={`mb-2 block text-xs uppercase tracking-[0.22em] ${isAtelierPage ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>szukaj</span>
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder={isAtelierPage ? 'np. miso, yuzu, jagnięcina, dashi' : 'np. cytryna, halloumi, makaron, brunch'}
-                className={`w-full rounded-[1.3rem] px-4 py-3 text-sm text-[#201714] outline-none transition focus:ring-2 ${isAtelierPage ? 'border border-[#8c3341]/10 bg-white/92 shadow-[0_10px_30px_rgba(32,23,20,0.06)] focus:border-[#8c3341] focus:ring-[#8c3341]/10' : 'border border-[#201714]/10 bg-white shadow-sm focus:border-[#8a4b2a] focus:ring-[#8a4b2a]/10'}`}
+                className={`w-full rounded-[1.3rem] px-4 py-3 text-sm text-[#201714] outline-none transition focus:ring-2 ${isAtelierPage ? 'border border-white/10 bg-[#fff7ee] shadow-[0_10px_30px_rgba(10,6,12,0.16)] focus:border-[#ffcf9f] focus:ring-[#ffcf9f]/20' : 'border border-[#201714]/10 bg-white shadow-sm focus:border-[#8a4b2a] focus:ring-[#8a4b2a]/10'}`}
               />
             </label>
 
-            <p className={`mb-4 text-xs ${isAtelierPage ? 'text-[#201714]/55' : 'text-[#201714]/45'}`}>{isAtelierPage ? 'Filtry dalej są shareowalne, ale tutaj ważniejszy jest klimat niż checkbox speedrun.' : 'Adres strony aktualizuje się sam, więc filtry, lodówka i wyszukiwarka są shareowalne.'}</p>
+            <p className={`mb-4 text-xs ${isAtelierPage ? 'text-[#f3dfcf]/62' : 'text-[#201714]/45'}`}>{isAtelierPage ? 'Filtry traktuj jak brief smakowy, nie spreadsheet.' : 'Adres strony aktualizuje się sam, więc filtry, lodówka i wyszukiwarka są shareowalne.'}</p>
 
           <div className="mb-3 flex flex-wrap gap-2">
             {moodFilters.map((filter) => {
@@ -992,9 +992,9 @@ export function RecipeCatalogPage({
 
           </div>
 
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 text-sm text-[#201714]/55">
+          <div className={`mb-6 flex flex-wrap items-center justify-between gap-3 text-sm ${isAtelierPage ? 'text-[#f3dfcf]/70' : 'text-[#201714]/55'}`}>
             <p>
-              Pokazuję <strong className="text-[#201714]">{filteredRecipes.length}</strong> {filteredRecipes.length === 1 ? 'przepis' : 'przepisów'}
+              Pokazuję <strong className={isAtelierPage ? 'text-[#ffcf9f]' : 'text-[#201714]'}>{filteredRecipes.length}</strong> {filteredRecipes.length === 1 ? 'przepis' : 'przepisów'}
               {hasActiveFilters ? ' z aktualnych filtrów' : ''}.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -1041,7 +1041,7 @@ export function RecipeCatalogPage({
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
                 return (
-                  <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 hover:-translate-y-1.5 ${isAtelierPage ? 'border border-[#8c3341]/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_48%,#f7edf4_100%)] shadow-[0_20px_60px_rgba(32,23,20,0.10)] hover:shadow-[0_28px_70px_rgba(32,23,20,0.16)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
+                  <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 hover:-translate-y-1.5 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Link
                         href={`/przepisy/${recipe.slug}`}

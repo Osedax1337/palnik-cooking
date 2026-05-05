@@ -67,7 +67,7 @@ const sections = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fffaf3] text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee]">
+    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-20 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -83,7 +83,7 @@ export default function Home() {
         }}
       />
 
-      <section className="relative px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7">
+      <section className="relative px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7 animate-fade-up-soft">
         <div className="absolute left-1/2 top-[-10rem] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[#ffd7b5]/75 blur-3xl" />
         <div className="absolute right-[-8rem] top-24 h-80 w-80 rounded-full bg-[#c9572d]/20 blur-3xl" />
         <div className="absolute bottom-0 left-[-8rem] h-80 w-80 rounded-full bg-[#7c2433]/10 blur-3xl" />
@@ -154,13 +154,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
+      <section className="px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12 animate-fade-up-soft">
         <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-3">
           {routes.map((route, index) => (
             <Link
               key={route.href}
               href={route.href}
-              className={`group min-h-[20rem] overflow-hidden rounded-[2rem] border p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:p-6 ${
+              className={`group sheen-on-hover min-h-[20rem] overflow-hidden rounded-[2rem] border p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:p-6 ${
                 route.tone === 'dark'
                   ? 'border-transparent bg-[#201714] text-[#fff7ee]'
                   : route.tone === 'wine'
@@ -184,7 +184,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 pb-14 sm:px-6 lg:px-8 lg:pb-20">
+      <section className="px-4 pb-14 sm:px-6 lg:px-8 lg:pb-20 animate-fade-up-soft">
         <div className="mx-auto max-w-6xl rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_54%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
           <div className="grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
             <div>
@@ -202,6 +202,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-2 gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
+        <Link href="/katalog" className="rounded-full bg-[#201714] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">
+          Katalog
+        </Link>
+        <Link href="/atelier" className="rounded-full bg-white px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+          Atelier
+        </Link>
+      </nav>
     </main>
   )
 }

@@ -177,9 +177,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
           </div>
         </div>
 
-        <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className={`overflow-hidden rounded-[2rem] shadow-[0_18px_60px_rgba(32,23,20,0.08)] sm:rounded-[2.2rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'bg-white'}`}>
-            <div className="relative aspect-[4/3] w-full">
+        <section className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+          <div className={`overflow-hidden rounded-[2rem] shadow-[0_22px_70px_rgba(32,23,20,0.10)] sm:rounded-[2.4rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'bg-white'}`}>
+            <div className="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[5/4]">
               <RecipeVisual recipe={recipe} large />
               {isAtelierRecipe ? (
                 <div className="absolute left-4 top-4 rounded-full border border-[#ffcf9f]/25 bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f] backdrop-blur">
@@ -201,8 +201,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <EffortDots effort={recipe.effort} />
                 </span>
               </div>
-              <h1 className="mt-4 max-w-[14ch] text-[2.65rem] font-semibold leading-[0.93] tracking-[-0.055em] sm:text-5xl">{recipe.title}</h1>
-              <p className="mt-4 max-w-[48ch] text-sm leading-6 text-[#201714]/72 sm:text-base">{recipe.intro}</p>
+              <h1 className="mt-4 max-w-[14ch] text-[2.85rem] font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl">{recipe.title}</h1>
+              <p className="mt-4 max-w-[48ch] text-base leading-7 text-[#201714]/72">{recipe.intro}</p>
               {isAtelierRecipe ? (
                 <p className="mt-5 rounded-[1.15rem] border border-[#8c3341]/10 bg-white/70 px-4 py-4 text-sm leading-6 text-[#201714]/82 shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8c3341]">chef note</span>
@@ -220,7 +220,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             </div>
           </div>
 
-          <div className={`rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.18)] sm:rounded-[2.2rem] sm:p-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
+          <div className={`rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.20)] sm:rounded-[2.35rem] sm:p-6 lg:sticky lg:top-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold tracking-[-0.03em]">Tryb gotowania</h2>
@@ -266,7 +266,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               <p className="mb-4 rounded-[1rem] bg-white/10 px-4 py-3 text-sm text-[#ffcf9f]">🎉 Masz wszystko. Czas na patelnię.</p>
             ) : null}
 
-            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="grid gap-6 xl:grid-cols-[0.86fr_1.14fr]">
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Składniki</h3>
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-[#f3dfcf]">
@@ -307,7 +307,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     const stepImage = recipe.stepImages?.[index]
 
                     return (
-                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 transition hover:border-white/15 ${stepImage ? 'p-0' : 'p-3'}`}>
+                      <li key={step} className={`overflow-hidden rounded-[1.25rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075] ${stepImage ? 'p-0' : 'p-3'}`}>
                         {stepImage ? (
                           <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
                             <Image
