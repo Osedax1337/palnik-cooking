@@ -542,7 +542,7 @@ export function RecipeCatalogPage({
                   key={card.eyebrow}
                   type="button"
                   onClick={() => runHeroScenario(card.scenario)}
-                  className={`group relative min-h-[300px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[285px] ${card.accent}`}
+                  className={`group relative min-h-[315px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[300px] ${card.accent}`}
                 >
                   <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
                   <div className="absolute inset-x-3 bottom-3 h-[118px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[110px]">
@@ -556,7 +556,7 @@ export function RecipeCatalogPage({
                   <div className="relative z-10 pr-10">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-60">{card.eyebrow}</p>
                     <h3 className="mt-2 text-2xl font-semibold leading-[0.98] tracking-[-0.055em]">{card.title}</h3>
-                    <p className="mt-3 line-clamp-2 text-sm leading-6 opacity-70">{card.body}</p>
+                    <p className="mt-3 line-clamp-1 text-xs leading-5 opacity-62">{card.body}</p>
                   </div>
                 </button>
               ))}
