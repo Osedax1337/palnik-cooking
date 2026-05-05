@@ -59,10 +59,10 @@ const routes = [
   },
 ] as const
 
-const principles = [
-  ['mniej scrolla', 'Homepage ma prowadzić, nie zasypywać. Ciężkie narzędzia mieszkają w katalogu.'],
-  ['więcej obrazu', 'Duże zdjęcia, mocne karty i sekcje, które mają rytm magazynu, nie formularza.'],
-  ['zero zadęcia', 'Palnik może wyglądać dobrze, ale dalej mówi ludzkim językiem: co zjeść, kiedy, po co.'],
+const sections = [
+  ['szybkie obiady', 'Proste dania na dni, kiedy głód jest szybszy niż ambicja. Masło, cytryna, patelnia, koniec filozofii.'],
+  ['gotowanie z lodówki', 'Masz pół cukinii, jajka i coś smutnego w szufladzie? Palnik pomaga złożyć z tego plan, nie wyrzuty sumienia.'],
+  ['Atelier', 'Dania z większym charakterem: ferment, dym, kwas, owoce przy mięsie i talerze, które wyglądają jak zaproszenie do stołu.'],
 ]
 
 export default function Home() {
@@ -188,11 +188,11 @@ export default function Home() {
         <div className="mx-auto max-w-6xl rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_54%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
           <div className="grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">nowy układ</p>
-              <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Strona startowa ma oddychać.</h2>
+              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">w Palniku</p>
+              <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Od szybkiej patelni po mały spektakl.</h2>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              {principles.map(([title, body]) => (
+              {sections.map(([title, body]) => (
                 <article key={title} className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
                   <h3 className="text-lg font-semibold tracking-[-0.04em]">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-[#201714]/62">{body}</p>
