@@ -1,5 +1,6 @@
 "use client"
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -304,6 +305,49 @@ export function RecipeCatalogPage({
     .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
 
   const visibleFridgeChips = showAllFridgeChips ? fridgePalette : fridgePalette.slice(0, 16)
+  const fridgeBestMatches = fridgeMode && fridgeSelection.size > 0
+    ? filteredRecipes
+        .filter((entry) => entry.match && entry.match.total > 0)
+        .slice(0, 3)
+    : []
+  const fridgeTopMatch = fridgeBestMatches[0]?.match
+  const fridgeTopRecipe = fridgeBestMatches[0]?.recipe
+  const fridgeSelectedList = [...fridgeSelection].slice(0, 5)
+  const fridgeSelectedRest = Math.max(0, fridgeSelection.size - fridgeSelectedList.length)
+  const decisionCards = [
+    {
+      eyebrow: 'głód teraz',
+      title: 'Chcę jeść za kwadrans',
+      body: 'Bez romantyzowania gotowania. Szybki obiad, mało ruchów, dużo sosu albo chrupnięcia.',
+      scenario: '15-min' as const,
+      recipe: recipes.find((recipe) => recipe.slug === 'makaron-cytryna') ?? recipes[0],
+      accent: 'bg-[#201714] text-[#fff7ee]',
+    },
+    {
+      eyebrow: 'lodówka-chaos',
+      title: 'Mam składniki, nie mam planu',
+      body: 'Zaznaczasz to, co już leży w kuchni. Palnik nie udaje szefa kuchni, tylko skraca listę.',
+      scenario: 'lodowka' as const,
+      recipe: recipes.find((recipe) => recipe.slug === 'frittata-cukinia') ?? recipes[1],
+      accent: 'bg-[#fff3e7] text-[#201714]',
+    },
+    {
+      eyebrow: 'bez wstydu przy stole',
+      title: 'Ma wyglądać jak więcej pracy',
+      body: 'Dania, które mają efekt „o kurde”, ale nie wymagają życia w kuchni od rana.',
+      scenario: 'atelier' as const,
+      recipe: recipes.find((recipe) => recipe.slug === 'baklazan-miso-daktyle') ?? recipes[2],
+      accent: 'bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_62%,#171217_100%)] text-[#fff7ee]',
+    },
+    {
+      eyebrow: 'jutro też jesz',
+      title: 'Zrób raz, podziękuj jutro',
+      body: 'Meal-prep bez pudełkowego smutku. Dania, które dobrze znoszą drugi dzień.',
+      scenario: 'meal-prep' as const,
+      recipe: recipes.find((recipe) => recipe.slug === 'chili-sin-carne') ?? recipes[3],
+      accent: 'bg-white text-[#201714]',
+    },
+  ]
 
   const hasActiveFilters =
     moodFilter !== 'all' ||
@@ -352,6 +396,9 @@ export function RecipeCatalogPage({
             <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
               <Link href="/" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:text-xs">
                 Palnik / Atelier
+              </Link>
+              <Link href="/katalog" className="hidden rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:inline-flex sm:text-xs">
+                Katalog
               </Link>
               <span className="hidden text-[11px] uppercase tracking-[0.22em] text-white/45 sm:inline">oriental fine dining lane</span>
             </div>
@@ -435,88 +482,88 @@ export function RecipeCatalogPage({
         </section>
       ) : (
       <>
-      <section className="relative overflow-hidden px-5 pb-8 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-8">
-        <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-[#ffd7b5]/70 blur-3xl lg:left-[22%] lg:top-12 lg:h-96 lg:w-96" />
-        <div className="absolute right-0 top-24 h-56 w-56 rounded-full bg-[#e66a3d]/20 blur-3xl lg:h-80 lg:w-80" />
-
-        <div className="relative mx-auto max-w-6xl">
-          <div className="mb-6 flex items-center justify-between gap-4 lg:mb-8">
-            <span className="rounded-full border border-[#201714]/10 bg-white/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">Palnik</span>
-            <span className="text-[11px] uppercase tracking-[0.22em] text-[#201714]/45">co dziś realnie ugotować</span>
+      <section className="px-5 pb-5 pt-5 sm:px-6 lg:px-8 lg:pb-7 lg:pt-7">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <Link href="/" className="rounded-full border border-[#201714]/10 bg-white/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Palnik</Link>
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+              <Link href="/atelier" className="rounded-full px-3 py-2 text-[#201714]/55 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Atelier</Link>
+              <Link href="/ulubione" className="rounded-full px-3 py-2 text-[#201714]/55 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Ulubione</Link>
+            </div>
           </div>
 
-          <div className="grid gap-5">
-            <article className="relative overflow-hidden rounded-[2rem] bg-[#201714] px-6 pb-6 pt-7 text-[#fff7ee] shadow-[0_25px_90px_rgba(32,23,20,0.18)] sm:px-7 sm:pb-7 sm:pt-8 lg:rounded-[2.75rem] lg:px-12 lg:pb-12 lg:pt-12">
-              <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#ffb36b] blur-2xl lg:h-40 lg:w-40" />
-              <div className="absolute bottom-0 right-0 h-24 w-24 rounded-full bg-[#e66a3d]/50 blur-2xl lg:h-36 lg:w-36" />
-
-              <div className="relative space-y-7">
-                <div className="max-w-2xl space-y-4">
-                  <p className="max-w-[34ch] text-sm uppercase tracking-[0.24em] text-[#ffcf9f]">wybierz sytuację — Palnik zawęzi przepisy</p>
-                  <h1 className="max-w-[11ch] text-5xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-6xl lg:max-w-[12ch] lg:text-7xl">
-                    Co dziś
-                    <br />
-                    realnie ugotować?
-                  </h1>
-                  <p className="max-w-[38ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                    Zamiast scrollować setkę dań, zaczynasz od tego, co realne: czas, lodówka, energia albo ochota na coś bardziej popisowego.
-                  </p>
-                  <div className="flex flex-wrap gap-2 pt-2 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{recipes.length} przepisów</span>
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">lodówka</span>
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">atelier</span>
-                  </div>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <button
-                    type="button"
-                    onClick={() => runHeroScenario('lodowka')}
-                    className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                  >
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">mam składniki</p>
-                    <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Lodówka</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Zaznacz, co masz. Palnik skróci listę.</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => runHeroScenario('15-min')}
-                    className="group rounded-[1.5rem] border border-white/12 bg-white/8 p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                  >
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffcf9f]">nie mam czasu</p>
-                    <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Szybko</p>
-                    <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">15–20 minut, mało tarcia, zero poezji.</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => runHeroScenario('atelier')}
-                    className="group rounded-[1.5rem] border border-[#ffcf9f]/18 bg-gradient-to-br from-[#6e1f1f] via-[#2e1a26] to-[#161317] p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.24)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.2em] text-[#ffd7b5]">mam ochotę na flex</p>
-                        <p className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[#fff7ee]">Atelier</p>
-                        <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Orientalne sztosy, kwas, dym, ego.</p>
-                      </div>
-                      <span className="rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-[#ffcf9f]">{atelierCount}</span>
-                    </div>
-                  </button>
-                </div>
-                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <a href="#katalog" className="inline-flex items-center justify-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition duration-200 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
-                    Zobacz wszystkie przepisy
-                  </a>
-                  <button type="button" onClick={handleRandomRecipe} className={`inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] ${isShuffling ? 'animate-shuffle-glow' : ''}`}>
-                    Zaskocz mnie
-                  </button>
-                </div>
+          <article className="relative overflow-hidden rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-6 lg:rounded-[2.35rem] lg:p-8">
+            <div className="absolute right-[-5rem] top-[-5rem] h-52 w-52 rounded-full bg-[#ffb36b]/35 blur-3xl" />
+            <div className="relative grid gap-5 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">katalog Palnika</p>
+                <h1 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl lg:text-6xl">
+                  Wybierz danie bez kopania w ścianie treści.
+                </h1>
               </div>
-            </article>
-          </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <button type="button" onClick={() => runHeroScenario('lodowka')} className="rounded-[1.35rem] border border-[#201714]/10 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#8a4b2a]">mam składniki</p>
+                  <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">Lodówka</p>
+                  <p className="mt-1 text-sm leading-6 text-[#201714]/62">Zacznij od tego, co już masz.</p>
+                </button>
+                <button type="button" onClick={() => runHeroScenario('15-min')} className="rounded-[1.35rem] border border-[#201714]/10 bg-[#201714] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">bez czasu</p>
+                  <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">15 minut</p>
+                  <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Najkrótsza droga do talerza.</p>
+                </button>
+                <button type="button" onClick={() => runHeroScenario('atelier')} className="rounded-[1.35rem] border border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_62%,#171217_100%)] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">ładniejszy talerz</p>
+                  <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">Atelier</p>
+                  <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Kiedy ma być trochę wow.</p>
+                </button>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
       </>
       )}
+
+      {!isAtelierPage ? (
+        <section className="px-5 pb-4 pt-2 sm:px-6 lg:px-8 lg:pb-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-3 flex items-end justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">szybka decyzja</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Nie wybieraj przepisu. Wybierz sytuację.</h2>
+              </div>
+              <p className="hidden max-w-[32ch] text-right text-sm leading-6 text-[#201714]/55 sm:block">Palnik ma działać jak kumpel przy blacie: najpierw pyta, jaki masz problem, dopiero potem pokazuje dania.</p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {decisionCards.map((card, index) => (
+                <button
+                  key={card.eyebrow}
+                  type="button"
+                  onClick={() => runHeroScenario(card.scenario)}
+                  className={`group relative min-h-[260px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${card.accent}`}
+                >
+                  <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
+                  <div className="absolute inset-x-3 bottom-3 top-[8.2rem] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025]">
+                    <RecipeVisual recipe={card.recipe} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/55 via-transparent to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <p className="line-clamp-1 text-sm font-semibold tracking-[-0.02em] text-white drop-shadow">{card.recipe.title}</p>
+                      <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-white/75">{card.recipe.time} · {card.recipe.cuisine}</p>
+                    </div>
+                  </div>
+                  <div className="relative z-10 pr-10">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-60">{card.eyebrow}</p>
+                    <h3 className="mt-2 text-2xl font-semibold leading-[0.98] tracking-[-0.055em]">{card.title}</h3>
+                    <p className="mt-3 text-sm leading-6 opacity-70">{card.body}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {!isAtelierPage && favoriteRecipes.length > 0 ? (
         <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
@@ -713,10 +760,98 @@ export function RecipeCatalogPage({
             </div>
 
             {fridgeMode && fridgeSelection.size > 0 ? (
-              <p className="mt-4 text-sm text-[#201714]/70">
-                Zaznaczono <strong className="text-[#201714]">{fridgeSelection.size}</strong> składników. Przepisy poniżej są posortowane od najlepiej dopasowanych.
+              <div className="mt-5 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
+                <div className="rounded-[1.55rem] border border-[#201714]/10 bg-[#fff8ee] p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">diagnoza lodówki</p>
+                  <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.05em]">
+                    {fridgeTopRecipe && fridgeTopMatch
+                      ? `${Math.round(fridgeTopMatch.score * 100)}% drogi do: ${fridgeTopRecipe.title}`
+                      : 'Jeszcze za mało składników, żeby Palnik był mądry'}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#201714]/68">
+                    Masz: <strong className="text-[#201714]">{fridgeSelectedList.join(', ')}</strong>{fridgeSelectedRest > 0 ? ` i jeszcze ${fridgeSelectedRest}` : ''}. Palnik sortuje przepisy po realnym dystansie do obiadu, nie po tym, co wygląda najładniej w katalogu.
+                  </p>
+                  {fridgeTopMatch && fridgeTopMatch.missing.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">dokup tylko</span>
+                      {fridgeTopMatch.missing.slice(0, 4).map((ingredient) => (
+                        <button
+                          key={ingredient.key}
+                          type="button"
+                          onClick={() => toggleFridgeKey(ingredient.key)}
+                          className="rounded-full border border-[#201714]/10 bg-white px-3 py-1.5 text-xs font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
+                          title="Dodaj do zaznaczonych, jeśli jednak masz"
+                        >
+                          + {ingredient.key}
+                        </button>
+                      ))}
+                    </div>
+                  ) : fridgeTopMatch ? (
+                    <p className="mt-3 inline-flex rounded-full bg-[#dff5e8] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#18623b]">masz wszystko do najlepszego trafienia</p>
+                  ) : null}
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {fridgeBestMatches.map(({ recipe, match }, index) => (
+                    <button
+                      key={recipe.slug}
+                      type="button"
+                      onClick={() => {
+                        setOpenRecipe(recipe.slug)
+                        scrollToSection('przepis')
+                      }}
+                      className={`group overflow-hidden rounded-[1.35rem] border p-2 text-left transition hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#201714]/15 bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/10 bg-white text-[#201714]'}`}
+                    >
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-[#201714]/10">
+                        <RecipeVisual recipe={recipe} />
+                        <div className="absolute left-2 top-2 rounded-full bg-white/94 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#201714]">
+                          {match ? Math.round(match.score * 100) : 0}% match
+                        </div>
+                      </div>
+                      <div className="px-1 pb-1 pt-2">
+                        <p className="line-clamp-2 text-sm font-semibold leading-tight tracking-[-0.03em]">{recipe.title}</p>
+                        <p className={`mt-1 text-[11px] uppercase tracking-[0.14em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{recipe.time} · {match?.matched}/{match?.total} masz</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-5 rounded-[1.55rem] border border-dashed border-[#201714]/14 bg-[#fffaf3] p-4 text-sm leading-6 text-[#201714]/65">
+                Pro tip: zaznacz 3–5 składników, które naprawdę masz. Wtedy Palnik zaczyna działać jak szybki doradca, nie jak kolejny filtr z piekła UX.
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 pt-6 sm:px-6 lg:px-8 lg:pt-8">
+        <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-6 lg:p-7">
+          <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">jak Palnik wybiera</p>
+              <h2 className="mt-2 max-w-[12ch] text-3xl font-semibold leading-[0.96] tracking-[-0.055em] sm:text-4xl">Mniej lista. Bardziej decyzja.</h2>
+              <p className="mt-3 max-w-[46ch] text-sm leading-6 text-[#201714]/65">
+                Ranking nie jest od „najładniejszego zdjęcia”. Palnik patrzy na dystans do talerza: czas, składniki, nastrój, kolekcję i to, czy danie ma sens na dziś.
               </p>
-            ) : null}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">01 / czas</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Najpierw realność</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">15 minut to nie kategoria estetyczna. To stan człowieka, który chce jeść.</p>
+              </article>
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-[#201714] p-4 text-[#fff7ee]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">02 / lodówka</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Potem dystans</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#f3dfcf]">Jeśli brakuje dwóch rzeczy, to jest plan. Jeśli siedmiu — to inspiracja na zakupy.</p>
+              </article>
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03 / vibe</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Na końcu ochota</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Comfort, świeże, brunch, Atelier. Bo obiad ma pasować do dnia, nie do tabelki.</p>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -881,7 +1016,7 @@ export function RecipeCatalogPage({
                 persistFridge([])
                 setFridgeMode(false)
               }}
-              suggestions={recipes.slice(0, 3)}
+              suggestions={fridgeMode && fridgeSelection.size > 0 ? filteredRecipes.slice(0, 3).map((entry) => entry.recipe) : recipes.slice(0, 3)}
               setOpenRecipe={setOpenRecipe}
               scrollToRecipe={() => scrollToSection('przepis')}
             />
@@ -907,7 +1042,7 @@ export function RecipeCatalogPage({
                       {match && match.total > 0 ? (
                         <div className="pointer-events-none absolute left-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#201714] backdrop-blur">
                           <span className={`inline-block h-1.5 w-1.5 rounded-full ${match.score === 1 ? 'bg-[#22a06b]' : match.score >= 0.5 ? 'bg-[#e08a36]' : 'bg-[#c9572d]'}`} />
-                          {match.matched}/{match.total} masz
+                          {Math.round(match.score * 100)}% · {match.matched}/{match.total}
                         </div>
                       ) : null}
                       <button
@@ -1045,12 +1180,29 @@ export function RecipeCatalogPage({
               <div>
                 <h4 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Kroki</h4>
                 <ol className="mt-3 space-y-3 text-sm leading-6 text-[#f3dfcf]">
-                  {currentRecipe.steps.map((step, index) => (
-                    <li key={step} className="flex gap-3 rounded-[1rem] border border-white/8 bg-white/5 p-3">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
-                      <span>{step}</span>
-                    </li>
-                  ))}
+                  {currentRecipe.steps.map((step, index) => {
+                    const stepImage = currentRecipe.stepImages?.[index]
+
+                    return (
+                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 transition hover:border-white/15 ${stepImage ? 'p-0' : 'p-3'}`}>
+                        {stepImage ? (
+                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
+                            <Image
+                              src={stepImage}
+                              alt={`${currentRecipe.title} — krok ${index + 1}`}
+                              fill
+                              className="object-cover transition duration-500 hover:scale-[1.025]"
+                              sizes="(max-width: 1024px) 100vw, 420px"
+                            />
+                          </div>
+                        ) : null}
+                        <div className="flex gap-3 p-3">
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
+                          <span>{step}</span>
+                        </div>
+                      </li>
+                    )
+                  })}
                 </ol>
               </div>
             </div>
@@ -1135,13 +1287,20 @@ function EmptyState({
     <div className="rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/60 p-8 text-center sm:p-12">
       <p className="text-3xl">🍋</p>
       <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">
-        {fridgeMode && fridgeSelectionSize > 0 ? 'Z tego nic się nie złoży' : 'Nic nie pasuje do tych filtrów'}
+        {fridgeMode && fridgeSelectionSize > 0 ? 'Z tego jeszcze nie będzie obiadu. Będzie lista zakupów.' : 'Filtry zrobiły za ciasno'}
       </h3>
-      <p className="mt-2 max-w-[40ch] text-sm leading-6 text-[#201714]/65 mx-auto">
+      <p className="mx-auto mt-2 max-w-[46ch] text-sm leading-6 text-[#201714]/65">
         {fridgeMode && fridgeSelectionSize > 0
-          ? 'Spróbuj dodać jeszcze jeden lub dwa składniki, albo wyłącz tryb lodówki, żeby zobaczyć inspiracje na zakupy.'
-          : 'Zluzuj filtry albo zacznij od czegoś popularnego — to dobre punkty startu.'}
+          ? 'To nie porażka lodówki, tylko informacja: masz bazę, ale brakuje mostu. Dodaj jeden składnik białkowy, coś kwaśnego albo wyłącz lodówkę i potraktuj wyniki jako inspirację.'
+          : 'Palnik nie znalazł sensownego przecięcia filtrów. Cofnij jeden warunek albo zacznij od popularnego przepisu — lepiej zjeść niż optymalizować do śmierci.'}
       </p>
+      {fridgeMode && fridgeSelectionSize > 0 ? (
+        <div className="mx-auto mt-4 grid max-w-2xl gap-2 text-left sm:grid-cols-3">
+          <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj białko</strong> jajko, tofu, kurczak, feta albo fasola często odblokują danie.</div>
+          <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj kwas</strong> cytryna, ocet, jogurt albo pomidor spinają resztki w coś sensownego.</div>
+          <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj bazę</strong> makaron, ryż, pieczywo albo ziemniak robią z chaosu posiłek.</div>
+        </div>
+      ) : null}
       <div className="mt-5 flex flex-wrap justify-center gap-2">
         <button
           type="button"
