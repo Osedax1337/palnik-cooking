@@ -388,64 +388,69 @@ export function RecipeCatalogPage({
   return (
     <main className={`min-h-screen text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
       {isAtelierPage ? (
-        <section className="relative overflow-hidden px-4 pb-8 pt-4 sm:px-6 lg:px-8 lg:pb-14 lg:pt-8">
-          <div className="absolute left-[8%] top-8 h-48 w-48 rounded-full bg-[#8c3341]/35 blur-3xl" />
-          <div className="absolute right-[6%] top-16 h-56 w-56 rounded-full bg-[#d87c4a]/20 blur-3xl" />
-          <div className="absolute left-1/2 top-[22rem] hidden h-px w-[70%] -translate-x-1/2 bg-gradient-to-r from-transparent via-white/18 to-transparent lg:block" />
+        <section className="relative overflow-hidden px-4 pb-10 pt-4 text-[#fff7ee] sm:px-6 lg:px-8 lg:pb-16 lg:pt-7">
+          <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_22%_0%,rgba(216,124,74,0.34),transparent_32%),radial-gradient(circle_at_82%_10%,rgba(140,51,65,0.45),transparent_34%),linear-gradient(180deg,#151016_0%,#21141b_58%,rgba(33,20,27,0)_100%)]" />
+          <div className="absolute left-[6%] top-24 h-64 w-64 rounded-full bg-[#8c3341]/28 blur-3xl" />
+          <div className="absolute right-[8%] top-56 hidden h-px w-80 rotate-[-18deg] bg-gradient-to-r from-transparent via-[#ffcf9f]/35 to-transparent lg:block" />
+
           <div className="relative mx-auto max-w-6xl">
-            <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
-              <Link href="/" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:text-xs">
+            <div className="mb-6 flex items-center justify-between gap-4 lg:mb-9">
+              <Link href="/" className="rounded-full border border-white/12 bg-white/7 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/12 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:text-xs">
                 Palnik / Atelier
               </Link>
-              <Link href="/katalog" className="hidden rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:inline-flex sm:text-xs">
-                Katalog
-              </Link>
-              <span className="hidden text-[11px] uppercase tracking-[0.22em] text-white/45 sm:inline">oriental fine dining lane</span>
+              <div className="flex items-center gap-2">
+                <Link href="/katalog" className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffd7b5] backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:text-xs">
+                  Katalog
+                </Link>
+                <span className="hidden text-[11px] uppercase tracking-[0.22em] text-white/45 md:inline">dark dining lane</span>
+              </div>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-stretch">
-              <article className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#21141b_0%,#2c1620_44%,#151217_100%)] px-5 pb-6 pt-6 text-[#fff7ee] shadow-[0_28px_90px_rgba(10,6,12,0.34)] sm:rounded-[2.4rem] sm:px-7 lg:px-10 lg:pb-10 lg:pt-10">
-                <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-[#8c3341]/45 blur-3xl" />
-                <div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-[#d87c4a]/18 blur-3xl" />
-                <div className="absolute right-6 top-6 hidden rounded-full border border-[#ffcf9f]/20 bg-[#ffcf9f]/8 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f] lg:block">selected 40</div>
-                <div className="relative max-w-3xl">
-                  <p className="text-[10px] uppercase tracking-[0.24em] text-[#ffcf9f] sm:text-[11px]">curated selection / michelin-ish / oriental precision</p>
-                  <h1 className="mt-4 max-w-[11ch] text-[3.35rem] font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl lg:text-7xl">
-                    Atelier.
-                    <br />
-                    Wybrane dania
-                    <br />
-                    dla ludzi z gustem.
-                  </h1>
-                  <p className="mt-5 max-w-[44ch] text-[15px] leading-7 text-[#f3dfcf] sm:text-lg">
-                    To jest selekcja dań w duchu współczesnej kuchni Michelin: precyzyjne kontrasty, ferment, dym, kwas, owoce przy mięsie i sosy, które robią robotę ciszej niż krzykliwe dekoracje. Nadal do ugotowania w domu — tylko z ambicją, żeby talerz miał charakter, nie tylko kalorie.
-                  </p>
-                  <div className="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f] sm:text-[11px]">
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">{atelierCount} dań</span>
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">Michelin-coded</span>
-                    <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1.5">ferment / dym / kwas</span>
+            <div className="grid gap-4 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
+              <article className="relative min-h-[32rem] overflow-hidden rounded-[2.25rem] border border-white/10 bg-[#181116] p-5 shadow-[0_34px_110px_rgba(8,5,8,0.46)] sm:p-7 lg:min-h-[42rem] lg:rounded-[2.8rem] lg:p-9">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_12%,rgba(255,207,159,0.18),transparent_28%),linear-gradient(145deg,rgba(110,31,31,0.58),rgba(24,17,22,0.4)_42%,rgba(13,10,12,0.95))]" />
+                <div className="absolute bottom-[-5rem] left-[-4rem] h-56 w-56 rounded-full bg-[#6e1f1f]/70 blur-3xl" />
+                <div className="relative flex h-full flex-col justify-between">
+                  <div>
+                    <div className="mb-7 flex w-fit items-center gap-2 rounded-full border border-[#ffcf9f]/18 bg-[#ffcf9f]/8 px-3 py-1.5 text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#ffcf9f]" />
+                      {atelierCount} talerzy / selekcja
+                    </div>
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-[#ffcf9f]">Atelier Palnika</p>
+                    <h1 className="mt-4 max-w-[8.2ch] text-[4rem] font-semibold leading-[0.84] tracking-[-0.08em] sm:text-7xl lg:text-[6.4rem]">
+                      Ciemniej.
+                      <br />
+                      Kwaśniej.
+                      <br />
+                      Lepiej.
+                    </h1>
                   </div>
-                  <div className="mt-7 flex flex-wrap gap-3">
-                    <button
-                      type="button"
-                      onClick={() => scrollToSection('katalog')}
-                      className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                    >
-                      Wejdź do kolekcji
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleRandomRecipe}
-                      className={`inline-flex items-center rounded-full border border-white/16 px-4 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] sm:px-5 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
-                    >
-                      Losuj danie
-                    </button>
+                  <div>
+                    <p className="max-w-[34ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
+                      Dania z większym ego: ferment, dym, owoce przy mięsie, sosy z napięciem. Nie szybki obiad. Mały spektakl na talerzu.
+                    </p>
+                    <div className="mt-7 flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        onClick={() => scrollToSection('katalog')}
+                        className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
+                      >
+                        Wejdź w menu
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleRandomRecipe}
+                        className={`inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] ${isShuffling ? 'animate-shuffle-glow' : ''}`}
+                      >
+                        Losuj talerz
+                      </button>
+                    </div>
                   </div>
                 </div>
               </article>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
-                {atelierRecipes.map((recipe, index) => (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[1.05fr_0.95fr]">
+                {atelierEntryPoints.map((recipe, index) => (
                   <button
                     key={recipe.slug}
                     type="button"
@@ -453,25 +458,32 @@ export function RecipeCatalogPage({
                       setOpenRecipe(recipe.slug)
                       scrollToSection('przepis')
                     }}
-                    className={`group grid grid-cols-[76px_minmax(0,1fr)] gap-3 overflow-hidden rounded-[1.5rem] border p-2.5 text-left transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,10,16,0.18)] focus:outline-none focus:ring-2 focus:ring-white/20 sm:grid-cols-[92px_minmax(0,1fr)] ${index === 0 ? 'border-white/10 bg-white/8 text-[#fff7ee]' : 'border-[#201714]/10 bg-white/88 text-[#201714]'}`}
+                    className={`group relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#151016] text-left shadow-[0_24px_70px_rgba(10,6,12,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(10,6,12,0.36)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 ${index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''}`}
                   >
-                    <div className="relative aspect-square overflow-hidden rounded-[1.1rem] bg-[#201714]">
-                      <RecipeVisual recipe={recipe} />
-                      <span className="absolute inset-0 bg-gradient-to-t from-[#201714]/30 to-transparent opacity-70" />
+                    <RecipeVisual recipe={recipe} large={index === 0} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0e0a0c]/92 via-[#151016]/18 to-transparent" />
+                    <div className="absolute left-4 top-4 rounded-full border border-white/14 bg-black/24 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f] backdrop-blur">
+                      {index === 0 ? 'signature' : recipe.time}
                     </div>
-                    <div className="min-w-0 py-1 pr-1">
-                      <p className={`text-[9px] uppercase tracking-[0.2em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8c3341]'}`}>{recipe.cuisine} · {recipe.time}</p>
-                      <p className="mt-1 line-clamp-2 text-base font-semibold leading-tight tracking-[-0.03em]">{recipe.title}</p>
-                      <p className={`mt-1 line-clamp-2 text-xs leading-5 sm:text-sm ${index === 0 ? 'text-[#f3dfcf]' : 'text-[#201714]/65'}`}>{recipe.intro}</p>
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-[#fff7ee] sm:p-6">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">{recipe.cuisine} · {recipe.tag}</p>
+                      <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.92] tracking-[-0.055em]">{recipe.title}</h2>
+                      <p className="mt-3 line-clamp-2 max-w-[34ch] text-sm leading-6 text-[#f3dfcf]">{recipe.intro}</p>
                     </div>
                   </button>
                 ))}
+
+                <article className="relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-[#ffcf9f]/12 bg-[#fff7ee] p-5 text-[#201714] shadow-[0_24px_70px_rgba(10,6,12,0.12)] sm:p-6">
+                  <p className="text-[10px] uppercase tracking-[0.24em] text-[#8c3341]">manifest</p>
+                  <h2 className="mt-3 max-w-[10ch] text-3xl font-semibold leading-[0.9] tracking-[-0.06em]">Nie dekoruj. Buduj napięcie.</h2>
+                  <p className="mt-4 max-w-[30ch] text-sm leading-6 text-[#201714]/66">Atelier działa, kiedy talerz ma jeden mocny konflikt: tłuszcz kontra kwas, miękkie kontra chrupiące, słodkie kontra dym.</p>
+                </article>
               </div>
             </div>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:mt-6">
+            <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:mt-7">
               {atelierSignatureMoves.map((move, index) => (
-                <article key={move.label} className={`rounded-[1.6rem] border p-4 shadow-[0_18px_50px_rgba(10,6,12,0.14)] ${index === 1 ? 'border-[#ffcf9f]/18 bg-[#fff7ee] text-[#201714]' : 'border-white/10 bg-white/[0.06] text-[#fff7ee] backdrop-blur'}`}>
+                <article key={move.label} className={`rounded-[1.7rem] border p-4 transition duration-300 hover:-translate-y-0.5 ${index === 1 ? 'border-[#ffcf9f]/18 bg-[#fff7ee] text-[#201714] shadow-[0_18px_50px_rgba(10,6,12,0.16)]' : 'border-white/10 bg-white/[0.055] text-[#fff7ee] backdrop-blur'}`}>
                   <p className={`text-[10px] uppercase tracking-[0.22em] ${index === 1 ? 'text-[#8c3341]' : 'text-[#ffcf9f]'}`}>{move.label}</p>
                   <h2 className="mt-2 text-xl font-semibold leading-tight tracking-[-0.04em]">{move.title}</h2>
                   <p className={`mt-2 text-sm leading-6 ${index === 1 ? 'text-[#201714]/70' : 'text-[#f3dfcf]'}`}>{move.body}</p>
