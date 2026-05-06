@@ -236,13 +236,13 @@ export function RecipeCatalogPage({
     })
   }
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setMoodFilter('all')
     setCuisineFilter('all')
     setCollectionFilter(forcedCollection)
     setDietFilters([])
     setSearchQuery('')
-  }
+  }, [forcedCollection])
 
   const scrollToSection = useCallback((id: string) => {
     if (typeof window === 'undefined') return
@@ -285,7 +285,7 @@ export function RecipeCatalogPage({
 
       scrollToSection('katalog')
     },
-    [router, scrollToSection],
+    [clearFilters, router, scrollToSection],
   )
 
   const toggleCompare = (slug: string) => {

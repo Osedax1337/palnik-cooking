@@ -17,6 +17,12 @@ const filters: { id: FavoriteFilter; label: string }[] = [
   { id: 'meal-prep', label: 'Na jutro' },
 ]
 
+const emptyShelves = [
+  { label: '15 minut', title: 'Zapisz coś na głód bez negocjacji.', href: '/katalog?zbior=15-min' },
+  { label: 'lodówka', title: 'Znajdź przepisy pod to, co już masz.', href: '/katalog#lodowka' },
+  { label: 'Atelier', title: 'Odłóż jeden przepis na kolację z efektem.', href: '/atelier' },
+]
+
 export function FavoritesPage() {
   const [filter, setFilter] = useState<FavoriteFilter>('all')
   const favoriteSlugs = useStorageValue<string[]>(STORAGE_KEYS.FAVORITES, getFavorites)
@@ -62,13 +68,28 @@ export function FavoritesPage() {
         </section>
 
         {favoriteRecipes.length === 0 ? (
-          <section className="mt-6 rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/70 p-8 text-center sm:p-12">
-            <p className="text-4xl">♡</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">Jeszcze nic nie zapisane</h2>
-            <p className="mx-auto mt-2 max-w-[38ch] text-sm leading-6 text-[#201714]/65">Wejdź w katalog i kliknij “zapisz” przy przepisie. Ta strona zacznie wtedy robić robotę.</p>
-            <Link href="/katalog" className="mt-5 inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
-              Idź do katalogu
-            </Link>
+          <section className="mt-6 overflow-hidden rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/75 p-6 sm:p-8 lg:p-10">
+            <div className="grid gap-7 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+              <div>
+                <p className="text-4xl">♡</p>
+                <h2 className="mt-3 max-w-[12ch] text-3xl font-semibold leading-tight tracking-[-0.055em] sm:text-4xl">Jeszcze pusta półka.</h2>
+                <p className="mt-3 max-w-[40ch] text-sm leading-6 text-[#201714]/65">
+                  I dobrze — ulubione mają być selekcją, nie śmietnikiem. Zapisz tylko te przepisy, do których realnie chcesz wracać.
+                </p>
+                <Link href="/katalog" className="mt-5 inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+                  Przejdź do katalogu →
+                </Link>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {emptyShelves.map((item) => (
+                  <Link key={item.href} href={item.href} className="group rounded-[1.45rem] border border-[#201714]/8 bg-[#fffaf3] p-4 transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#201714]/25">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">{item.label}</p>
+                    <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em] text-[#201714]">{item.title}</p>
+                    <p className="mt-4 text-sm font-semibold text-[#8a4b2a] transition group-hover:translate-x-1">Otwórz →</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </section>
         ) : (
           <>
@@ -96,9 +117,14 @@ export function FavoritesPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">ostatnio zapisane</p>
                 <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
                   {latest.map((recipe) => (
-                    <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="min-w-[220px] rounded-[1.3rem] bg-white p-4 shadow-sm transition hover:-translate-y-0.5">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#8a4b2a]">{recipe.time}</p>
-                      <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em]">{recipe.title}</p>
+                    <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="group min-w-[230px] overflow-hidden rounded-[1.45rem] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(32,23,20,0.12)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#201714]/25">
+                      <div className="relative aspect-[16/10] overflow-hidden">
+                        <RecipeVisual recipe={recipe} />
+                      </div>
+                      <div className="p-4">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[#8a4b2a]">{recipe.time}</p>
+                        <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em]">{recipe.title}</p>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -107,8 +133,11 @@ export function FavoritesPage() {
 
             {visibleRecipes.length === 0 ? (
               <section className="mt-6 rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/70 p-8 text-center">
-                <h2 className="text-2xl font-semibold tracking-[-0.04em]">Tu pusto</h2>
-                <p className="mt-2 text-sm text-[#201714]/65">Masz ulubione, ale żadne nie pasuje do tego filtra.</p>
+                <h2 className="text-2xl font-semibold tracking-[-0.04em]">Ten filtr nic nie łapie.</h2>
+                <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-6 text-[#201714]/65">Półka istnieje, tylko ten konkretny koszyk jest pusty. Poluzuj filtr albo zapisz coś z tej kategorii.</p>
+                <button type="button" onClick={() => setFilter('all')} className="mt-5 inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+                  Pokaż wszystkie
+                </button>
               </section>
             ) : (
               <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

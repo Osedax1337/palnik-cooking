@@ -20,6 +20,24 @@ import { useStorageValue } from '@/lib/use-storage'
 
 type ComparedRecipe = (typeof recipes)[number]
 
+const starterComparisons = [
+  {
+    label: 'głód teraz',
+    title: 'Trzy szybkie wyjścia awaryjne',
+    href: '/porownaj?ids=makaron-cytryna,ryz-smazony-jajko-chilli,quesadilla-kurczak-ser',
+  },
+  {
+    label: 'bez wstydu',
+    title: 'Kolacja, która wygląda na większy plan',
+    href: '/porownaj?ids=baklazan-miso-daktyle,risotto-grzyby-lesne,kurczak-jogurt-cytryna',
+  },
+  {
+    label: 'jutro też jem',
+    title: 'Meal-prep bez smutnego pudełka',
+    href: '/porownaj?ids=chili-sin-carne,tagliatelle-ragu-warzywne,pomidorowa-z-pieca',
+  },
+]
+
 function buildMetricRanks(selected: ComparedRecipe[], getValue: (recipe: ComparedRecipe) => number) {
   return [...selected].sort((a, b) => getValue(a) - getValue(b))
 }
@@ -356,31 +374,64 @@ export function CompareView() {
     <main className="min-h-screen bg-[#fffaf3] px-5 py-6 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link href="/" className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+          <Link href="/katalog" className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
             ← Wróć do katalogu
           </Link>
           <span className="rounded-full border border-[#201714]/10 bg-white/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">Palnik / porównaj</span>
         </div>
 
-        <div className="mb-7 max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">porównaj</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">Co dziś gotujemy?</h1>
-          <p className="mt-2 text-sm leading-6 text-[#201714]/65 sm:text-base">
-            Dwa albo trzy przepisy obok siebie — czas, składniki, wysiłek, klimat. Pomaga, kiedy stoisz w lodówce i nie możesz się zdecydować.
-          </p>
-        </div>
+        <section className="mb-7 overflow-hidden rounded-[2.35rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.16)] sm:p-7 lg:p-8">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] lg:items-end">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#ffcf9f]">stół decyzyjny</p>
+              <h1 className="mt-3 max-w-[10ch] text-5xl font-semibold leading-[0.9] tracking-[-0.065em] sm:text-6xl lg:text-7xl">Co dziś gotujemy?</h1>
+              <p className="mt-5 max-w-[48ch] text-sm leading-6 text-[#f3dfcf] sm:text-base">
+                Dwa albo trzy przepisy obok siebie. Nie ranking dla sportu — tylko szybka odpowiedź: co ma sens teraz, z tym głodem i tą lodówką.
+              </p>
+            </div>
+            {selected.length > 0 ? (
+              <div className="grid gap-2 rounded-[1.6rem] border border-white/10 bg-white/8 p-3 sm:grid-cols-3 lg:grid-cols-1">
+                <div className="rounded-[1.1rem] bg-[#fff7ee] px-4 py-3 text-[#201714]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">w zestawie</p>
+                  <p className="mt-1 text-2xl font-semibold tracking-[-0.04em]">{selected.length} przepisy</p>
+                </div>
+                <div className="rounded-[1.1rem] border border-white/10 px-4 py-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">najszybciej</p>
+                  <p className="mt-1 text-2xl font-semibold tracking-[-0.04em]">{fastest} min</p>
+                </div>
+                <div className="rounded-[1.1rem] border border-white/10 px-4 py-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">mniej tarcia</p>
+                  <p className="mt-1 text-2xl font-semibold tracking-[-0.04em]">{fewest} skład.</p>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </section>
 
         {selected.length < 2 ? (
-          <div className="rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/60 p-8 text-center sm:p-12">
-            <p className="text-3xl">⚖️</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">Dodaj 2–3 przepisy do porównania</h2>
-            <p className="mt-2 max-w-[44ch] text-sm leading-6 text-[#201714]/65 mx-auto">
-              W katalogu kliknij &quot;+ porównaj&quot; przy przepisach, które chcesz zestawić. Tutaj zobaczysz je obok siebie.
-            </p>
-            <Link href="/" className="mt-5 inline-flex items-center rounded-full bg-[#201714] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924]">
-              Wróć do katalogu
-            </Link>
-          </div>
+          <section className="rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/70 p-6 sm:p-8 lg:p-10">
+            <div className="grid gap-7 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+              <div>
+                <p className="text-3xl">⚖️</p>
+                <h2 className="mt-3 max-w-[12ch] text-3xl font-semibold leading-tight tracking-[-0.055em] sm:text-4xl">Dodaj 2–3 przepisy.</h2>
+                <p className="mt-3 max-w-[42ch] text-sm leading-6 text-[#201714]/65">
+                  W katalogu kliknij &quot;+ porównaj&quot;. Albo weź jeden z gotowych zestawów poniżej i od razu zobacz, co Palnik by wybrał.
+                </p>
+                <Link href="/katalog" className="mt-5 inline-flex items-center rounded-full bg-[#201714] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+                  Idź do katalogu →
+                </Link>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {starterComparisons.map((item) => (
+                  <Link key={item.href} href={item.href} className="group rounded-[1.45rem] border border-[#201714]/8 bg-[#fffaf3] p-4 text-left transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#201714]/25">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">{item.label}</p>
+                    <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em] text-[#201714]">{item.title}</p>
+                    <p className="mt-4 text-sm font-semibold text-[#8a4b2a] transition group-hover:translate-x-1">Porównaj →</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
         ) : (
           <>
             <section className="mb-6 rounded-[2rem] bg-white p-5 shadow-sm sm:p-6">
