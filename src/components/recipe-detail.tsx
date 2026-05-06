@@ -124,6 +124,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const checked = ingredientLines.filter((line) => shopping[line.id]).length
   const total = ingredientLines.length
   const progress = total === 0 ? 0 : checked / total
+  const remaining = Math.max(0, total - checked)
   const allDone = checked === total && total > 0
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
@@ -279,16 +280,25 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             </div>
 
             {shoppingMode ? (
-              <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full transition-[width] duration-500"
-                  style={{ width: `${Math.round(progress * 100)}%`, background: HIGHLIGHT[Math.min(2, Math.floor(progress * 3))] }}
-                />
+              <div className="mb-4 rounded-[1.15rem] border border-white/8 bg-white/[0.045] p-3">
+                <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+                  <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">{checked}/{total} gotowe</span>
+                  <span className="text-[#f3dfcf]/70">{remaining === 0 ? 'lista domknięta' : `jeszcze ${remaining}`}</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className={`h-full rounded-full transition-[width] duration-500 ${allDone ? 'animate-progress-glow' : ''}`}
+                    style={{ width: `${Math.round(progress * 100)}%`, background: HIGHLIGHT[Math.min(2, Math.floor(progress * 3))] }}
+                  />
+                </div>
               </div>
             ) : null}
 
             {allDone && shoppingMode ? (
-              <p className="mb-4 rounded-[1rem] bg-white/10 px-4 py-3 text-sm text-[#ffcf9f]">🎉 Masz wszystko. Czas na patelnię.</p>
+              <div className="mb-4 animate-success-rise rounded-[1.15rem] border border-[#ffcf9f]/20 bg-[#ffcf9f]/10 px-4 py-3 text-sm text-[#ffcf9f] shadow-[0_18px_50px_rgba(255,207,159,0.10)]">
+                <p className="font-semibold">🎉 Masz wszystko. Czas na patelnię.</p>
+                <p className="mt-1 text-xs leading-5 text-[#f3dfcf]/72">Lista zakupów zamknięta — teraz już tylko ogień, patelnia i zero scrollowania.</p>
+              </div>
             ) : null}
 
             <div className="grid gap-6 xl:grid-cols-[0.86fr_1.14fr]">
@@ -318,9 +328,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                                   onClick={() => toggleItem(line.id)}
                                   aria-pressed={isChecked}
                                   aria-label={isChecked ? `Oznacz jako niekupione: ${line.text}` : `Oznacz jako kupione: ${line.text}`}
-                                  className="group flex w-full items-start gap-3 rounded-[0.9rem] border border-white/8 bg-white/5 p-3 text-left transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30"
+                                  className={`group flex w-full items-start gap-3 rounded-[0.9rem] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 ${isChecked ? 'border-[#22a06b]/25 bg-[#22a06b]/10' : 'border-white/8 bg-white/5 hover:bg-white/10'}`}
                                 >
-                                  <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
+                                  <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'animate-check-pop border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
                                     ✓
                                   </span>
                                   <span className={`flex-1 ${isChecked ? 'text-[#ffcf9f]/55 line-through' : 'text-[#f3dfcf]'}`}>{line.text}</span>
