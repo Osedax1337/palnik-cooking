@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CompareView } from '@/components/compare-view'
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/seo'
 
 function CompareFallback() {
   return (
@@ -31,32 +32,28 @@ function CompareFallback() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Porównaj przepisy — Palnik',
-  description: 'Zobacz dwa lub trzy przepisy obok siebie: czas, składniki, wysiłek i klimat.',
-  keywords: ['porównanie przepisów', 'co ugotować', 'Palnik', 'przepisy'],
-  alternates: {
-    canonical: '/porownaj',
-  },
-  openGraph: {
-    title: 'Porównaj przepisy — Palnik',
-    description: 'Zobacz dwa lub trzy przepisy obok siebie: czas, składniki, wysiłek i klimat.',
-    url: '/porownaj',
-    siteName: 'Palnik',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Porównaj przepisy — Palnik',
-    description: 'Zobacz dwa lub trzy przepisy obok siebie: czas, składniki, wysiłek i klimat.',
-  },
-}
+  description: 'Zobacz dwa lub trzy przepisy obok siebie: czas, składniki, wysiłek, klimat i wspólną listę zakupów.',
+  path: '/porownaj',
+  keywords: ['porównanie przepisów', 'lista zakupów', 'co ugotować', 'Palnik', 'przepisy'],
+})
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<CompareFallback />}>
-      <CompareView />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([
+            { name: 'Palnik', path: '/' },
+            { name: 'Porównaj', path: '/porownaj' },
+          ])),
+        }}
+      />
+      <Suspense fallback={<CompareFallback />}>
+        <CompareView />
+      </Suspense>
+    </>
   )
 }

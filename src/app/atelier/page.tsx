@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { RecipeCatalogPage } from '@/components/recipe-catalog-page'
+import { breadcrumbJsonLd, collectionJsonLd, pageMetadata } from '@/lib/seo'
 
 function AtelierFallback() {
   return (
@@ -20,28 +21,40 @@ function AtelierFallback() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Atelier — orientalne sztosy z Palnika',
   description:
     'Atelier to selekcja bardziej wysublimowanych dań Palnika: ferment, dym, kwas, fine dining energy i nieoczywiste połączenia smaków.',
-  alternates: {
-    canonical: '/atelier',
-  },
-  openGraph: {
-    title: 'Atelier — orientalne sztosy z Palnika',
-    description:
-      'Osobna kolekcja Palnika dla dań z większym ego: oriental fine dining, dziwne kontrasty i kontrolowany chaos.',
-    url: '/atelier',
-    siteName: 'Palnik',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-}
+  path: '/atelier',
+  image: '/recipes/baklazan-miso-daktyle.png',
+  keywords: ['Atelier Palnika', 'fine dining w domu', 'orientalne przepisy', 'ferment', 'nieoczywiste przepisy'],
+})
 
 export default function AtelierPage() {
   return (
-    <Suspense fallback={<AtelierFallback />}>
-      <RecipeCatalogPage forcedCollection="atelier" variant="atelier" />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionJsonLd({
+            name: 'Atelier Palnika',
+            description: 'Selekcja ciemniejszych, kwaśniejszych i bardziej popisowych dań Palnika.',
+            path: '/atelier',
+          })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([
+            { name: 'Palnik', path: '/' },
+            { name: 'Atelier', path: '/atelier' },
+          ])),
+        }}
+      />
+      <Suspense fallback={<AtelierFallback />}>
+        <RecipeCatalogPage forcedCollection="atelier" variant="atelier" />
+      </Suspense>
+    </>
   )
 }

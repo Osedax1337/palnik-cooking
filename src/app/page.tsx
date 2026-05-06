@@ -1,30 +1,15 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { RecipeVisual } from '@/components/recipe-visual'
 import { recipes } from '@/lib/recipes'
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata, siteUrl } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Palnik — gotowanie bez scrollowania w nieskończoność',
   description:
     'Palnik pomaga wybrać, co dziś ugotować: katalog przepisów, tryb lodówki, Atelier i szybkie wejścia bez kulinarnego zadęcia.',
+  path: '/',
   keywords: ['przepisy', 'szybki obiad', 'co ugotować', 'gotowanie w domu', 'Palnik'],
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'Palnik — gotowanie bez scrollowania w nieskończoność',
-    description: 'Katalog przepisów, tryb lodówki, Atelier i szybkie decyzje bez kulinarnego zadęcia.',
-    url: '/',
-    siteName: 'Palnik',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Palnik — gotowanie bez scrollowania w nieskończoność',
-    description: 'Katalog przepisów, tryb lodówki, Atelier i szybkie decyzje bez kulinarnego zadęcia.',
-  },
-}
+})
 
 const heroRecipes = [
   recipes.find((recipe) => recipe.slug === 'baklazan-miso-daktyle') ?? recipes[0],
@@ -75,11 +60,22 @@ export default function Home() {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
             name: 'Palnik',
-            url: 'https://palnik-cooking-fresh.vercel.app',
+            url: siteUrl,
             description:
               'Palnik pomaga wybrać, co dziś ugotować: katalog przepisów, tryb lodówki, Atelier i szybkie wejścia bez kulinarnego zadęcia.',
             inLanguage: 'pl-PL',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: `${absoluteUrl('/katalog')}?q={search_term_string}`,
+              'query-input': 'required name=search_term_string',
+            },
           }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Palnik', path: '/' }])),
         }}
       />
 

@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { defaultOgImage, siteUrl } from '@/lib/seo'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://palnik-cooking-fresh.vercel.app'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Palnik — gotowanie bez spiny',
     template: '%s',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Palnik — co dziś realnie ugotować?',
     description: 'Przepisy, tryb lodówki, Atelier i szybkie decyzje bez scrollowania w nieskończoność.',
-    images: ['/og-palnik.png'],
+    images: [defaultOgImage],
   },
 }
 

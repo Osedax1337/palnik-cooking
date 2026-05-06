@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { FavoritesPage } from '@/components/favorites-page'
+import { breadcrumbJsonLd, pageMetadata } from '@/lib/seo'
 
 function FavoritesFallback() {
   return (
@@ -21,26 +22,28 @@ function FavoritesFallback() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Ulubione przepisy — Palnik',
-  description: 'Twoja lokalna półka zapisanych przepisów w Palniku.',
-  alternates: {
-    canonical: '/ulubione',
-  },
-  openGraph: {
-    title: 'Ulubione przepisy — Palnik',
-    description: 'Twoja lokalna półka zapisanych przepisów w Palniku.',
-    url: '/ulubione',
-    siteName: 'Palnik',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-}
+  description: 'Twoja lokalna półka zapisanych przepisów w Palniku — szybki powrót do dań, które naprawdę chcesz ugotować ponownie.',
+  path: '/ulubione',
+  keywords: ['ulubione przepisy', 'zapisane przepisy', 'Palnik', 'gotowanie w domu'],
+})
 
 export default function FavoritesRoute() {
   return (
-    <Suspense fallback={<FavoritesFallback />}>
-      <FavoritesPage />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([
+            { name: 'Palnik', path: '/' },
+            { name: 'Ulubione', path: '/ulubione' },
+          ])),
+        }}
+      />
+      <Suspense fallback={<FavoritesFallback />}>
+        <FavoritesPage />
+      </Suspense>
+    </>
   )
 }

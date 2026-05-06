@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { RecipeCatalogPage } from '@/components/recipe-catalog-page'
+import { breadcrumbJsonLd, collectionJsonLd, pageMetadata } from '@/lib/seo'
 
 function CatalogFallback() {
   return (
@@ -20,27 +21,39 @@ function CatalogFallback() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Katalog przepisów — Palnik',
   description:
     'Pełny katalog Palnika: filtry, tryb lodówki, szybkie decyzje, porównywanie i przepisy na zwykły dzień bez spiny.',
-  alternates: {
-    canonical: '/katalog',
-  },
-  openGraph: {
-    title: 'Katalog przepisów — Palnik',
-    description: 'Przepisy, filtry, lodówka i szybkie wybory obiadu w jednym miejscu.',
-    url: '/katalog',
-    siteName: 'Palnik',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-}
+  path: '/katalog',
+  keywords: ['katalog przepisów', 'przepisy obiadowe', 'szybkie przepisy', 'tryb lodówki', 'Palnik'],
+})
 
 export default function CatalogPage() {
   return (
-    <Suspense fallback={<CatalogFallback />}>
-      <RecipeCatalogPage />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionJsonLd({
+            name: 'Katalog przepisów Palnika',
+            description: 'Filtry, tryb lodówki, szybkie decyzje, porównywanie i przepisy na zwykły dzień bez spiny.',
+            path: '/katalog',
+          })),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([
+            { name: 'Palnik', path: '/' },
+            { name: 'Katalog', path: '/katalog' },
+          ])),
+        }}
+      />
+      <Suspense fallback={<CatalogFallback />}>
+        <RecipeCatalogPage />
+      </Suspense>
+    </>
   )
 }
