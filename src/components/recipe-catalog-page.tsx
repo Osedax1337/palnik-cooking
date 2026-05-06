@@ -516,6 +516,22 @@ export function RecipeCatalogPage({
               </div>
             </div>
 
+            <section className="mt-5 grid gap-3 lg:grid-cols-[0.72fr_1.28fr] lg:items-stretch">
+              <article className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 text-[#fff7ee] backdrop-blur sm:p-6">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-[#ffcf9f]">degustacja domowa</p>
+                <h2 className="mt-3 max-w-[10ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em]">Wybierz napięcie, nie kategorię.</h2>
+                <p className="mt-4 text-sm leading-6 text-[#f3dfcf]">Atelier ma działać jak karta małej restauracji: mniej pozycji, mocniejsze intencje, szybciej wiesz, czy dziś chcesz dym, kwas czy aksamit.</p>
+              </article>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {['kwas przecina tłuszcz', 'dym robi scenę', 'chrup pilnuje rytmu'].map((line, index) => (
+                  <article key={line} className="rounded-[1.55rem] border border-[#ffcf9f]/14 bg-[#0f0b0e]/42 p-4 text-[#fff7ee]">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">zasada 0{index + 1}</p>
+                    <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em]">{line}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
             <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:mt-7">
               {atelierSignatureMoves.map((move, index) => (
                 <article key={move.label} className={`rounded-[1.7rem] border p-4 transition duration-300 hover:-translate-y-0.5 ${index === 1 ? 'border-[#ffcf9f]/18 bg-[#fff7ee] text-[#201714] shadow-[0_18px_50px_rgba(10,6,12,0.16)]' : 'border-white/10 bg-white/[0.055] text-[#fff7ee] backdrop-blur'}`}>

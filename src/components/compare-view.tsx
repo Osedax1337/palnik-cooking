@@ -92,6 +92,11 @@ function getVerdict(selected: ComparedRecipe[]) {
   }
 }
 
+function scoreWidth(score: number, maxScore: number) {
+  if (maxScore <= 0) return 0
+  return Math.max(18, Math.round((score / maxScore) * 100))
+}
+
 function formatAmount(value: number): string {
   if (Math.abs(value - 0.25) < 0.01) return '¼'
   if (Math.abs(value - 0.5) < 0.01) return '½'
@@ -257,6 +262,7 @@ export function CompareView() {
   const easiest =
     selected.length > 0 ? Math.min(...selected.map((r) => effortLevels[r.effort].dots)) : 0
   const verdict = useMemo(() => getVerdict(selected), [selected])
+  const maxVerdictScore = verdict?.scored[0]?.score ?? 0
   const combinedShopping = useMemo(() => buildCombinedShoppingList(selected, portionState), [selected, portionState])
   const checkedShopping = combinedShopping.filter((item) => shopping[item.id]).length
   const shoppingProgress = combinedShopping.length === 0 ? 0 : checkedShopping / combinedShopping.length
@@ -576,7 +582,9 @@ export function CompareView() {
 
             {verdict ? (
               <section className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-                <div className="rounded-[2rem] bg-[#201714] px-5 py-5 text-[#fff7ee] shadow-[0_22px_60px_rgba(32,23,20,0.14)] sm:px-6 sm:py-6">
+                <div className="relative overflow-hidden rounded-[2rem] bg-[#201714] px-5 py-5 text-[#fff7ee] shadow-[0_22px_60px_rgba(32,23,20,0.14)] sm:px-6 sm:py-6">
+                  <div className="absolute right-[-3rem] top-[-3rem] h-36 w-36 rounded-full bg-[#ffcf9f]/18 blur-3xl" />
+                  <div className="relative">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#ffcf9f]">werdykt palnika</p>
                   <h2 className="mt-2 max-w-[14ch] text-2xl font-semibold leading-tight tracking-[-0.04em] sm:text-3xl">
                     {verdict.top.recipe.title} wygrywa na dziś.
@@ -591,6 +599,22 @@ export function CompareView() {
                       </span>
                     ))}
                   </div>
+                  <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-white/8 p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">tablica decyzji</p>
+                    <div className="mt-3 space-y-2.5">
+                      {verdict.scored.map((item, index) => (
+                        <div key={item.recipe.slug}>
+                          <div className="mb-1 flex items-center justify-between gap-3 text-xs">
+                            <span className="line-clamp-1 font-semibold text-[#fff7ee]">{index + 1}. {item.recipe.title}</span>
+                            <span className="shrink-0 text-[#ffcf9f]">{Math.round(item.score * 10) / 10}</span>
+                          </div>
+                          <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                            <div className="h-full rounded-full bg-[#ffcf9f] transition-[width] duration-500" style={{ width: `${scoreWidth(item.score, maxVerdictScore)}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   {winnerRecipeUrl ? (
                     <div className="mt-5">
                       <Link
@@ -601,6 +625,7 @@ export function CompareView() {
                       </Link>
                     </div>
                   ) : null}
+                  </div>
                 </div>
 
                 <div className="rounded-[2rem] bg-white px-5 py-5 shadow-sm sm:px-6 sm:py-6">
@@ -705,6 +730,18 @@ export function CompareView() {
                           <dd className="font-semibold">{recipe.servings}</dd>
                         </div>
                       </dl>
+
+                      {recipeVerdict ? (
+                        <div className="mt-4 rounded-[1rem] border border-[#201714]/8 bg-[#fffaf3] p-3">
+                          <div className="mb-2 flex items-center justify-between gap-3">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">decision score</p>
+                            <p className="text-xs font-semibold text-[#201714]/60">{Math.round(recipeVerdict.score * 10) / 10}</p>
+                          </div>
+                          <div className="h-2 overflow-hidden rounded-full bg-[#201714]/10">
+                            <div className={`h-full rounded-full transition-[width] duration-500 ${isWinner ? 'bg-[#201714]' : 'bg-[#c9572d]'}`} style={{ width: `${scoreWidth(recipeVerdict.score, maxVerdictScore)}%` }} />
+                          </div>
+                        </div>
+                      ) : null}
 
                       <div className="mt-4">
                         <DietTags tags={recipe.dietTags} />

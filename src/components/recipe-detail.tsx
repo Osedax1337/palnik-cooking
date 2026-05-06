@@ -73,6 +73,25 @@ function getFlavorProfile(recipe: Recipe): FlavorProfile[] {
   ]
 }
 
+function getChefNote(recipe: Recipe) {
+  const keys = new Set(recipe.ingredients.map((ingredient) => ingredient.key.toLowerCase()))
+  const has = (key: string) => keys.has(key)
+
+  if (recipe.collections.includes('atelier')) {
+    return 'Tu nie kombinuj z siedmioma dodatkami. Pilnuj jednego kontrastu: kwas ma przeciąć tłuszcz, a tekstura ma wejść na końcu.'
+  }
+  if (has('cytryna') || has('limonka') || has('ocet')) {
+    return 'Kwas dawkuj na końcu. Najpierw zbuduj bazę, potem dopiero podkręć — inaczej danie zrobi się płaskie i krzykliwe.'
+  }
+  if (has('miso') || has('sos sojowy') || has('parmezan')) {
+    return 'Sól dodawaj ostrożnie. Umami już niesie dużo ciężaru, więc lepiej dosolić po spróbowaniu niż ratować przesoloną patelnię.'
+  }
+  if (recipe.minutes <= 15) {
+    return 'Przygotuj składniki przed ogniem. Ten przepis jest szybki, więc patelnia nie będzie czekać, aż romantycznie pokroisz cebulę.'
+  }
+  return 'Najważniejsze: nie rób wszystkiego naraz. Najpierw baza, potem balans, na końcu tekstura i świeży akcent.'
+}
+
 function parseCheckedKeys(raw: string | null) {
   if (!raw) return new Set<string>()
   return new Set(
@@ -169,6 +188,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const remaining = Math.max(0, total - checked)
   const allDone = checked === total && total > 0
   const flavorProfile = useMemo(() => getFlavorProfile(recipe), [recipe])
+  const chefNote = useMemo(() => getChefNote(recipe), [recipe])
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -285,6 +305,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 <DietTags tags={recipe.dietTags} />
               </div>
               <p className="mt-5 rounded-[1rem] border border-[#201714]/8 bg-white px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {recipe.tip}</p>
+              <div className="mt-5 rounded-[1.25rem] bg-[#201714] px-4 py-4 text-[#fff7ee] shadow-[0_14px_36px_rgba(32,23,20,0.12)]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">notatka szefa</p>
+                <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{chefNote}</p>
+              </div>
               <div className="mt-5 rounded-[1.35rem] border border-[#201714]/8 bg-[#fffaf3] p-4 shadow-[0_12px_34px_rgba(32,23,20,0.05)]">
                 <div className="mb-3 flex items-end justify-between gap-3">
                   <div>
