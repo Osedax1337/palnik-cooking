@@ -52,7 +52,7 @@ const sections = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-20 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
+    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-32 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

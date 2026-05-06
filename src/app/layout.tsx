@@ -12,6 +12,27 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description: 'Mobile-first strona o prostym, zmysłowym gotowaniu w domu. Mniej zadęcia, więcej smaku.',
+  manifest: '/manifest.webmanifest',
+  applicationName: 'Palnik',
+  appleWebApp: {
+    capable: true,
+    title: 'Palnik',
+    statusBarStyle: 'black-translucent',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: '/icons/palnik-icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/palnik-icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/palnik-icon-192.png', sizes: '192x192', type: 'image/png' }],
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'theme-color': '#201714',
+  },
   openGraph: {
     title: 'Palnik — co dziś realnie ugotować?',
     description: 'Przepisy, tryb lodówki, Atelier i szybkie decyzje bez scrollowania w nieskończoność.',
