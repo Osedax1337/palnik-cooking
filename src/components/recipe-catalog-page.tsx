@@ -157,6 +157,7 @@ export function RecipeCatalogPage({
   )
 
   const hiddenRecipeCount = Math.max(0, filteredRecipes.length - visibleFilteredRecipes.length)
+  const resultAnimationKey = `${moodFilter}-${cuisineFilter}-${dietFilters.join('.')}-${collectionFilter}-${searchQuery}-${fridgeMode ? [...fridgeSelection].sort().join('.') : 'nofridge'}-${visibleRecipeCount}`
 
   useEffect(() => {
     if (!filteredRecipes.some((entry) => entry.recipe.slug === openRecipe)) {
@@ -1110,15 +1111,15 @@ export function RecipeCatalogPage({
               scrollToRecipe={() => scrollToSection('przepis')}
             />
           ) : (
-            <div className="grid gap-4 lg:grid-cols-3">
-              {visibleFilteredRecipes.map(({ recipe, match }) => {
+            <div key={resultAnimationKey} className="grid gap-4 lg:grid-cols-3" aria-live="polite">
+              {visibleFilteredRecipes.map(({ recipe, match }, cardIndex) => {
                 const active = openRecipe === recipe.slug
                 const isInCompare = compareSlugs.includes(recipe.slug)
                 const isFavorite = favoriteSlugs.includes(recipe.slug)
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
                 return (
-                  <article key={recipe.slug} className={`group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
+                  <article key={recipe.slug} style={{ animationDelay: `${Math.min(cardIndex, 8) * 38}ms` }} className={`catalog-card-enter group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Link
                         href={`/przepisy/${recipe.slug}`}

@@ -452,12 +452,22 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]/75">prowadzenie</p>
                   <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Kroki</h3>
                 </div>
+                <div className="mt-3 rounded-[1.05rem] border border-white/8 bg-white/[0.045] p-3">
+                  <div className="flex items-center justify-between gap-3 text-xs">
+                    <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">{recipe.steps.length} kroków</span>
+                    <span className="text-[#f3dfcf]/68">czytaj jak checklistę przy blacie</span>
+                  </div>
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full w-full rounded-full bg-[#ffcf9f]/80" />
+                  </div>
+                </div>
                 <ol className="mt-4 space-y-4 text-sm leading-6 text-[#f3dfcf]">
                   {recipe.steps.map((step, index) => {
                     const stepImage = recipe.stepImages?.[index]
+                    const stepProgress = Math.round(((index + 1) / recipe.steps.length) * 100)
 
                     return (
-                      <li key={step} className="group overflow-hidden rounded-[1.45rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075]">
+                      <li key={step} className="step-progress-card group overflow-hidden rounded-[1.45rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075] focus-within:border-white/18">
                         {stepImage ? (
                           <div className="relative aspect-[5/4] w-full overflow-hidden bg-[#120c0a] sm:aspect-[16/10] xl:aspect-[5/4]">
                             <Image
@@ -470,12 +480,11 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                             <div className="absolute left-3 top-3 rounded-full bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] backdrop-blur">
                               krok {String(index + 1).padStart(2, '0')}
                             </div>
+                            <div className="absolute bottom-0 left-0 h-1 bg-[#ffcf9f] transition-[width] duration-500" style={{ width: `${stepProgress}%` }} />
                           </div>
                         ) : null}
                         <div className="flex gap-3 p-4">
-                          {!stepImage ? (
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{String(index + 1).padStart(2, '0')}</span>
-                          ) : null}
+                          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition group-hover:scale-105 ${stepImage ? 'bg-[#ffcf9f] text-[#201714]' : 'bg-white/10 text-[#ffcf9f]'}`}>{String(index + 1).padStart(2, '0')}</span>
                           <span className="text-[15px] leading-7">{step}</span>
                         </div>
                       </li>
