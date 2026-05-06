@@ -58,7 +58,7 @@ const storyBeats = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-32 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
+    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-44 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -133,18 +133,18 @@ export default function Home() {
             <div className="grid gap-3 sm:grid-cols-2 lg:min-h-[34rem] lg:grid-cols-[0.92fr_1.08fr]">
               <Link href={`/przepisy/${heroRecipes[0].slug}`} className="group float-slow relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_24px_70px_rgba(32,23,20,0.16)] sm:col-span-2 sm:min-h-[28rem] lg:col-span-1 lg:row-span-2 lg:min-h-0">
                 <RecipeVisual recipe={heroRecipes[0]} large />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/92 via-[#201714]/28 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/96 via-[#201714]/48 to-[#201714]/8" />
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-[#fff7ee] sm:p-6">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">dzisiejszy talerz</p>
                   <h2 className="mt-2 max-w-[13ch] text-3xl font-semibold leading-[0.95] tracking-[-0.055em]">{heroRecipes[0].title}</h2>
-                  <p className="mt-2 max-w-[32ch] text-sm leading-6 text-[#f3dfcf]">{heroRecipes[0].intro}</p>
+                  <p className="mt-2 line-clamp-3 max-w-[32ch] text-sm leading-6 text-[#f3dfcf]">{heroRecipes[0].intro}</p>
                 </div>
               </Link>
 
               {heroRecipes.slice(1).map((recipe) => (
                 <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="group float-slower relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_18px_50px_rgba(32,23,20,0.12)] sm:min-h-[16rem]">
                   <RecipeVisual recipe={recipe} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/84 via-[#201714]/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/92 via-[#201714]/42 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-[#fff7ee]">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f]">{recipe.time} · {recipe.cuisine}</p>
                     <h2 className="mt-1 text-xl font-semibold leading-tight tracking-[-0.04em]">{recipe.title}</h2>

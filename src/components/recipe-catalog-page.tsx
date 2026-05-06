@@ -610,7 +610,7 @@ export function RecipeCatalogPage({
                   <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
                   <div className="absolute inset-x-3 bottom-3 h-[92px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[88px]">
                     <RecipeVisual recipe={card.recipe} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/78 via-[#201714]/18 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/92 via-[#201714]/42 to-transparent" />
                     <div className="absolute bottom-3 left-3 right-3">
                       <p className="line-clamp-1 text-sm font-semibold tracking-[-0.02em] text-white drop-shadow">{card.recipe.title}</p>
                       <p className="mt-0.5 text-[11px] uppercase tracking-[0.16em] text-white/78">{card.recipe.time} · {card.recipe.cuisine}</p>
