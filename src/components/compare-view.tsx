@@ -17,6 +17,7 @@ import {
   toggleCompare as toggleCompareStorage,
 } from '@/lib/storage'
 import { useStorageValue } from '@/lib/use-storage'
+import { track } from '@/lib/analytics'
 
 type ComparedRecipe = (typeof recipes)[number]
 
@@ -216,6 +217,9 @@ export function CompareView() {
   // Sync with persisted compare state for nav consistency.
   useEffect(() => {
     persistCompare(selected.map((recipe) => recipe.slug))
+    if (selected.length > 0) {
+      track('comparison_viewed', { compare_count: selected.length, slugs: selected.map((recipe) => recipe.slug).join(',') })
+    }
   }, [selected])
 
   useEffect(() => {
@@ -341,6 +345,7 @@ export function CompareView() {
 
     try {
       await navigator.clipboard.writeText(`${shoppingExportText}\n\nDeep link: ${deepShareUrl}`)
+      track('shopping_list_copied', { compare_count: selected.length, item_count: combinedShopping.length })
       setShareState('copied')
     } catch {
       setShareState('error')
@@ -359,11 +364,13 @@ export function CompareView() {
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share(sharePayload)
+        track('shopping_list_shared', { compare_count: selected.length, item_count: combinedShopping.length, method: 'native_share' })
         setShareState('shared')
         return
       }
 
       await navigator.clipboard.writeText(`${shoppingExportText}\n\n${sharePayload.url ?? ''}`.trim())
+      track('shopping_list_shared', { compare_count: selected.length, item_count: combinedShopping.length, method: 'clipboard_fallback' })
       setShareState('copied')
     } catch {
       setShareState('error')
@@ -446,7 +453,11 @@ export function CompareView() {
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setShoppingMode((current) => !current)}
+                    onClick={() => setShoppingMode((current) => {
+                      const next = !current
+                      track('compare_shopping_mode_toggled', { enabled: next, compare_count: selected.length, item_count: combinedShopping.length })
+                      return next
+                    })}
                     aria-pressed={shoppingMode}
                     aria-label={shoppingMode ? 'Wyłącz checklistę zakupów' : 'Włącz checklistę zakupów'}
                     className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${
@@ -629,7 +640,11 @@ export function CompareView() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => persistCompare(toggleCompareStorage(recipe.slug))}
+                        onClick={() => {
+                          const next = toggleCompareStorage(recipe.slug)
+                          persistCompare(next)
+                          track('compare_toggled', { slug: recipe.slug, selected: next.includes(recipe.slug), compare_count: next.length, source: 'compare_view' })
+                        }}
                         aria-label={`Usuń z porównania: ${recipe.title}`}
                         className="absolute right-3 top-3 z-20 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#201714] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#201714]/30"
                       >

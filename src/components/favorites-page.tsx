@@ -7,6 +7,7 @@ import { DietTags } from '@/components/recipe-meta'
 import { clearFavorites, getFavorites, STORAGE_KEYS, toggleFavorite as toggleFavoriteStorage } from '@/lib/storage'
 import { recipes } from '@/lib/recipes'
 import { useStorageValue } from '@/lib/use-storage'
+import { track } from '@/lib/analytics'
 
 type FavoriteFilter = 'all' | 'quick' | 'atelier' | 'meal-prep'
 
@@ -99,13 +100,19 @@ export function FavoritesPage() {
                   <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">filtry</p>
                   <h2 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Szybciej znajdź zapisane</h2>
                 </div>
-                <button type="button" onClick={clearFavorites} aria-label="Wyczyść wszystkie ulubione przepisy" className="rounded-full border border-[#c9572d]/20 bg-[#fff3e7] px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c9572d] transition hover:bg-[#ffe4d2] focus:outline-none focus:ring-2 focus:ring-[#c9572d]/20">
+                <button type="button" onClick={() => {
+                  track('favorites_cleared', { favorite_count: favoriteRecipes.length })
+                  clearFavorites()
+                }} aria-label="Wyczyść wszystkie ulubione przepisy" className="rounded-full border border-[#c9572d]/20 bg-[#fff3e7] px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c9572d] transition hover:bg-[#ffe4d2] focus:outline-none focus:ring-2 focus:ring-[#c9572d]/20">
                   Wyczyść wszystko
                 </button>
               </div>
               <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
                 {filters.map((item) => (
-                  <button key={item.id} type="button" onClick={() => setFilter(item.id)} aria-pressed={filter === item.id} aria-label={`${filter === item.id ? 'Aktywny filtr' : 'Filtruj ulubione'}: ${item.label}`} className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${filter === item.id ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7]'}`}>
+                  <button key={item.id} type="button" onClick={() => {
+                    setFilter(item.id)
+                    track('favorites_filter_selected', { filter: item.id, favorite_count: favoriteRecipes.length })
+                  }} aria-pressed={filter === item.id} aria-label={`${filter === item.id ? 'Aktywny filtr' : 'Filtruj ulubione'}: ${item.label}`} className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${filter === item.id ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7]'}`}>
                     {item.label}
                   </button>
                 ))}
@@ -158,7 +165,10 @@ export function FavoritesPage() {
                         <Link href={`/przepisy/${recipe.slug}`} className="inline-flex rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
                           Otwórz
                         </Link>
-                        <button type="button" onClick={() => toggleFavoriteStorage(recipe.slug)} aria-label={`Usuń z ulubionych: ${recipe.title}`} className="inline-flex rounded-full border border-[#201714]/12 px-4 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+                        <button type="button" onClick={() => {
+                          const next = toggleFavoriteStorage(recipe.slug)
+                          track('favorite_toggled', { slug: recipe.slug, selected: next.includes(recipe.slug), favorite_count: next.length, source: 'favorites_page' })
+                        }} aria-label={`Usuń z ulubionych: ${recipe.title}`} className="inline-flex rounded-full border border-[#201714]/12 px-4 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
                           Usuń
                         </button>
                       </div>

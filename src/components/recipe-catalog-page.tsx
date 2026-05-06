@@ -33,6 +33,7 @@ import {
   toggleFavorite as toggleFavoriteStorage,
 } from '@/lib/storage'
 import { useStorageValue } from '@/lib/use-storage'
+import { track, trackRecipeOpened, trackSearchUsed } from '@/lib/analytics'
 
 const moodKeys = new Set(moodFilters.map((filter) => filter.key))
 const cuisineKeys = new Set(cuisineFilters.map((filter) => filter.key))
@@ -54,6 +55,7 @@ export function RecipeCatalogPage({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const isAtelierPage = variant === 'atelier'
 
   const [moodFilter, setMoodFilter] = useState<(typeof moodFilters)[number]['key']>('all')
   const [cuisineFilter, setCuisineFilter] = useState<(typeof cuisineFilters)[number]['key']>('all')
@@ -220,6 +222,7 @@ export function RecipeCatalogPage({
     window.setTimeout(() => {
       setOpenRecipe(next.recipe.slug)
       setIsShuffling(false)
+      trackRecipeOpened(next.recipe.slug, 'random_recipe', { result_count: filteredRecipes.length })
     }, 180)
 
     if (typeof window !== 'undefined') {
@@ -232,9 +235,11 @@ export function RecipeCatalogPage({
   const toggleFridgeKey = useCallback((key: string) => {
     setFridgeSelection((current) => {
       const next = new Set(current)
+      const selected = !next.has(key)
       if (next.has(key)) next.delete(key)
       else next.add(key)
       persistFridge([...next])
+      track('fridge_ingredient_toggled', { ingredient: key, selected, ingredient_count: next.size })
       return next
     })
   }, [])
@@ -246,6 +251,7 @@ export function RecipeCatalogPage({
         setFridgeSelection(new Set())
         persistFridge([])
       }
+      track('fridge_toggled', { enabled: next, ingredient_count: next ? fridgeSelection.size : 0 })
       return next
     })
   }
@@ -303,12 +309,22 @@ export function RecipeCatalogPage({
   )
 
   const toggleCompare = (slug: string) => {
-    persistCompare(toggleCompareStorage(slug))
+    const next = toggleCompareStorage(slug)
+    persistCompare(next)
+    track('compare_toggled', { slug, selected: next.includes(slug), compare_count: next.length })
   }
 
   const toggleFavorite = (slug: string) => {
-    toggleFavoriteStorage(slug)
+    const next = toggleFavoriteStorage(slug)
+    track('favorite_toggled', { slug, selected: next.includes(slug), favorite_count: next.length })
   }
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      trackSearchUsed(searchQuery, filteredRecipes.length, isAtelierPage ? 'atelier' : 'catalog')
+    }, 700)
+    return () => window.clearTimeout(timeout)
+  }, [filteredRecipes.length, isAtelierPage, searchQuery])
 
   const compareCount = compareSlugs.length
   const recentRecipes = recentSlugs
@@ -396,7 +412,6 @@ export function RecipeCatalogPage({
       body: 'Sezam, orzech, crispy rice, przypalone brzegi. Mały ruch, który sprawia, że danie nie jest jedną miękką chmurą.',
     },
   ]
-  const isAtelierPage = variant === 'atelier'
   const canUnsetCollection = forcedCollection === 'all'
 
   return (
@@ -1163,7 +1178,11 @@ export function RecipeCatalogPage({
             <div className="mt-6 flex justify-center">
               <button
                 type="button"
-                onClick={() => setVisibleRecipeCount((count) => Math.min(count + LOAD_MORE_RECIPES, filteredRecipes.length))}
+                onClick={() => {
+                  const nextCount = Math.min(visibleRecipeCount + LOAD_MORE_RECIPES, filteredRecipes.length)
+                  setVisibleRecipeCount(nextCount)
+                  track('load_more_clicked', { shown_count: nextCount, hidden_count: Math.max(0, filteredRecipes.length - nextCount), total_count: filteredRecipes.length })
+                }}
                 aria-label={`Pokaż kolejne przepisy: ${Math.min(LOAD_MORE_RECIPES, hiddenRecipeCount)} z ${hiddenRecipeCount} ukrytych`}
                 className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-5 py-3 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
               >

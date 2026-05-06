@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Suspense } from 'react'
+import { PostHogProvider } from '@/components/posthog-provider'
 import { defaultOgImage, siteUrl } from '@/lib/seo'
 import './globals.css'
 
@@ -65,7 +67,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        {children}
+        <Suspense fallback={null}>
+          <PostHogProvider />
+        </Suspense>
+      </body>
     </html>
   )
 }
