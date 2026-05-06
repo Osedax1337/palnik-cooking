@@ -31,6 +31,48 @@ import { track, trackRecipeOpened } from '@/lib/analytics'
 
 const HIGHLIGHT = ['#22a06b', '#e08a36', '#c9572d']
 
+type FlavorProfile = {
+  label: string
+  value: number
+  note: string
+}
+
+function clampFlavor(value: number) {
+  return Math.max(1, Math.min(5, value))
+}
+
+function getFlavorProfile(recipe: Recipe): FlavorProfile[] {
+  const keys = new Set(recipe.ingredients.map((ingredient) => ingredient.key.toLowerCase()))
+  const hasAny = (items: string[]) => items.some((item) => keys.has(item))
+
+  const acid = clampFlavor(
+    1 +
+      (hasAny(['cytryna', 'limonka', 'yuzu', 'ocet', 'sumak', 'rabarbar', 'melasa z granatu']) ? 2 : 0) +
+      (recipe.collections.includes('atelier') ? 1 : 0),
+  )
+  const umami = clampFlavor(
+    1 +
+      (hasAny(['miso', 'sos sojowy', 'parmezan', 'grzyby', 'shiitake', 'kombu', 'bulion']) ? 2 : 0) +
+      (['azjatycka', 'włoska'].includes(recipe.cuisine) ? 1 : 0),
+  )
+  const comfort = clampFlavor(
+    1 +
+      (recipe.dietTags.includes('comfort') ? 2 : 0) +
+      (hasAny(['masło', 'śmietanka', 'ser', 'feta', 'makaron', 'ryż', 'gnocchi']) ? 1 : 0) +
+      (recipe.collections.includes('rozgrzewa') ? 1 : 0),
+  )
+  const heat = clampFlavor(1 + (hasAny(['chilli', 'harissa', 'jalapeño', 'papryka']) ? 2 : 0) + (recipe.cuisine === 'tex-mex' ? 1 : 0))
+  const crunch = clampFlavor(1 + (hasAny(['sezam', 'orzech', 'pestki', 'chleb', 'tortilla']) ? 2 : 0) + (recipe.collections.includes('one-pan') ? 1 : 0))
+
+  return [
+    { label: 'kwas', value: acid, note: acid >= 4 ? 'tnie tłuszcz' : 'raczej miękko' },
+    { label: 'umami', value: umami, note: umami >= 4 ? 'głębia robi robotę' : 'lekka baza' },
+    { label: 'comfort', value: comfort, note: comfort >= 4 ? 'miska szczęścia' : 'lżejszy vibe' },
+    { label: 'ogień', value: heat, note: heat >= 4 ? 'jest kopnięcie' : 'bez alarmu' },
+    { label: 'chrup', value: crunch, note: crunch >= 4 ? 'tekstura gra' : 'miękka sprawa' },
+  ]
+}
+
 function parseCheckedKeys(raw: string | null) {
   if (!raw) return new Set<string>()
   return new Set(
@@ -126,6 +168,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const progress = total === 0 ? 0 : checked / total
   const remaining = Math.max(0, total - checked)
   const allDone = checked === total && total > 0
+  const flavorProfile = useMemo(() => getFlavorProfile(recipe), [recipe])
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -242,6 +285,36 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 <DietTags tags={recipe.dietTags} />
               </div>
               <p className="mt-5 rounded-[1rem] border border-[#201714]/8 bg-white px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {recipe.tip}</p>
+              <div className="mt-5 rounded-[1.35rem] border border-[#201714]/8 bg-[#fffaf3] p-4 shadow-[0_12px_34px_rgba(32,23,20,0.05)]">
+                <div className="mb-3 flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">profil talerza</p>
+                    <h2 className="mt-1 text-lg font-semibold tracking-[-0.04em] text-[#201714]">Jak to uderza w smak</h2>
+                  </div>
+                  <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a4b2a]">1–5</span>
+                </div>
+                <div className="space-y-2.5">
+                  {flavorProfile.map((item) => (
+                    <div key={item.label} className="grid grid-cols-[4.8rem_1fr] items-center gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#201714]">{item.label}</p>
+                        <p className="text-[11px] text-[#201714]/48">{item.note}</p>
+                      </div>
+                      <div className="flex gap-1.5" aria-label={`${item.label}: ${item.value} z 5`}>
+                        {Array.from({ length: 5 }).map((_, index) => {
+                          const active = index < item.value
+                          return (
+                            <span
+                              key={index}
+                              className={`h-2.5 flex-1 rounded-full transition ${active ? 'bg-[#201714]' : 'bg-[#201714]/10'}`}
+                            />
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
