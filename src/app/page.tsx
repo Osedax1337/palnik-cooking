@@ -6,7 +6,7 @@ import { absoluteUrl, breadcrumbJsonLd, pageMetadata, siteUrl } from '@/lib/seo'
 export const metadata = pageMetadata({
   title: 'Palnik — gotowanie bez scrollowania w nieskończoność',
   description:
-    'Palnik pomaga wybrać, co dziś ugotować: katalog przepisów, tryb lodówki, Atelier i szybkie wejścia bez kulinarnego zadęcia.',
+    'Palnik skraca drogę od głodu do decyzji: szybki katalog, tryb lodówki, porównywanie i Atelier bez kulinarnego zadęcia.',
   path: '/',
   keywords: ['przepisy', 'szybki obiad', 'co ugotować', 'gotowanie w domu', 'Palnik'],
 })
@@ -22,7 +22,7 @@ const routes = [
     href: '/katalog',
     eyebrow: 'pełny katalog',
     title: 'Przepisy na dziś',
-    body: 'Filtry, szybkie wybory, lodówka i porównywanie. Cały silnik Palnika w jednym miejscu.',
+    body: 'Szukasz po składniku, klikasz nastrój, porównujesz 2–3 opcje. Mniej scrollowania, więcej decyzji.',
     cta: 'Wejdź do katalogu',
     tone: 'dark',
   },
@@ -30,7 +30,7 @@ const routes = [
     href: '/atelier',
     eyebrow: 'ładniejsze talerze',
     title: 'Atelier',
-    body: 'Ferment, kwas, dym, owoce przy mięsie i trochę prywatnej degustacji bez restauracyjnej pozy.',
+    body: 'Dania z większym ego: kwas, dym, miso, owoce przy mięsie i talerze, które wyglądają jak plan.',
     cta: 'Otwórz Atelier',
     tone: 'wine',
   },
@@ -38,16 +38,16 @@ const routes = [
     href: '/katalog#lodowka',
     eyebrow: 'mam składniki',
     title: 'Tryb lodówki',
-    body: 'Zaznacz, co masz. Palnik pokaże, jak daleko jesteś od sensownego obiadu.',
+    body: 'Zaznacz rzeczy z kuchni. Palnik pokaże, które przepisy są blisko, a gdzie trzeba dokupić pół sklepu.',
     cta: 'Sprawdź lodówkę',
     tone: 'light',
   },
 ] as const
 
 const sections = [
-  ['szybkie obiady', 'Proste dania na dni, kiedy głód jest szybszy niż ambicja. Masło, cytryna, patelnia, koniec filozofii.'],
-  ['gotowanie z lodówki', 'Masz pół cukinii, jajka i coś smutnego w szufladzie? Palnik pomaga złożyć z tego plan, nie wyrzuty sumienia.'],
-  ['Atelier', 'Dania z większym charakterem: ferment, dym, kwas, owoce przy mięsie i talerze, które wyglądają jak zaproszenie do stołu.'],
+  ['szybkie obiady', 'Dania na moment, kiedy głód ma już buty na nogach. Masło, cytryna, patelnia, bez przemówień.'],
+  ['gotowanie z lodówki', 'Masz jajka, pół cukinii i coś podejrzanie ambitnego w szufladzie? Palnik składa z tego plan, nie wyrzuty sumienia.'],
+  ['Atelier', 'Dania z większym charakterem: ferment, dym, kwas, owoce przy mięsie i talerze, które mówią „usiądź, będzie dobrze”.'],
 ]
 
 export default function Home() {
@@ -62,7 +62,7 @@ export default function Home() {
             name: 'Palnik',
             url: siteUrl,
             description:
-              'Palnik pomaga wybrać, co dziś ugotować: katalog przepisów, tryb lodówki, Atelier i szybkie wejścia bez kulinarnego zadęcia.',
+              'Palnik skraca drogę od głodu do decyzji: szybki katalog, tryb lodówki, porównywanie i Atelier bez kulinarnego zadęcia.',
             inLanguage: 'pl-PL',
             potentialAction: {
               '@type': 'SearchAction',
@@ -111,7 +111,7 @@ export default function Home() {
                   Więcej obiadu.
                 </h1>
                 <p className="mt-6 max-w-[39ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                  Palnik nie udaje kulinarnej encyklopedii. To ładny skrót do decyzji: szybki obiad, lodówka, coś popisowego albo pełny katalog, gdy masz ochotę pogrzebać.
+                  Palnik nie jest encyklopedią przepisów. To skrót od „jestem głodny” do „wiem, co robię”: szybki obiad, lodówka, porównanie albo coś z efektem wow.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link href="/katalog" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
