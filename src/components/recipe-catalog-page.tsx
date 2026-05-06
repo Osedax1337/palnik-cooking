@@ -734,7 +734,8 @@ export function RecipeCatalogPage({
                       setFridgeSelection(new Set())
                       persistFridge([])
                     }}
-                    className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline"
+                    aria-label="Wyczyść zaznaczone składniki lodówki"
+                    className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                   >
                     Wyczyść
                   </button>
@@ -1028,7 +1029,8 @@ export function RecipeCatalogPage({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7]"
+                  aria-label="Wyczyść aktywne filtry katalogu"
+                  className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                 >
                   Wyczyść filtry
                 </button>
