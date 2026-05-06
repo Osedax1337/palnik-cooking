@@ -30,6 +30,7 @@ export function PortionSwitcher({
               type="button"
               onClick={() => onChange(portion)}
               aria-pressed={isActive}
+              aria-label={`Ustaw ${portion === 1 ? '1 porcję' : `${portion} porcje`}`}
               className={`min-w-[2.25rem] rounded-full px-3 py-1.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30 ${isActive ? active : inactive}`}
             >
               {portion}

@@ -440,6 +440,7 @@ export function RecipeCatalogPage({
                       <button
                         type="button"
                         onClick={handleRandomRecipe}
+                        aria-label="Wylosuj talerz z Atelier"
                         className={`inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714] ${isShuffling ? 'animate-shuffle-glow' : ''}`}
                       >
                         Losuj talerz
@@ -458,6 +459,7 @@ export function RecipeCatalogPage({
                       setOpenRecipe(recipe.slug)
                       scrollToSection('przepis')
                     }}
+                    aria-label={`Podejrzyj danie Atelier: ${recipe.title}`}
                     className={`group sheen-on-hover relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#151016] text-left shadow-[0_24px_70px_rgba(10,6,12,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(10,6,12,0.36)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 ${index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''}`}
                   >
                     <RecipeVisual recipe={recipe} large={index === 0} />
@@ -514,17 +516,17 @@ export function RecipeCatalogPage({
                 </h1>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
-                <button type="button" onClick={() => runHeroScenario('lodowka')} className="rounded-[1.35rem] border border-[#201714]/10 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                <button type="button" onClick={() => runHeroScenario('lodowka')} aria-label="Przejdź do trybu lodówki" className="rounded-[1.35rem] border border-[#201714]/10 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#8a4b2a]">mam składniki</p>
                   <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">Lodówka</p>
                   <p className="mt-1 text-sm leading-6 text-[#201714]/62">Zacznij od tego, co już masz.</p>
                 </button>
-                <button type="button" onClick={() => runHeroScenario('15-min')} className="rounded-[1.35rem] border border-[#201714]/10 bg-[#201714] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                <button type="button" onClick={() => runHeroScenario('15-min')} aria-label="Pokaż przepisy do 15 minut" className="rounded-[1.35rem] border border-[#201714]/10 bg-[#201714] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">bez czasu</p>
                   <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">15 minut</p>
                   <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Najkrótsza droga do talerza.</p>
                 </button>
-                <button type="button" onClick={() => runHeroScenario('atelier')} className="rounded-[1.35rem] border border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_62%,#171217_100%)] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                <button type="button" onClick={() => runHeroScenario('atelier')} aria-label="Przejdź do Atelier" className="rounded-[1.35rem] border border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_62%,#171217_100%)] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">ładniejszy talerz</p>
                   <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">Atelier</p>
                   <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Kiedy ma być trochę wow.</p>
@@ -623,7 +625,7 @@ export function RecipeCatalogPage({
                 <Link
                   key={recipe.slug}
                   href={`/przepisy/${recipe.slug}`}
-                  className="group flex w-[240px] shrink-0 items-stretch overflow-hidden rounded-[1.4rem] border border-[#201714]/8 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(32,23,20,0.10)]"
+                  className="group flex w-[240px] shrink-0 items-stretch overflow-hidden rounded-[1.4rem] border border-[#201714]/8 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
                 >
                   <div className="relative h-[88px] w-[100px] shrink-0 overflow-hidden">
                     <RecipeVisual recipe={recipe} />
@@ -653,7 +655,8 @@ export function RecipeCatalogPage({
                   <button
                     type="button"
                     onClick={() => setCollectionFilter('all')}
-                    className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline"
+                    aria-label="Wyczyść filtr kolekcji"
+                    className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                   >
                     Wyczyść
                   </button>
@@ -675,6 +678,8 @@ export function RecipeCatalogPage({
                         }
                         setCollectionFilter(active && canUnsetCollection ? 'all' : collection.key)
                       }}
+                      aria-pressed={active}
+                      aria-label={`${active ? 'Aktywna kolekcja' : 'Wybierz kolekcję'}: ${collection.label}`}
                       className={`flex w-[230px] shrink-0 flex-col items-start rounded-[1.6rem] border px-4 py-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                         active
                           ? isAtelier
@@ -724,7 +729,8 @@ export function RecipeCatalogPage({
                   type="button"
                   onClick={toggleFridgeMode}
                   aria-pressed={fridgeMode}
-                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                  aria-label={fridgeMode ? 'Wyłącz tryb lodówki' : 'Włącz tryb lodówki'}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${
                     fridgeMode
                       ? 'border-transparent bg-[#201714] text-[#fff7ee]'
                       : 'border-[#201714]/15 bg-white text-[#201714] hover:bg-[#fff3e7]'
@@ -748,6 +754,7 @@ export function RecipeCatalogPage({
                       toggleFridgeKey(key)
                     }}
                     aria-pressed={active}
+                    aria-label={active ? `Usuń składnik z lodówki: ${key}` : `Dodaj składnik do lodówki: ${key}`}
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                       active
                         ? 'bg-[#201714] text-[#fff7ee]'
@@ -764,7 +771,8 @@ export function RecipeCatalogPage({
                 <button
                   type="button"
                   onClick={() => setShowAllFridgeChips((value) => !value)}
-                  className="inline-flex items-center rounded-full border border-dashed border-[#201714]/15 px-3 py-1.5 text-sm font-medium text-[#8a4b2a] transition hover:bg-[#fff3e7]"
+                  aria-label={showAllFridgeChips ? 'Pokaż mniej składników lodówki' : `Pokaż wszystkie składniki lodówki: ${fridgePalette.length}`}
+                  className="inline-flex items-center rounded-full border border-dashed border-[#201714]/15 px-3 py-1.5 text-sm font-medium text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                 >
                   {showAllFridgeChips ? 'Pokaż mniej' : `Pokaż wszystkie (${fridgePalette.length})`}
                 </button>
@@ -791,6 +799,7 @@ export function RecipeCatalogPage({
                           key={ingredient.key}
                           type="button"
                           onClick={() => toggleFridgeKey(ingredient.key)}
+                          aria-label={`Dodaj brakujący składnik do lodówki: ${ingredient.key}`}
                           className="rounded-full border border-[#201714]/10 bg-white px-3 py-1.5 text-xs font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
                           title="Dodaj do zaznaczonych, jeśli jednak masz"
                         >
@@ -812,6 +821,7 @@ export function RecipeCatalogPage({
                         setOpenRecipe(recipe.slug)
                         scrollToSection('przepis')
                       }}
+                      aria-label={`Podejrzyj najlepsze dopasowanie z lodówki: ${recipe.title}`}
                       className={`group overflow-hidden rounded-[1.35rem] border p-2 text-left transition hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#201714]/15 bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/10 bg-white text-[#201714]'}`}
                     >
                       <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-[#201714]/10">
@@ -949,7 +959,7 @@ export function RecipeCatalogPage({
             {moodFilters.map((filter) => {
               const active = moodFilter === filter.key
               return (
-                <button key={filter.key} type="button" onClick={() => setMoodFilter(filter.key)} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'bg-white text-[#201714] hover:bg-[#fff3e7]'}`}>
+                <button key={filter.key} type="button" onClick={() => setMoodFilter(filter.key)} aria-pressed={active} aria-label={`${active ? 'Aktywny nastrój' : 'Filtruj po nastroju'}: ${filter.label}`} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'bg-white text-[#201714] hover:bg-[#fff3e7]'}`}>
                   {filter.label}
                 </button>
               )
@@ -960,7 +970,7 @@ export function RecipeCatalogPage({
             {cuisineFilters.map((filter) => {
               const active = cuisineFilter === filter.key
               return (
-                <button key={filter.key} type="button" onClick={() => setCuisineFilter(filter.key)} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#8a4b2a] text-[#fff7ee]' : 'bg-[#fff3e7] text-[#201714] hover:bg-[#ffe8d2]'}`}>
+                <button key={filter.key} type="button" onClick={() => setCuisineFilter(filter.key)} aria-pressed={active} aria-label={`${active ? 'Aktywna kuchnia' : 'Filtruj po kuchni'}: ${filter.label}`} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#8a4b2a] text-[#fff7ee]' : 'bg-[#fff3e7] text-[#201714] hover:bg-[#ffe8d2]'}`}>
                   {filter.label}
                 </button>
               )
@@ -978,6 +988,8 @@ export function RecipeCatalogPage({
                   onClick={() =>
                     setDietFilters((current) => (current.includes(tag.key) ? current.filter((entry) => entry !== tag.key) : [...current, tag.key]))
                   }
+                  aria-pressed={active}
+                  aria-label={active ? `Usuń filtr diety: ${tag.label}` : `Dodaj filtr diety: ${tag.label}`}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                     active
                       ? 'bg-[#8a4b2a] text-[#fff7ee]'
@@ -1011,7 +1023,8 @@ export function RecipeCatalogPage({
                 type="button"
                 onClick={handleRandomRecipe}
                 disabled={filteredRecipes.length === 0}
-                className={`inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] disabled:cursor-not-allowed disabled:opacity-45 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
+                aria-label="Wylosuj przepis z aktualnych filtrów"
+                className={`inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 disabled:cursor-not-allowed disabled:opacity-45 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
               >
                 Losuj z aktualnych filtrów
               </button>
@@ -1061,6 +1074,7 @@ export function RecipeCatalogPage({
                         type="button"
                         onClick={() => toggleFavorite(recipe.slug)}
                         aria-pressed={isFavorite}
+                        aria-label={isFavorite ? `Usuń z ulubionych: ${recipe.title}` : `Zapisz w ulubionych: ${recipe.title}`}
                         className={`absolute left-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${match && match.total > 0 ? 'top-12' : 'top-3'} ${
                           isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'bg-white/95 text-[#201714] hover:bg-white'
                         }`}
@@ -1072,6 +1086,7 @@ export function RecipeCatalogPage({
                         onClick={() => toggleCompare(recipe.slug)}
                         disabled={compareDisabled}
                         aria-pressed={isInCompare}
+                        aria-label={isInCompare ? `Usuń z porównania: ${recipe.title}` : compareDisabled ? `Limit porównania osiągnięty, nie można dodać: ${recipe.title}` : `Dodaj do porównania: ${recipe.title}`}
                         className={`absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${
                           isInCompare
                             ? 'bg-[#201714] text-[#fff7ee]'
@@ -1114,7 +1129,7 @@ export function RecipeCatalogPage({
                         <button type="button" onClick={() => {
                           setOpenRecipe(recipe.slug)
                           scrollToSection('przepis')
-                        }} aria-pressed={active} className={`inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
+                        }} aria-pressed={active} aria-label={`Podejrzyj przepis niżej: ${recipe.title}`} className={`inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
                           {active ? 'Przepis otwarty ↓' : 'Podejrzyj niżej'}
                         </button>
                         <Link href={`/przepisy/${recipe.slug}`} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
@@ -1237,7 +1252,7 @@ export function RecipeCatalogPage({
                 return (
                   <span key={slug} className="inline-flex items-center gap-1 rounded-full bg-[#fff3e7] px-2 py-1 text-[11px] font-semibold text-[#8a4b2a]">
                     {recipe.title.split(' ').slice(0, 2).join(' ')}
-                    <button type="button" onClick={() => toggleCompare(slug)} className="text-[#8a4b2a]/60 hover:text-[#201714]">
+                    <button type="button" onClick={() => toggleCompare(slug)} aria-label={`Usuń z porównania: ${recipe.title}`} className="text-[#8a4b2a]/60 hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
                       ×
                     </button>
                   </span>
@@ -1247,7 +1262,8 @@ export function RecipeCatalogPage({
             <button
               type="button"
               onClick={() => persistCompare([])}
-              className="rounded-full border border-[#201714]/10 px-3 py-1.5 text-xs font-semibold text-[#201714] hover:bg-[#fff3e7]"
+              aria-label="Wyczyść wszystkie przepisy z porównania"
+              className="rounded-full border border-[#201714]/10 px-3 py-1.5 text-xs font-semibold text-[#201714] hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
             >
               Wyczyść
             </button>
@@ -1304,7 +1320,8 @@ function EmptyState({
         <button
           type="button"
           onClick={clearFilters}
-          className="inline-flex items-center rounded-full bg-[#201714] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924]"
+          aria-label="Wyczyść wszystkie filtry katalogu"
+          className="inline-flex items-center rounded-full bg-[#201714] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
         >
           Wyczyść filtry
         </button>
@@ -1312,7 +1329,8 @@ function EmptyState({
           <button
             type="button"
             onClick={clearFridge}
-            className="inline-flex items-center rounded-full border border-[#201714]/12 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7]"
+            aria-label="Wyłącz tryb lodówki i wyczyść składniki"
+            className="inline-flex items-center rounded-full border border-[#201714]/12 bg-white px-4 py-2.5 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
           >
             Wyłącz tryb lodówki
           </button>
@@ -1330,7 +1348,8 @@ function EmptyState({
                 setOpenRecipe(recipe.slug)
                 scrollToRecipe()
               }}
-              className="group flex items-center gap-3 rounded-[1.4rem] border border-[#201714]/8 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)]"
+              aria-label={`Podejrzyj sugerowany przepis: ${recipe.title}`}
+              className="group flex items-center gap-3 rounded-[1.4rem] border border-[#201714]/8 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
             >
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
                 <RecipeVisual recipe={recipe} />

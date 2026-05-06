@@ -447,7 +447,9 @@ export function CompareView() {
                   <button
                     type="button"
                     onClick={() => setShoppingMode((current) => !current)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                    aria-pressed={shoppingMode}
+                    aria-label={shoppingMode ? 'Wyłącz checklistę zakupów' : 'Włącz checklistę zakupów'}
+                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${
                       shoppingMode ? 'border-transparent bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/10 bg-[#fffaf3] text-[#201714] hover:bg-[#fff3e7]'
                     }`}
                   >
@@ -457,19 +459,21 @@ export function CompareView() {
                   <button
                     type="button"
                     onClick={handleCopyShopping}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7]"
+                    aria-label="Skopiuj wspólną listę zakupów"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                   >
                     Kopiuj listę
                   </button>
                   <button
                     type="button"
                     onClick={handleShareShopping}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7]"
+                    aria-label="Udostępnij wspólną listę zakupów"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                   >
                     Share / export
                   </button>
                   {shoppingMode ? (
-                    <button type="button" onClick={resetShopping} className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline">
+                    <button type="button" onClick={resetShopping} aria-label="Wyczyść checklistę zakupów" className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a4b2a] underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
                       Wyzeruj
                     </button>
                   ) : null}
@@ -521,7 +525,9 @@ export function CompareView() {
                                 <button
                                   type="button"
                                   onClick={() => toggleShopping(item.id)}
-                                  className="group flex w-full items-start gap-3 rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4 text-left transition hover:bg-[#fff3e7]"
+                                  aria-pressed={isChecked}
+                                  aria-label={isChecked ? `Oznacz jako niekupione: ${headline}` : `Oznacz jako kupione: ${headline}`}
+                                  className="group flex w-full items-start gap-3 rounded-[1.2rem] border border-[#201714]/8 bg-[#fffaf3] p-4 text-left transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
                                 >
                                   <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-xs transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-white' : 'border-[#201714]/20 bg-white text-transparent group-hover:border-[#201714]/45'}`}>
                                     ✓
@@ -624,7 +630,8 @@ export function CompareView() {
                       <button
                         type="button"
                         onClick={() => persistCompare(toggleCompareStorage(recipe.slug))}
-                        className="absolute right-3 top-3 z-20 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#201714] transition hover:bg-white"
+                        aria-label={`Usuń z porównania: ${recipe.title}`}
+                        className="absolute right-3 top-3 z-20 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#201714] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#201714]/30"
                       >
                         usuń
                       </button>

@@ -151,6 +151,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             <button
               type="button"
               onClick={() => window.print()}
+              aria-label={`Drukuj lub zapisz PDF przepisu: ${recipe.title}`}
               className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
             >
               Druk / PDF
@@ -159,6 +160,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               type="button"
               onClick={toggleFavorite}
               aria-pressed={isFavorite}
+              aria-label={isFavorite ? `Usuń z ulubionych: ${recipe.title}` : `Zapisz w ulubionych: ${recipe.title}`}
               className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                 isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7]'
               }`}
@@ -169,6 +171,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               type="button"
               onClick={toggleCompare}
               aria-pressed={isInCompare}
+              aria-label={isInCompare ? `Usuń z porównania: ${recipe.title}` : `Dodaj do porównania: ${recipe.title}`}
               className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                 isInCompare ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7]'
               }`}
@@ -242,6 +245,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 type="button"
                 onClick={() => setShoppingMode((current) => !current)}
                 aria-pressed={shoppingMode}
+                aria-label={shoppingMode ? 'Wyłącz tryb listy zakupów' : 'Włącz tryb listy zakupów'}
                 className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 ${
                   shoppingMode
                     ? 'border-transparent bg-[#fff7ee] text-[#201714]'
@@ -254,7 +258,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               {shoppingMode ? (
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-[#ffcf9f]">{checked}/{total}</span>
-                  <button type="button" onClick={resetShopping} className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] underline-offset-4 hover:underline">
+                  <button type="button" onClick={resetShopping} aria-label="Wyczyść odhaczone składniki" className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30">
                     Wyzeruj
                   </button>
                 </div>
@@ -299,7 +303,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                                 <button
                                   type="button"
                                   onClick={() => toggleItem(line.id)}
-                                  className="group flex w-full items-start gap-3 rounded-[0.9rem] border border-white/8 bg-white/5 p-3 text-left transition hover:bg-white/10"
+                                  aria-pressed={isChecked}
+                                  aria-label={isChecked ? `Oznacz jako niekupione: ${line.text}` : `Oznacz jako kupione: ${line.text}`}
+                                  className="group flex w-full items-start gap-3 rounded-[0.9rem] border border-white/8 bg-white/5 p-3 text-left transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30"
                                 >
                                   <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
                                     ✓
