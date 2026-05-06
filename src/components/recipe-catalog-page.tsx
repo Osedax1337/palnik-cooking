@@ -64,6 +64,7 @@ export function RecipeCatalogPage({
   const [searchQuery, setSearchQuery] = useState('')
   const [openRecipe, setOpenRecipe] = useState(recipes[0].slug)
   const [isShuffling, setIsShuffling] = useState(false)
+  const [decisionRecipe, setDecisionRecipe] = useState<(typeof recipes)[number] | null>(null)
   const [fridgeMode, setFridgeMode] = useState(false)
   const [fridgeSelection, setFridgeSelection] = useState<Set<string>>(new Set())
   const [showAllFridgeChips, setShowAllFridgeChips] = useState(false)
@@ -218,12 +219,15 @@ export function RecipeCatalogPage({
 
     const pool = filteredRecipes.length > 1 ? filteredRecipes.filter((entry) => entry.recipe.slug !== openRecipe) : filteredRecipes
     const next = pool[Math.floor(Math.random() * pool.length)] ?? filteredRecipes[0]
+    setDecisionRecipe(next.recipe)
 
     window.setTimeout(() => {
       setOpenRecipe(next.recipe.slug)
       setIsShuffling(false)
       trackRecipeOpened(next.recipe.slug, 'random_recipe', { result_count: filteredRecipes.length })
-    }, 180)
+    }, 520)
+
+    window.setTimeout(() => setDecisionRecipe(null), 1350)
 
     if (typeof window !== 'undefined') {
       requestAnimationFrame(() => {
@@ -1055,12 +1059,25 @@ export function RecipeCatalogPage({
                 onClick={handleRandomRecipe}
                 disabled={filteredRecipes.length === 0}
                 aria-label="Wylosuj przepis z aktualnych filtrów"
-                className={`inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 disabled:cursor-not-allowed disabled:opacity-45 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
+                className={`tap-pop inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-4 py-2 font-semibold text-[#201714] transition duration-200 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 disabled:cursor-not-allowed disabled:opacity-45 ${isShuffling ? 'animate-shuffle-glow' : ''}`}
               >
                 Losuj z aktualnych filtrów
               </button>
             </div>
           </div>
+
+          {decisionRecipe ? (
+            <div className="pointer-events-none fixed inset-x-4 bottom-6 z-50 mx-auto max-w-md animate-decision-orbit rounded-[1.7rem] border border-[#ffcf9f]/30 bg-[#201714]/95 p-4 text-[#fff7ee] shadow-[0_26px_90px_rgba(32,23,20,0.34)] backdrop-blur sm:bottom-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ffcf9f] text-lg text-[#201714] animate-decision-pulse">🔥</span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffcf9f]">Palnik wybrał</p>
+                  <p className="truncate text-lg font-semibold tracking-[-0.04em]">{decisionRecipe.title}</p>
+                  <p className="text-xs text-[#f3dfcf]/80">{decisionRecipe.time} · {decisionRecipe.cuisine}</p>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           {filteredRecipes.length === 0 ? (
             <EmptyState
@@ -1085,7 +1102,7 @@ export function RecipeCatalogPage({
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
                 return (
-                  <article key={recipe.slug} className={`group relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 hover:-translate-y-1.5 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
+                  <article key={recipe.slug} className={`group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Link
                         href={`/przepisy/${recipe.slug}`}
@@ -1106,7 +1123,7 @@ export function RecipeCatalogPage({
                         onClick={() => toggleFavorite(recipe.slug)}
                         aria-pressed={isFavorite}
                         aria-label={isFavorite ? `Usuń z ulubionych: ${recipe.title}` : `Zapisz w ulubionych: ${recipe.title}`}
-                        className={`absolute left-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${match && match.total > 0 ? 'top-12' : 'top-3'} ${
+                        className={`tap-pop absolute left-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${match && match.total > 0 ? 'top-12' : 'top-3'} ${
                           isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'bg-white/95 text-[#201714] hover:bg-white'
                         }`}
                       >
@@ -1118,7 +1135,7 @@ export function RecipeCatalogPage({
                         disabled={compareDisabled}
                         aria-pressed={isInCompare}
                         aria-label={isInCompare ? `Usuń z porównania: ${recipe.title}` : compareDisabled ? `Limit porównania osiągnięty, nie można dodać: ${recipe.title}` : `Dodaj do porównania: ${recipe.title}`}
-                        className={`absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${
+                        className={`tap-pop absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${
                           isInCompare
                             ? 'bg-[#201714] text-[#fff7ee]'
                             : 'bg-white/95 text-[#201714] hover:bg-white disabled:opacity-50'
@@ -1160,7 +1177,7 @@ export function RecipeCatalogPage({
                         <button type="button" onClick={() => {
                           setOpenRecipe(recipe.slug)
                           scrollToSection('przepis')
-                        }} aria-pressed={active} aria-label={`Podejrzyj przepis niżej: ${recipe.title}`} className={`inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
+                        }} aria-pressed={active} aria-label={`Podejrzyj przepis niżej: ${recipe.title}`} className={`tap-pop inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
                           {active ? 'Przepis otwarty ↓' : 'Podejrzyj niżej'}
                         </button>
                         <Link href={`/przepisy/${recipe.slug}`} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
