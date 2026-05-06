@@ -14,6 +14,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/katalog`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/atelier`,
       lastModified: now,
       changeFrequency: 'weekly',
@@ -24,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/ulubione`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.4,
     },
     ...recipes.map((recipe) => ({
       url: `${baseUrl}/przepisy/${recipe.slug}`,

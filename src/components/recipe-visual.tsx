@@ -15,6 +15,7 @@ export function RecipeVisual({ recipe, large = false }: { recipe: Recipe; large?
         fill
         className="object-cover transition duration-700 ease-out animate-fade-up-soft group-hover:scale-[1.06]"
         sizes={large ? '(max-width: 1024px) 100vw, 45vw' : '(max-width: 1024px) 100vw, 33vw'}
+        priority={large}
       />
     )
   }

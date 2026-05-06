@@ -19,6 +19,7 @@ export function RecipeGallery({
         fill
         className="object-cover transition duration-700 ease-out animate-fade-up-soft group-hover:scale-[1.06]"
         sizes={large ? '(max-width: 1024px) 100vw, 45vw' : '(max-width: 1024px) 100vw, 33vw'}
+        priority={large}
       />
     )
   }
@@ -33,6 +34,7 @@ export function RecipeGallery({
             fill
             className="object-cover transition duration-700 ease-out group-hover:scale-[1.05]"
             sizes={large ? '(max-width: 1024px) 50vw, 24vw' : '(max-width: 1024px) 50vw, 16vw'}
+            priority={large && index === 0}
           />
         </div>
       ))}

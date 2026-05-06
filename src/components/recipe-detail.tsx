@@ -144,7 +144,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     <main className={`min-h-screen px-4 py-4 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8 ${isAtelierRecipe ? 'bg-[radial-gradient(circle_at_top,#25131d_0%,#171317_24%,#fffaf3_62%)]' : 'bg-[#fffaf3]'}`}>
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link href={isAtelierRecipe ? '/atelier' : '/'} className={`inline-flex items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 print:hidden ${isAtelierRecipe ? 'border border-white/10 bg-white/8 text-[#fff7ee] hover:bg-white/12 focus:ring-[#ffcf9f]/35' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/15'}`}>
+          <Link href={isAtelierRecipe ? '/atelier' : '/katalog'} className={`inline-flex items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 print:hidden ${isAtelierRecipe ? 'border border-white/10 bg-white/8 text-[#fff7ee] hover:bg-white/12 focus:ring-[#ffcf9f]/35' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/15'}`}>
             ← {isAtelierRecipe ? 'Wróć do Atelier' : 'Wróć do katalogu'}
           </Link>
           <div className="flex items-center gap-2 print:hidden">

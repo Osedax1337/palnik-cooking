@@ -1061,7 +1061,7 @@ export function RecipeCatalogPage({
                         type="button"
                         onClick={() => toggleFavorite(recipe.slug)}
                         aria-pressed={isFavorite}
-                        className={`absolute left-3 top-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${
+                        className={`absolute left-3 z-20 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition focus:outline-none focus:ring-2 focus:ring-[#fff7ee]/40 ${match && match.total > 0 ? 'top-12' : 'top-3'} ${
                           isFavorite ? 'bg-[#c9572d] text-[#fff7ee]' : 'bg-white/95 text-[#201714] hover:bg-white'
                         }`}
                       >

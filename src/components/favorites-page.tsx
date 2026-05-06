@@ -66,7 +66,7 @@ export function FavoritesPage() {
             <p className="text-4xl">♡</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em]">Jeszcze nic nie zapisane</h2>
             <p className="mx-auto mt-2 max-w-[38ch] text-sm leading-6 text-[#201714]/65">Wejdź w katalog i kliknij “zapisz” przy przepisie. Ta strona zacznie wtedy robić robotę.</p>
-            <Link href="/#katalog" className="mt-5 inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+            <Link href="/katalog" className="mt-5 inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
               Idź do katalogu
             </Link>
           </section>
