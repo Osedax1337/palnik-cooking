@@ -159,6 +159,42 @@ body {
   }
 }
 
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slow-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(-0.35deg);
+  }
+}
+
+@keyframes ember-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: translate3d(12px, -14px, 0) scale(1.08);
+    opacity: 0.86;
+  }
+}
+
 .animate-fade-up-soft {
   animation: fade-up-soft 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -193,6 +229,24 @@ body {
 
 .animate-success-rise {
   animation: success-rise 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal {
+  animation: scroll-reveal 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 28%;
+}
+
+.float-slow {
+  animation: slow-float 7s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: slow-float 9s ease-in-out infinite reverse;
+}
+
+.ember-drift {
+  animation: ember-drift 8s ease-in-out infinite;
 }
 
 .recipe-card-lift {

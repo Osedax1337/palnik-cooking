@@ -50,6 +50,12 @@ const sections = [
   ['Atelier', 'Dania z większym charakterem: ferment, dym, kwas, owoce przy mięsie i talerze, które mówią „usiądź, będzie dobrze”.'],
 ]
 
+const storyBeats = [
+  ['01', 'Głód', 'Nie zaczynasz od 40 kart. Zaczynasz od sytuacji: szybko, z lodówki, dla ludzi albo z efektem wow.'],
+  ['02', 'Decyzja', 'Palnik zawęża opcje, pozwala porównać talerze i nie każe udawać, że masz czas na doktorat z obiadu.'],
+  ['03', 'Ogień', 'Otwierasz przepis, skalujesz porcje, odhaczasz składniki i gotujesz bez wracania do ściany tekstu.'],
+]
+
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-32 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
@@ -80,8 +86,8 @@ export default function Home() {
       />
 
       <section className="relative px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7 animate-fade-up-soft">
-        <div className="absolute left-1/2 top-[-10rem] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[#ffd7b5]/75 blur-3xl" />
-        <div className="absolute right-[-8rem] top-24 h-80 w-80 rounded-full bg-[#c9572d]/20 blur-3xl" />
+        <div className="ember-drift absolute left-1/2 top-[-10rem] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[#ffd7b5]/75 blur-3xl" />
+        <div className="ember-drift absolute right-[-8rem] top-24 h-80 w-80 rounded-full bg-[#c9572d]/20 blur-3xl [animation-delay:1.4s]" />
         <div className="absolute bottom-0 left-[-8rem] h-80 w-80 rounded-full bg-[#7c2433]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl">
@@ -125,7 +131,7 @@ export default function Home() {
             </article>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:min-h-[34rem] lg:grid-cols-[0.92fr_1.08fr]">
-              <Link href={`/przepisy/${heroRecipes[0].slug}`} className="group relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_24px_70px_rgba(32,23,20,0.16)] sm:col-span-2 sm:min-h-[28rem] lg:col-span-1 lg:row-span-2 lg:min-h-0">
+              <Link href={`/przepisy/${heroRecipes[0].slug}`} className="group float-slow relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_24px_70px_rgba(32,23,20,0.16)] sm:col-span-2 sm:min-h-[28rem] lg:col-span-1 lg:row-span-2 lg:min-h-0">
                 <RecipeVisual recipe={heroRecipes[0]} large />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/92 via-[#201714]/28 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-[#fff7ee] sm:p-6">
@@ -136,7 +142,7 @@ export default function Home() {
               </Link>
 
               {heroRecipes.slice(1).map((recipe) => (
-                <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="group relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_18px_50px_rgba(32,23,20,0.12)] sm:min-h-[16rem]">
+                <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="group float-slower relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_18px_50px_rgba(32,23,20,0.12)] sm:min-h-[16rem]">
                   <RecipeVisual recipe={recipe} />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/84 via-[#201714]/10 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-[#fff7ee]">
@@ -150,7 +156,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12 animate-fade-up-soft">
+      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
         <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-3">
           {routes.map((route, index) => (
             <Link
@@ -180,7 +186,27 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 pb-14 sm:px-6 lg:px-8 lg:pb-20 animate-fade-up-soft">
+      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.2rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_28px_90px_rgba(32,23,20,0.16)] sm:p-7 lg:p-9">
+          <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+            <div>
+              <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">jak to płynie</p>
+              <h2 className="mt-2 max-w-[11ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Od głodu do ognia.</h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {storyBeats.map(([number, title, body], index) => (
+                <article key={title} className="rounded-[1.45rem] border border-white/10 bg-white/[0.055] p-4 backdrop-blur" style={{ animationDelay: `${index * 90}ms` }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">{number}</p>
+                  <h3 className="mt-2 text-xl font-semibold tracking-[-0.045em]">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/78">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="scroll-reveal px-4 pb-14 sm:px-6 lg:px-8 lg:pb-10">
         <div className="mx-auto max-w-6xl rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_54%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
           <div className="grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
             <div>
@@ -195,6 +221,20 @@ export default function Home() {
                 </article>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="scroll-reveal px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+        <div className="mx-auto flex max-w-6xl flex-col gap-5 overflow-hidden rounded-[2.2rem] border border-[#201714]/8 bg-[#201714] p-6 text-[#fff7ee] shadow-[0_28px_90px_rgba(32,23,20,0.16)] sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:p-10">
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">następny ruch</p>
+            <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Nie czytaj dalej. Gotuj.</h2>
+            <p className="mt-4 max-w-[48ch] text-sm leading-6 text-[#f3dfcf]/78">Wejdź do katalogu, odpal lodówkę albo idź w Atelier. Palnik ma skracać drogę do talerza, nie robić z obiadu spotkania zarządu.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">Otwórz katalog</Link>
+            <Link href="/katalog#lodowka" className="tap-pop inline-flex rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">Mam składniki</Link>
           </div>
         </div>
       </section>
