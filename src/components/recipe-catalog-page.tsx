@@ -39,6 +39,8 @@ const cuisineKeys = new Set(cuisineFilters.map((filter) => filter.key))
 const dietKeys = new Set(dietTagFilters.map((filter) => filter.key as DietTag))
 const collectionKeys = new Set(collectionDefs.map((c) => c.key as Collection))
 const recipeSlugs = new Set(recipes.map((recipe) => recipe.slug))
+const INITIAL_VISIBLE_RECIPES = 24
+const LOAD_MORE_RECIPES = 24
 
 const fridgePalette = buildFridgePalette()
 
@@ -64,6 +66,7 @@ export function RecipeCatalogPage({
   const [fridgeSelection, setFridgeSelection] = useState<Set<string>>(new Set())
   const [showAllFridgeChips, setShowAllFridgeChips] = useState(false)
   const [previewPortions, setPreviewPortions] = useState<number | null>(null)
+  const [visibleRecipeCount, setVisibleRecipeCount] = useState(INITIAL_VISIBLE_RECIPES)
 
   // Load persistent fridge selection on mount.
   useEffect(() => {
@@ -140,6 +143,17 @@ export function RecipeCatalogPage({
       .map((recipe) => ({ recipe, match: null as ReturnType<typeof fridgeMatch> | null }))
       .sort((a, b) => a.recipe.minutes - b.recipe.minutes)
   }, [baseFiltered, fridgeMode, fridgeSelection])
+
+  useEffect(() => {
+    setVisibleRecipeCount(INITIAL_VISIBLE_RECIPES)
+  }, [collectionFilter, cuisineFilter, dietFilters, fridgeMode, fridgeSelection, moodFilter, searchQuery])
+
+  const visibleFilteredRecipes = useMemo(
+    () => filteredRecipes.slice(0, visibleRecipeCount),
+    [filteredRecipes, visibleRecipeCount],
+  )
+
+  const hiddenRecipeCount = Math.max(0, filteredRecipes.length - visibleFilteredRecipes.length)
 
   useEffect(() => {
     if (!filteredRecipes.some((entry) => entry.recipe.slug === openRecipe)) {
@@ -1047,7 +1061,7 @@ export function RecipeCatalogPage({
             />
           ) : (
             <div className="grid gap-4 lg:grid-cols-3">
-              {filteredRecipes.map(({ recipe, match }) => {
+              {visibleFilteredRecipes.map(({ recipe, match }) => {
                 const active = openRecipe === recipe.slug
                 const isInCompare = compareSlugs.includes(recipe.slug)
                 const isFavorite = favoriteSlugs.includes(recipe.slug)
@@ -1142,6 +1156,19 @@ export function RecipeCatalogPage({
               })}
             </div>
           )}
+
+          {hiddenRecipeCount > 0 ? (
+            <div className="mt-6 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setVisibleRecipeCount((count) => Math.min(count + LOAD_MORE_RECIPES, filteredRecipes.length))}
+                aria-label={`Pokaż kolejne przepisy: ${Math.min(LOAD_MORE_RECIPES, hiddenRecipeCount)} z ${hiddenRecipeCount} ukrytych`}
+                className="inline-flex items-center rounded-full border border-[#201714]/10 bg-white px-5 py-3 text-sm font-semibold text-[#201714] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
+              >
+                Pokaż kolejne {Math.min(LOAD_MORE_RECIPES, hiddenRecipeCount)} · zostało {hiddenRecipeCount}
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 
