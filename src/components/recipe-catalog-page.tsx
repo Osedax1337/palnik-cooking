@@ -12,6 +12,7 @@ import {
   dietTagFilters,
   type DietTag,
   fridgeMatch,
+  type Recipe,
   moodFilters,
   recipes,
   renderIngredient,
@@ -43,6 +44,18 @@ const recipeSlugs = new Set(recipes.map((recipe) => recipe.slug))
 const INITIAL_VISIBLE_RECIPES = 24
 const LOAD_MORE_RECIPES = 24
 
+type BrainMode = 'lodowka' | 'szybko' | 'sexy' | 'spokojnie'
+
+type BrainRecommendation = {
+  recipe: Recipe
+  score: number
+  verdict: string
+  reason: string
+  missing: string[]
+  matched: number
+  total: number
+}
+
 const fridgePalette = buildFridgePalette()
 const fridgeStarterKits = [
   {
@@ -61,6 +74,83 @@ const fridgeStarterKits = [
     keys: ['ryż', 'sos sojowy', 'jajko'],
   },
 ] as const
+
+function effortWeight(effort: Recipe['effort']) {
+  if (effort === 'lekko') return 1
+  if (effort === 'średnio') return 0.62
+  return 0.28
+}
+
+function makeBrainVerdict(recipe: Recipe, mode: BrainMode, missing: string[], matchScore: number) {
+  if (missing.length === 0 && matchScore > 0) return `Rób to. Masz wszystko, ${recipe.time} i zero zakupowego teatru.`
+  if (missing.length > 0 && missing.length <= 2) return `Rób to. Brakuje tylko: ${missing.join(', ')}.`
+  if (mode === 'szybko') return `${recipe.time}. Krótka droga do talerza, mało filozofii.`
+  if (mode === 'sexy') return 'To jest talerz z pauzą przy stole. Trochę teatr, ale z powodem.'
+  if (mode === 'spokojnie') return 'Bez ciśnienia. Ciepłe, wdzięczne, do ogarnięcia bez sprintu.'
+  return 'Najbliższy sensowny ruch z tego, co już masz.'
+}
+
+function makeBrainReason(recipe: Recipe, mode: BrainMode, match: ReturnType<typeof fridgeMatch> | null) {
+  const traits = []
+  if (match && match.total > 0) traits.push(`${match.matched}/${match.total} składników już masz`)
+  if (recipe.minutes <= 20) traits.push('szybkie wejście')
+  if (recipe.effort === 'lekko') traits.push('mało ruchów')
+  if (recipe.collections.includes('atelier')) traits.push('większy efekt na talerzu')
+  if (recipe.collections.includes('meal-prep')) traits.push('dobrze znosi jutro')
+  if (recipe.dietTags.includes('comfort')) traits.push('comfort bez tłumaczenia')
+
+  if (traits.length >= 2) return traits.slice(0, 3).join(' · ')
+  if (mode === 'sexy') return 'kontrast, tekstura i efekt większy niż robota'
+  if (mode === 'szybko') return 'czas wygrywa z ambicją, ale smak nie umiera'
+  if (mode === 'spokojnie') return 'bezpieczny wybór, gdy chcesz ugotować i nie walczyć'
+  return 'najmniejszy dystans między lodówką a talerzem'
+}
+
+function scoreBrainRecipe({
+  recipe,
+  mode,
+  fridgeSelection,
+  moodFilter,
+  cuisineFilter,
+  collectionFilter,
+  dietFilters,
+  favoriteSlugs,
+  recentSlugs,
+}: {
+  recipe: Recipe
+  mode: BrainMode
+  fridgeSelection: Set<string>
+  moodFilter: (typeof moodFilters)[number]['key']
+  cuisineFilter: (typeof cuisineFilters)[number]['key']
+  collectionFilter: Collection | 'all'
+  dietFilters: DietTag[]
+  favoriteSlugs: string[]
+  recentSlugs: string[]
+}) {
+  const match = fridgeSelection.size > 0 ? fridgeMatch(recipe, fridgeSelection) : null
+  const matchScore = match?.score ?? 0
+  const timeScore = Math.max(0, 1 - Math.max(0, recipe.minutes - 12) / 55)
+  const missingPenalty = match ? Math.min(0.45, match.missing.length * 0.055) : 0
+
+  let score = 0
+  score += timeScore * 1.25
+  score += effortWeight(recipe.effort) * 0.85
+  score += match ? matchScore * 2.35 - missingPenalty : 0.2
+  score += favoriteSlugs.includes(recipe.slug) ? 0.34 : 0
+  score += recentSlugs.includes(recipe.slug) ? 0.18 : 0
+
+  if (moodFilter !== 'all' && recipe.mood === moodFilter) score += 0.52
+  if (cuisineFilter !== 'all' && recipe.cuisine === cuisineFilter) score += 0.36
+  if (collectionFilter !== 'all' && recipe.collections.includes(collectionFilter)) score += 0.55
+  if (dietFilters.length > 0 && dietFilters.every((tag) => recipe.dietTags.includes(tag))) score += 0.42
+
+  if (mode === 'lodowka') score += match ? matchScore * 1.9 : -0.35
+  if (mode === 'szybko') score += recipe.minutes <= 20 ? 1.1 : recipe.minutes <= 30 ? 0.35 : -0.45
+  if (mode === 'sexy') score += recipe.collections.includes('atelier') ? 1.45 : recipe.collections.includes('na-gosci') ? 0.55 : -0.2
+  if (mode === 'spokojnie') score += recipe.effort === 'lekko' ? 0.75 : recipe.dietTags.includes('comfort') ? 0.45 : 0
+
+  return { score, match }
+}
 
 export function RecipeCatalogPage({
   forcedCollection = 'all',
@@ -87,6 +177,7 @@ export function RecipeCatalogPage({
   const [showAllFridgeChips, setShowAllFridgeChips] = useState(false)
   const [previewPortions, setPreviewPortions] = useState<number | null>(null)
   const [visibleRecipeCount, setVisibleRecipeCount] = useState(INITIAL_VISIBLE_RECIPES)
+  const [brainMode, setBrainMode] = useState<BrainMode>('lodowka')
 
   // Load persistent fridge selection on mount.
   useEffect(() => {
@@ -372,6 +463,49 @@ export function RecipeCatalogPage({
   const favoriteRecipes = favoriteSlugs
     .map((slug) => recipes.find((recipe) => recipe.slug === slug))
     .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
+
+  const brainRecommendations = useMemo<BrainRecommendation[]>(() => {
+    const candidatePool = recipes.filter((recipe) => {
+      if (brainMode !== 'sexy' && recipe.collections.includes('atelier') && !recipe.collections.includes('15-min')) return false
+      if (dietFilters.length > 0 && !dietFilters.every((tag) => recipe.dietTags.includes(tag))) return false
+      return true
+    })
+
+    return candidatePool
+      .map((recipe) => {
+        const { score, match } = scoreBrainRecipe({
+          recipe,
+          mode: brainMode,
+          fridgeSelection,
+          moodFilter,
+          cuisineFilter,
+          collectionFilter,
+          dietFilters,
+          favoriteSlugs,
+          recentSlugs,
+        })
+        const missing = match?.missing.slice(0, 3).map((ingredient) => ingredient.key) ?? []
+        return {
+          recipe,
+          score,
+          verdict: makeBrainVerdict(recipe, brainMode, missing, match?.score ?? 0),
+          reason: makeBrainReason(recipe, brainMode, match),
+          missing,
+          matched: match?.matched ?? 0,
+          total: match?.total ?? recipe.ingredients.length,
+        }
+      })
+      .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
+      .slice(0, 3)
+  }, [brainMode, collectionFilter, cuisineFilter, dietFilters, favoriteSlugs, fridgeSelection, moodFilter, recentSlugs])
+
+  const leadBrain = brainRecommendations[0]
+  const brainModes = [
+    { key: 'lodowka' as const, label: 'Uratuj lodówkę', body: 'najmniej zakupów' },
+    { key: 'szybko' as const, label: 'Chcę jeść szybko', body: 'czas wygrywa' },
+    { key: 'sexy' as const, label: 'Zrób coś sexy', body: 'efekt przy stole' },
+    { key: 'spokojnie' as const, label: 'Bez spiny', body: 'komfort i niski chaos' },
+  ]
 
   const visibleFridgeChips = showAllFridgeChips ? fridgePalette : fridgePalette.slice(0, 16)
   const fridgeBestMatches = fridgeMode && fridgeSelection.size > 0
@@ -667,6 +801,120 @@ export function RecipeCatalogPage({
                   </div>
                 </button>
               ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {!isAtelierPage && leadBrain ? (
+        <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
+          <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.25rem] border border-[#201714]/10 bg-[radial-gradient(circle_at_18%_8%,rgba(255,207,159,0.44),transparent_28%),linear-gradient(135deg,#201714_0%,#2c1b18_48%,#fff3e7_49%,#fffaf3_100%)] shadow-[0_28px_80px_rgba(32,23,20,0.14)]">
+            <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
+              <article className="relative min-h-[26rem] overflow-hidden p-5 text-[#fff7ee] sm:p-6 lg:p-8">
+                <div className="absolute inset-0 opacity-55">
+                  <RecipeVisual recipe={leadBrain.recipe} large />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#201714] via-[#201714]/78 to-[#201714]/22" />
+                </div>
+                <div className="relative flex min-h-[23rem] flex-col justify-between">
+                  <div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[#ffcf9f]/20 bg-[#ffcf9f]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#ffcf9f]" />
+                      Palnik Brain / God Mode
+                    </div>
+                    <h2 className="mt-4 max-w-[9ch] text-5xl font-semibold leading-[0.86] tracking-[-0.075em] sm:text-6xl">Gotuj to.</h2>
+                    <p className="mt-4 max-w-[34ch] text-base leading-7 text-[#f3dfcf]">{leadBrain.verdict}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">najmocniejsza decyzja teraz</p>
+                    <h3 className="mt-2 max-w-[15ch] text-3xl font-semibold leading-[0.95] tracking-[-0.055em]">{leadBrain.recipe.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{leadBrain.recipe.time} · {leadBrain.recipe.cuisine} · {leadBrain.reason}</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenRecipe(leadBrain.recipe.slug)
+                          scrollToSection('przepis')
+                          trackRecipeOpened(leadBrain.recipe.slug, 'brain_lead', { mode: brainMode, score: Math.round(leadBrain.score * 100) })
+                        }}
+                        className="rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
+                      >
+                        Pokaż w katalogu
+                      </button>
+                      <Link href={`/przepisy/${leadBrain.recipe.slug}`} className="rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
+                        Gotuj teraz
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <div className="p-5 sm:p-6 lg:p-7">
+                <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">tryb decyzji</p>
+                    <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Nie szukaj. Wydaj rozkaz.</h2>
+                  </div>
+                  <p className="max-w-[33ch] text-sm leading-6 text-[#201714]/62">Brain miesza lodówkę, czas, effort, filtry i historię. Wynik ma być decyzją, nie tablicą ogłoszeń.</p>
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-4">
+                  {brainModes.map((mode) => {
+                    const active = brainMode === mode.key
+                    return (
+                      <button
+                        key={mode.key}
+                        type="button"
+                        onClick={() => setBrainMode(mode.key)}
+                        aria-pressed={active}
+                        className={`rounded-[1.15rem] border p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_14px_34px_rgba(32,23,20,0.18)]' : 'border-[#201714]/10 bg-white/78 text-[#201714] hover:bg-white'}`}
+                      >
+                        <span className={`block text-[10px] font-semibold uppercase tracking-[0.18em] ${active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{mode.body}</span>
+                        <span className="mt-1 block text-sm font-semibold tracking-[-0.02em]">{mode.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <div className="mt-4 grid gap-3">
+                  {brainRecommendations.map((item, index) => (
+                    <article key={item.recipe.slug} className={`grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 shadow-sm sm:grid-cols-[116px_1fr] ${index === 0 ? 'border-[#201714]/12 bg-white' : 'border-[#201714]/8 bg-white/70'}`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenRecipe(item.recipe.slug)
+                          scrollToSection('przepis')
+                          trackRecipeOpened(item.recipe.slug, 'brain_card', { mode: brainMode, rank: index + 1 })
+                        }}
+                        aria-label={`Podejrzyj rekomendację Palnik Brain: ${item.recipe.title}`}
+                        className="group relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-[#201714]/10 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:aspect-auto"
+                      >
+                        <RecipeVisual recipe={item.recipe} />
+                        <div className="absolute left-2 top-2 rounded-full bg-white/94 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#201714]">#{index + 1}</div>
+                      </button>
+                      <div className="flex min-w-0 flex-col justify-between gap-3 py-1">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+                            <span>{item.recipe.time}</span>
+                            <span>·</span>
+                            <span>{item.recipe.effort}</span>
+                            {fridgeSelection.size > 0 ? <span>· {item.matched}/{item.total} masz</span> : null}
+                          </div>
+                          <h3 className="mt-1 line-clamp-2 text-lg font-semibold leading-tight tracking-[-0.04em] text-[#201714]">{item.recipe.title}</h3>
+                          <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#201714]/64">{item.reason}</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {item.missing.length > 0 ? (
+                            <span className="rounded-full bg-[#fff3e7] px-3 py-1.5 text-xs font-semibold text-[#8a4b2a]">dokup: {item.missing.join(', ')}</span>
+                          ) : (
+                            <span className="rounded-full bg-[#dff5e8] px-3 py-1.5 text-xs font-semibold text-[#18623b]">bez oczywistych braków</span>
+                          )}
+                          <Link href={`/przepisy/${item.recipe.slug}`} className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee] transition hover:bg-[#3a2b25] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Gotuj</Link>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
