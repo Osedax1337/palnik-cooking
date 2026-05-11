@@ -68,6 +68,9 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <body className={`${inter.className} antialiased`}>
+        <a href="#main-content" className="skip-link">
+          Przejdź do treści
+        </a>
         {children}
         <Suspense fallback={null}>
           <PostHogProvider />

@@ -58,7 +58,7 @@ const storyBeats = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fffaf3] pb-44 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
+    <main id="main-content" className="min-h-screen overflow-hidden bg-[#fffaf3] pb-44 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
