@@ -20,7 +20,7 @@ const filters: { id: FavoriteFilter; label: string }[] = [
 
 const emptyShelves = [
   { label: '15 minut', title: 'Zapisz coś na głód bez negocjacji.', href: '/katalog?zbior=15-min' },
-  { label: 'lodówka', title: 'Znajdź przepisy pod to, co już masz.', href: '/katalog#lodowka' },
+  { label: 'lodówka', title: 'Znajdź przepisy pod to, co już masz.', href: '/katalog?lodowka=1#lodowka' },
   { label: 'Atelier', title: 'Odłóż jeden przepis na kolację z efektem.', href: '/atelier' },
 ]
 

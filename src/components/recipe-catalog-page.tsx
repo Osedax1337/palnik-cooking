@@ -57,8 +57,8 @@ const fridgeStarterKits = [
   },
   {
     label: 'azjatycki skrót',
-    body: 'ryż, sos sojowy, jajka — baza pod szybki comfort bez zamawiania.',
-    keys: ['ryż', 'sos sojowy', 'jajka'],
+    body: 'ryż, sos sojowy, jajko — baza pod szybki comfort bez zamawiania.',
+    keys: ['ryż', 'sos sojowy', 'jajko'],
   },
 ] as const
 
@@ -381,8 +381,17 @@ export function RecipeCatalogPage({
     : []
   const fridgeTopMatch = fridgeBestMatches[0]?.match
   const fridgeTopRecipe = fridgeBestMatches[0]?.recipe
+  const fridgeWeakMatch = Boolean(fridgeTopMatch && fridgeTopMatch.score > 0 && fridgeTopMatch.score < 0.35)
   const fridgeSelectedList = [...fridgeSelection].slice(0, 5)
   const fridgeSelectedRest = Math.max(0, fridgeSelection.size - fridgeSelectedList.length)
+  const emptyStateSuggestions = fridgeMode && fridgeSelection.size > 0
+    ? recipes
+        .map((recipe) => ({ recipe, match: fridgeMatch(recipe, fridgeSelection) }))
+        .filter((entry) => entry.match.total > 0)
+        .sort((a, b) => b.match.score - a.match.score || a.recipe.minutes - b.recipe.minutes)
+        .slice(0, 3)
+        .map((entry) => entry.recipe)
+    : recipes.slice(0, 3)
   const decisionCards = [
     {
       eyebrow: 'głód teraz',
@@ -876,6 +885,11 @@ export function RecipeCatalogPage({
                   <p className="mt-2 text-sm leading-6 text-[#201714]/68">
                     Masz: <strong className="text-[#201714]">{fridgeSelectedList.join(', ')}</strong>{fridgeSelectedRest > 0 ? ` i jeszcze ${fridgeSelectedRest}` : ''}. Palnik sortuje przepisy po realnym dystansie do obiadu, nie po tym, co wygląda najładniej w katalogu.
                   </p>
+                  {fridgeWeakMatch ? (
+                    <p className="mt-3 rounded-[1rem] border border-[#c9572d]/15 bg-white px-3 py-2 text-xs leading-5 text-[#8a4b2a]">
+                      To jest raczej trop niż plan. Masz coś, co zahacza o przepis, ale brakuje mostu: białka, kwaśnego akcentu albo konkretnej bazy.
+                    </p>
+                  ) : null}
                   {fridgeTopMatch && fridgeTopMatch.missing.length > 0 ? (
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">dokup tylko</span>
@@ -1163,7 +1177,7 @@ export function RecipeCatalogPage({
                 persistFridge([])
                 setFridgeMode(false)
               }}
-              suggestions={fridgeMode && fridgeSelection.size > 0 ? filteredRecipes.slice(0, 3).map((entry) => entry.recipe) : recipes.slice(0, 3)}
+              suggestions={emptyStateSuggestions}
               setOpenRecipe={setOpenRecipe}
               scrollToRecipe={() => scrollToSection('przepis')}
             />
