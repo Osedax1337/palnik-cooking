@@ -47,8 +47,8 @@ const fridgePalette = buildFridgePalette()
 const fridgeStarterKits = [
   {
     label: 'szybka patelnia',
-    body: 'jajka, cukinia, feta — coś, co brzmi jak obiad, a nie negocjacje z głodem.',
-    keys: ['jajka', 'cukinia', 'feta'],
+    body: 'jajko, cukinia, feta — coś, co brzmi jak obiad, a nie negocjacje z głodem.',
+    keys: ['jajko', 'cukinia', 'feta'],
   },
   {
     label: 'makaron ratunkowy',
