@@ -1527,6 +1527,7 @@ export function RecipeCatalogPage({
                 type="search"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
+                aria-label={isAtelierPage ? 'Szukaj w Atelier po składniku, nastroju albo kuchni' : 'Szukaj przepisu po składniku, nastroju albo kuchni'}
                 placeholder={isAtelierPage ? 'np. miso, yuzu, jagnięcina, dashi' : 'np. cytryna, halloumi, makaron, brunch'}
                 className={`w-full rounded-[1.3rem] px-4 py-3 text-sm text-[#201714] outline-none transition focus:ring-2 ${isAtelierPage ? 'border border-white/10 bg-[#fff7ee] shadow-[0_10px_30px_rgba(10,6,12,0.16)] focus:border-[#ffcf9f] focus:ring-[#ffcf9f]/20' : 'border border-[#201714]/10 bg-white shadow-sm focus:border-[#8a4b2a] focus:ring-[#8a4b2a]/10'}`}
               />
