@@ -56,6 +56,13 @@ const storyBeats = [
   ['03', 'Ogień', 'Otwierasz przepis, skalujesz porcje, odhaczasz składniki i gotujesz bez wracania do ściany tekstu.'],
 ]
 
+const brainSteps = [
+  ['lodówka', 'Zaznaczasz, co masz. Palnik liczy dystans do obiadu, a nie pokazuje katalog dla sportu.'],
+  ['Brain', 'Dostajesz jedną mocną rekomendację z wyjaśnieniem: czas, effort, braki, pamięć i smak.'],
+  ['Cockpit', 'Po wejściu w przepis widzisz blat: masz/brakuje/zamienniki, pierwszy ruch i aktywne kroki.'],
+  ['pamięć lokalna', 'Pantry Memory i Taste DNA siedzą tylko w przeglądarce. Bez konta, bez wysyłania profilu do serwera.'],
+]
+
 export default function Home() {
   return (
     <main id="main-content" className="min-h-screen overflow-hidden bg-[#fffaf3] pb-44 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
@@ -199,6 +206,28 @@ export default function Home() {
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">{number}</p>
                   <h3 className="mt-2 text-xl font-semibold tracking-[-0.045em]">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/78">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.35rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] shadow-[0_24px_70px_rgba(32,23,20,0.09)]">
+          <div className="grid gap-px bg-[#201714]/8 lg:grid-cols-[0.78fr_1.22fr]">
+            <article className="bg-[#201714] p-6 text-[#fff7ee] sm:p-8 lg:p-10">
+              <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">jak działa Palnik</p>
+              <h2 className="mt-3 max-w-[10ch] text-4xl font-semibold leading-[0.9] tracking-[-0.065em] sm:text-5xl">To nie jest lista. To decyzja.</h2>
+              <p className="mt-5 max-w-[38ch] text-sm leading-6 text-[#f3dfcf]/82">Palnik łączy lodówkę, preferencje i prowadzenie przy blacie. Ma skrócić drogę od “co ja mam zjeść” do pierwszego ruchu nożem.</p>
+              <Link href="/katalog?lodowka=1#lodowka" className="mt-6 inline-flex rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">Odpal lodówkę</Link>
+            </article>
+            <div className="grid gap-px bg-[#201714]/8 sm:grid-cols-2">
+              {brainSteps.map(([title, body], index) => (
+                <article key={title} className="bg-white/92 p-5 sm:p-6">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">0{index + 1}</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[#201714]">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-[#201714]/66">{body}</p>
                 </article>
               ))}
             </div>

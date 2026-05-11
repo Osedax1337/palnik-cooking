@@ -594,6 +594,12 @@ export function RecipeCatalogPage({
         .slice(0, 3)
         .map((entry) => entry.recipe)
     : recipes.slice(0, 3)
+  const closureSteps = [
+    ['1', 'Wybierz sytuację', 'Szybko, z lodówki, efekt przy stole albo bez spiny. Palnik zaczyna od problemu, nie od listy.'],
+    ['2', 'Brain zawęża', 'Rekomendacja tłumaczy, czemu ma sens: składniki, czas, effort, pamięć i smak.'],
+    ['3', 'Cockpit prowadzi', 'W przepisie widzisz pierwszy ruch, braki, zamienniki i aktywny krok przy blacie.'],
+  ]
+
   const decisionCards = [
     {
       eyebrow: 'głód teraz',
@@ -843,6 +849,27 @@ export function RecipeCatalogPage({
 
       {!isAtelierPage ? (
         <section className="px-5 pb-4 pt-2 sm:px-6 lg:px-8 lg:pb-6">
+          <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[0.72fr_1.28fr]">
+            <article className="rounded-[2rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.14)] sm:p-6">
+              <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">pierwsza ścieżka</p>
+              <h2 className="mt-2 max-w-[10ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em]">Jak działa Palnik?</h2>
+              <p className="mt-4 text-sm leading-6 text-[#f3dfcf]/78">Wybierasz sytuację, Brain zawęża decyzję, Cockpit prowadzi przy blacie. Jeśli pamięć pomaga, działa lokalnie w tej przeglądarce.</p>
+            </article>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {closureSteps.map(([number, title, body]) => (
+                <article key={title} className="rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">0{number}</p>
+                  <h3 className="mt-2 text-xl font-semibold tracking-[-0.045em]">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#201714]/62">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {!isAtelierPage ? (
+        <section className="px-5 pb-4 pt-2 sm:px-6 lg:px-8 lg:pb-6">
           <div className="mx-auto max-w-6xl">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
@@ -1029,6 +1056,9 @@ export function RecipeCatalogPage({
                 {hasProfileSignal
                   ? 'Lokalnie łapie składniki i wybory. Brain może startować bliżej twojej kuchni, nawet zanim coś zaznaczysz.'
                   : 'Zaznacz kilka składników albo wybierz tryb Brain. Palnik zacznie budować lokalny profil bez logowania i bez wysyłania tego na serwer.'}
+              </p>
+              <p className="mt-3 rounded-[1rem] border border-[#201714]/8 bg-[#fffaf3] px-3 py-2 text-xs leading-5 text-[#201714]/62">
+                Prywatność po ludzku: ta pamięć siedzi tylko w localStorage tej przeglądarki. Reset niżej czyści ją od razu — bez konta, bez profilu w chmurze.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <button type="button" onClick={() => resetMemory('pantry')} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
