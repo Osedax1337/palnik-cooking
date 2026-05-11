@@ -373,8 +373,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         </div>
 
         <section className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-          <div className={`overflow-hidden rounded-[2rem] shadow-[0_22px_70px_rgba(32,23,20,0.10)] sm:rounded-[2.4rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'bg-white'}`}>
-            <div className="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[5/4]">
+          <div className={`overflow-hidden rounded-[2rem] shadow-[0_22px_70px_rgba(32,23,20,0.10)] sm:rounded-[2.4rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'palnik-detail-surface'}`}>
+            <div className="palnik-image-glow relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[5/4]">
               <RecipeVisual recipe={recipe} large />
               {isAtelierRecipe ? (
                 <div className="absolute left-4 top-4 rounded-full border border-[#ffcf9f]/25 bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f] backdrop-blur">
@@ -405,11 +405,11 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     <span className="mt-1 block">Tu chodzi o balans: słodycz ma podbić umami, kwas ma przeciąć tłuszcz, a chrupnięcie ma zamknąć talerz. Nie dekoruj na siłę — lepiej zostawić jedną mocną decyzję niż pięć ozdobników.</span>
                   </p>
                 ) : null}
-                <p className="rounded-[1rem] bg-[#fffaf3] px-4 py-3.5 text-sm leading-6 text-[#201714]/85">
+                <p className="palnik-warm-panel rounded-[1rem] border border-[#201714]/6 px-4 py-3.5 text-sm leading-6 text-[#201714]/85 shadow-[0_10px_28px_rgba(32,23,20,0.045)]">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">kiedy to robić</span>
                   <span className="mt-1 block">{recipe.whenToMake}</span>
                 </p>
-                <p className="rounded-[1rem] bg-[#fff3e7] px-4 py-3.5 text-sm leading-6 text-[#201714]/80">
+                <p className="rounded-[1rem] border border-[#c9572d]/10 bg-[#fff3e7] px-4 py-3.5 text-sm leading-6 text-[#201714]/80 shadow-[0_10px_28px_rgba(32,23,20,0.045)]">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">dlaczego działa</span>
                   <span className="mt-1 block">{isAtelierRecipe ? atelierWhy : recipeWhy}</span>
                 </p>
@@ -430,7 +430,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">notatka szefa</p>
                   <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{chefNote}</p>
                 </div>
-                <div className="rounded-[1.25rem] border border-[#201714]/8 bg-[#fff3e7] px-4 py-4 text-[#201714] shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
+                <div className="palnik-warm-panel rounded-[1.25rem] border border-[#201714]/8 px-4 py-4 text-[#201714] shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">{recipeSignature.label}</p>
                   <h2 className="mt-1 text-lg font-semibold tracking-[-0.04em]">{recipeSignature.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-[#201714]/72">{recipeSignature.body}</p>
@@ -688,7 +688,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     const stepProgress = Math.round(((index + 1) / recipe.steps.length) * 100)
 
                     return (
-                      <li key={step} className={`step-progress-card group overflow-hidden rounded-[1.45rem] border transition duration-300 hover:-translate-y-0.5 focus-within:border-white/18 ${activeStep === index ? 'border-[#ffcf9f]/35 bg-[#ffcf9f]/10 shadow-[0_18px_50px_rgba(255,207,159,0.08)]' : 'border-white/8 bg-white/[0.055] hover:border-white/18 hover:bg-white/[0.075]'}`}>
+                      <li key={step} className={`step-progress-card group overflow-hidden rounded-[1.45rem] border transition duration-300 hover:-translate-y-0.5 focus-within:border-white/18 ${activeStep === index ? 'cook-step-active border-[#ffcf9f]/35 bg-[#ffcf9f]/10' : 'border-white/8 bg-white/[0.055] hover:border-white/18 hover:bg-white/[0.075]'}`}>
                         {stepImage ? (
                           <div className="relative aspect-[5/4] w-full overflow-hidden bg-[#120c0a] sm:aspect-[16/10] xl:aspect-[5/4]">
                             <Image

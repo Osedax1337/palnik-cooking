@@ -1619,8 +1619,8 @@ export function RecipeCatalogPage({
                 const cardWhy = makeRecipeWhy(recipe)
                 const cardSignals = makeRecipeQualitySignals(recipe)
                 return (
-                  <article key={recipe.slug} style={{ animationDelay: `${Math.min(cardIndex, 8) * 38}ms` }} className={`catalog-card-enter group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
-                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <article key={recipe.slug} style={{ animationDelay: `${Math.min(cardIndex, 8) * 38}ms` }} className={`catalog-card-enter group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'palnik-card-surface sheen-on-hover hover:shadow-[0_26px_70px_rgba(32,23,20,0.16)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
+                    <div className="palnik-image-glow relative aspect-[4/3] w-full overflow-hidden">
                       <Link
                         href={recipeHref(recipe.slug)}
                         aria-label={`Otwórz przepis: ${recipe.title}`}
@@ -1667,7 +1667,7 @@ export function RecipeCatalogPage({
                         </div>
                       ) : null}
                     </div>
-                    <div className={`flex flex-1 flex-col p-5 lg:p-6 ${isAtelierPage ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_100%)]' : ''}`}>
+                    <div className={`flex flex-1 flex-col p-5 lg:p-6 ${isAtelierPage ? 'bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_100%)]' : 'bg-white/58 backdrop-blur-[1px]'}`}>
                       <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#201714]/60">
                         <span className="rounded-full border border-current/10 px-3 py-1.5">{recipe.time}</span>
                         <span className="rounded-full border border-current/10 px-3 py-1.5">{recipe.cuisine}</span>
