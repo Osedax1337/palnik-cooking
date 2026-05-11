@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { effortLevels, recipes, renderIngredient } from '@/lib/recipes'
 import { RecipeVisual } from '@/components/recipe-visual'
@@ -14,7 +14,6 @@ import {
   setCompareShopping,
   setPortionFor,
   STORAGE_KEYS,
-  toggleCompare as toggleCompareStorage,
 } from '@/lib/storage'
 import { useStorageValue } from '@/lib/use-storage'
 import { track } from '@/lib/analytics'
@@ -202,6 +201,7 @@ function parseCheckedParam(raw: string | null) {
 
 export function CompareView() {
   const pathname = usePathname()
+  const router = useRouter()
   const searchParams = useSearchParams()
   const [shoppingMode, setShoppingMode] = useState(false)
   const [shopping, setShopping] = useState<Record<string, boolean>>({})
@@ -273,6 +273,21 @@ export function CompareView() {
 
   const resetShopping = () => {
     setShopping({})
+  }
+
+  const removeFromComparison = (slug: string) => {
+    const next = selected.filter((recipe) => recipe.slug !== slug).map((recipe) => recipe.slug)
+    persistCompare(next)
+    track('compare_toggled', { slug, selected: false, compare_count: next.length, source: 'compare_view' })
+
+    if (next.length === 0) {
+      router.push('/porownaj')
+      return
+    }
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('ids', next.join(','))
+    router.push(`/porownaj?${params.toString()}`)
   }
 
   const shoppingExportText = useMemo(() => {
@@ -665,11 +680,7 @@ export function CompareView() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => {
-                          const next = toggleCompareStorage(recipe.slug)
-                          persistCompare(next)
-                          track('compare_toggled', { slug: recipe.slug, selected: next.includes(recipe.slug), compare_count: next.length, source: 'compare_view' })
-                        }}
+                        onClick={() => removeFromComparison(recipe.slug)}
                         aria-label={`Usuń z porównania: ${recipe.title}`}
                         className="absolute right-3 top-3 z-20 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#201714] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#201714]/30"
                       >

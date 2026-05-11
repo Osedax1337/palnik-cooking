@@ -225,6 +225,12 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             ← {isAtelierRecipe ? 'Wróć do Atelier' : 'Wróć do katalogu'}
           </Link>
           <div className="flex items-center gap-2 print:hidden">
+            <Link
+              href="#gotowanie"
+              className="inline-flex items-center rounded-full bg-[#201714] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#fff7ee] transition hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
+            >
+              Gotuj teraz
+            </Link>
             <button
               type="button"
               onClick={() => window.print()}
@@ -342,7 +348,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             </div>
           </div>
 
-          <div className={`rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.20)] sm:rounded-[2.35rem] sm:p-6 lg:sticky lg:top-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
+          <div id="gotowanie" className={`scroll-mt-4 rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.20)] sm:rounded-[2.35rem] sm:p-6 lg:sticky lg:top-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold tracking-[-0.03em]">Tryb gotowania</h2>

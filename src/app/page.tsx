@@ -234,14 +234,17 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">Otwórz katalog</Link>
-            <Link href="/katalog#lodowka" className="tap-pop inline-flex rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">Mam składniki</Link>
+            <Link href="/katalog?lodowka=1#lodowka" className="tap-pop inline-flex rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">Mam składniki</Link>
           </div>
         </div>
       </section>
 
-      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-2 gap-2 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1.5 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
         <Link href="/katalog" className="rounded-full bg-[#201714] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">
           Katalog
+        </Link>
+        <Link href="/katalog?lodowka=1#lodowka" className="rounded-full bg-white px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">
+          Lodówka
         </Link>
         <Link href="/atelier" className="rounded-full bg-white px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
           Atelier
