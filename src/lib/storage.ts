@@ -131,6 +131,11 @@ export function getPantryMemory(): MemoryCounts {
   return safeRead<MemoryCounts>(PANTRY_MEMORY_KEY, {})
 }
 
+export function clearPantryMemory() {
+  safeWrite(PANTRY_MEMORY_KEY, {})
+  notify(PANTRY_MEMORY_KEY)
+}
+
 export function bumpPantryKeys(keys: string[]) {
   const current = getPantryMemory()
   keys.filter(Boolean).forEach((key) => {
@@ -144,12 +149,22 @@ export function getTasteMemory(): MemoryCounts {
   return safeRead<MemoryCounts>(TASTE_MEMORY_KEY, {})
 }
 
+export function clearTasteMemory() {
+  safeWrite(TASTE_MEMORY_KEY, {})
+  notify(TASTE_MEMORY_KEY)
+}
+
 export function bumpTasteSignal(signal: string, weight = 1) {
   if (!signal) return
   const current = getTasteMemory()
   current[signal] = (current[signal] ?? 0) + weight
   safeWrite(TASTE_MEMORY_KEY, current)
   notify(TASTE_MEMORY_KEY)
+}
+
+export function clearPalnikMemory() {
+  clearPantryMemory()
+  clearTasteMemory()
 }
 
 const listeners = new Map<string, Set<() => void>>()

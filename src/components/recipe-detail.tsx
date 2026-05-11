@@ -160,6 +160,20 @@ function getParallelTiming(recipe: Recipe) {
   return 'Czytaj kroki jak sekwencję przy blacie: przygotuj, zbuduj bazę, dopiero potem dopraw i wykończ.'
 }
 
+function getStepCoach(step: string, index: number, total: number) {
+  if (/piekarnik|piecz/i.test(step)) return 'To jest moment na sos, zioła i ogarnięcie blatu. Piekarnik pracuje, ty nie stoisz jak NPC.'
+  if (/ugotuj|makaron|ryż|wod/i.test(step)) return 'Wstaw bazę i równolegle szykuj resztę. Czekanie nad garnkiem nie dodaje smaku.'
+  if (/smaż|podsmaż|patelni|zarumien/i.test(step)) return 'Patelnia lubi spokój. Daj składnikom złapać kolor, nie mieszaj jak DJ na panice.'
+  if (/dopraw|sok|skórk|cytryn|ocet/i.test(step)) return 'Doprawiaj po trochu i próbuj. Kwas ma podnieść danie, nie zrobić alarm.'
+  if (index === 0) return 'Pierwszy ruch ustawia tempo. Wyciągnij sprzęt i składniki zanim odpalisz chaos.'
+  if (index === total - 1) return 'Finisz. Teraz tekstura, świeży akcent i talerz — nie rozgotuj zwycięstwa.'
+  return 'Zrób ten krok do końca, dopiero potem następny. Multitasking w kuchni często jest tylko bałaganem w garniturze.'
+}
+
+function estimateStepMinutes(recipe: Recipe) {
+  return Math.max(2, Math.round(recipe.minutes / Math.max(1, recipe.steps.length)))
+}
+
 function recipeTasteSignals(recipe: Recipe) {
   return [
     `mood:${recipe.mood}`,
@@ -178,6 +192,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const [hydrated, setHydrated] = useState(false)
   const [compareContext, setCompareContext] = useState(false)
   const [fridgeKeys, setFridgeKeys] = useState<Set<string>>(new Set())
+  const [activeStep, setActiveStep] = useState(0)
 
   // Hydrate persisted portions + shopping list once on client.
   useEffect(() => {
@@ -236,6 +251,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     if (hydrated) setShoppingFor(recipe.slug, shopping)
   }, [hydrated, shopping, recipe.slug])
 
+  useEffect(() => {
+    setActiveStep(0)
+  }, [recipe.slug])
+
   const ratio = portions / recipe.servings
   const compareSlugs = useStorageValue<string[]>(STORAGE_KEYS.COMPARE, getCompare)
   const favoriteSlugs = useStorageValue<string[]>(STORAGE_KEYS.FAVORITES, getFavorites)
@@ -270,6 +289,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const firstMove = useMemo(() => getFirstMove(recipe), [recipe])
   const parallelTiming = useMemo(() => getParallelTiming(recipe), [recipe])
   const smartSwaps = useMemo(() => makeSmartSwaps((cockpitHasFridgeContext ? missingLines : freshLines).map((line) => line.ingredient)), [cockpitHasFridgeContext, freshLines, missingLines])
+  const activeStepText = recipe.steps[activeStep] ?? recipe.steps[0] ?? 'Gotuj spokojnie.'
+  const activeStepCoach = useMemo(() => getStepCoach(activeStepText, activeStep, recipe.steps.length), [activeStep, activeStepText, recipe.steps.length])
+  const stepMinutes = useMemo(() => estimateStepMinutes(recipe), [recipe])
+  const stepPercent = recipe.steps.length === 0 ? 0 : Math.round(((activeStep + 1) / recipe.steps.length) * 100)
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -602,15 +625,44 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               <div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]/75">prowadzenie</p>
-                  <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Kroki</h3>
+                  <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Aktywny Cook Mode</h3>
                 </div>
-                <div className="mt-3 rounded-[1.05rem] border border-white/8 bg-white/[0.045] p-3">
-                  <div className="flex items-center justify-between gap-3 text-xs">
-                    <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">{recipe.steps.length} kroków</span>
-                    <span className="text-[#f3dfcf]/68">czytaj jak checklistę przy blacie</span>
+                <div className="mt-3 overflow-hidden rounded-[1.35rem] border border-[#ffcf9f]/16 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between gap-3 text-xs">
+                      <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">krok {activeStep + 1}/{recipe.steps.length}</span>
+                      <span className="text-[#f3dfcf]/68">~{stepMinutes} min na ten ruch</span>
+                    </div>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500" style={{ width: `${stepPercent}%` }} />
+                    </div>
+                    <p className="mt-4 text-lg font-semibold leading-7 tracking-[-0.03em] text-[#fff7ee]">{activeStepText}</p>
+                    <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>
                   </div>
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-                    <div className="h-full w-full rounded-full bg-[#ffcf9f]/80" />
+                  <div className="grid gap-px bg-white/8 sm:grid-cols-3">
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep((current) => Math.max(0, current - 1))}
+                      disabled={activeStep === 0}
+                      className="bg-[#201714]/55 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:text-[#f3dfcf]/30 disabled:hover:bg-[#201714]/55"
+                    >
+                      ← poprzedni
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShoppingMode(true)}
+                      className="bg-[#201714]/55 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#f3dfcf] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30"
+                    >
+                      lista zakupów
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep((current) => Math.min(recipe.steps.length - 1, current + 1))}
+                      disabled={activeStep >= recipe.steps.length - 1}
+                      className="bg-[#ffcf9f] px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#ffe0c0] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-[#f3dfcf]/30"
+                    >
+                      następny →
+                    </button>
                   </div>
                 </div>
                 <ol className="mt-4 space-y-4 text-sm leading-6 text-[#f3dfcf]">
@@ -619,7 +671,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     const stepProgress = Math.round(((index + 1) / recipe.steps.length) * 100)
 
                     return (
-                      <li key={step} className="step-progress-card group overflow-hidden rounded-[1.45rem] border border-white/8 bg-white/[0.055] transition duration-300 hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.075] focus-within:border-white/18">
+                      <li key={step} className={`step-progress-card group overflow-hidden rounded-[1.45rem] border transition duration-300 hover:-translate-y-0.5 focus-within:border-white/18 ${activeStep === index ? 'border-[#ffcf9f]/35 bg-[#ffcf9f]/10 shadow-[0_18px_50px_rgba(255,207,159,0.08)]' : 'border-white/8 bg-white/[0.055] hover:border-white/18 hover:bg-white/[0.075]'}`}>
                         {stepImage ? (
                           <div className="relative aspect-[5/4] w-full overflow-hidden bg-[#120c0a] sm:aspect-[16/10] xl:aspect-[5/4]">
                             <Image
@@ -635,10 +687,15 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                             <div className="absolute bottom-0 left-0 h-1 bg-[#ffcf9f] transition-[width] duration-500" style={{ width: `${stepProgress}%` }} />
                           </div>
                         ) : null}
-                        <div className="flex gap-3 p-4">
-                          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition group-hover:scale-105 ${stepImage ? 'bg-[#ffcf9f] text-[#201714]' : 'bg-white/10 text-[#ffcf9f]'}`}>{String(index + 1).padStart(2, '0')}</span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveStep(index)}
+                          aria-current={activeStep === index ? 'step' : undefined}
+                          className="flex w-full gap-3 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30"
+                        >
+                          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition group-hover:scale-105 ${activeStep === index || stepImage ? 'bg-[#ffcf9f] text-[#201714]' : 'bg-white/10 text-[#ffcf9f]'}`}>{String(index + 1).padStart(2, '0')}</span>
                           <span className="text-[15px] leading-7">{step}</span>
-                        </div>
+                        </button>
                       </li>
                     )
                   })}

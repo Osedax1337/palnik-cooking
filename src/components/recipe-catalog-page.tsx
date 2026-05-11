@@ -26,6 +26,9 @@ import { makeBrainExplanation, makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpPantryKeys,
   bumpTasteSignal,
+  clearPalnikMemory,
+  clearPantryMemory,
+  clearTasteMemory,
   getCompare,
   getFavorites,
   getFridge,
@@ -484,6 +487,13 @@ export function RecipeCatalogPage({
     const recipe = recipes.find((item) => item.slug === slug)
     if (recipe && next.includes(slug)) recipeTasteSignals(recipe).forEach((signal) => bumpTasteSignal(signal, 2))
     track('favorite_toggled', { slug, selected: next.includes(slug), favorite_count: next.length })
+  }
+
+  const resetMemory = (scope: 'all' | 'pantry' | 'taste') => {
+    if (scope === 'pantry') clearPantryMemory()
+    else if (scope === 'taste') clearTasteMemory()
+    else clearPalnikMemory()
+    track('memory_reset', { scope })
   }
 
   useEffect(() => {
@@ -1020,6 +1030,17 @@ export function RecipeCatalogPage({
                   ? 'Lokalnie łapie składniki i wybory. Brain może startować bliżej twojej kuchni, nawet zanim coś zaznaczysz.'
                   : 'Zaznacz kilka składników albo wybierz tryb Brain. Palnik zacznie budować lokalny profil bez logowania i bez wysyłania tego na serwer.'}
               </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button type="button" onClick={() => resetMemory('pantry')} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                  wyczyść składniki
+                </button>
+                <button type="button" onClick={() => resetMemory('taste')} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+                  wyczyść smak
+                </button>
+                <button type="button" onClick={() => resetMemory('all')} className="rounded-full border border-[#c9572d]/20 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#c9572d] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#c9572d]/20">
+                  reset pamięci
+                </button>
+              </div>
             </article>
 
             <div className="grid gap-3 sm:grid-cols-2">
