@@ -44,6 +44,23 @@ const INITIAL_VISIBLE_RECIPES = 24
 const LOAD_MORE_RECIPES = 24
 
 const fridgePalette = buildFridgePalette()
+const fridgeStarterKits = [
+  {
+    label: 'szybka patelnia',
+    body: 'jajka, cukinia, feta — coś, co brzmi jak obiad, a nie negocjacje z głodem.',
+    keys: ['jajka', 'cukinia', 'feta'],
+  },
+  {
+    label: 'makaron ratunkowy',
+    body: 'makaron, cytryna, parmezan — trzy rzeczy i nagle życie mniej ssie.',
+    keys: ['makaron', 'cytryna', 'parmezan'],
+  },
+  {
+    label: 'azjatycki skrót',
+    body: 'ryż, sos sojowy, jajka — baza pod szybki comfort bez zamawiania.',
+    keys: ['ryż', 'sos sojowy', 'jajka'],
+  },
+] as const
 
 export function RecipeCatalogPage({
   forcedCollection = 'all',
@@ -93,6 +110,7 @@ export function RecipeCatalogPage({
     const collectionParam = searchParams.get('zbior')
     const dietParam = searchParams.get('diet')
     const fridgeParam = searchParams.get('fridge')
+    const fridgeOpenParam = searchParams.get('lodowka')
 
     const nextMood = moodParam && moodKeys.has(moodParam as (typeof moodFilters)[number]['key']) ? (moodParam as (typeof moodFilters)[number]['key']) : 'all'
     const nextCuisine = cuisineParam && cuisineKeys.has(cuisineParam as (typeof cuisineFilters)[number]['key']) ? (cuisineParam as (typeof cuisineFilters)[number]['key']) : 'all'
@@ -124,6 +142,11 @@ export function RecipeCatalogPage({
           return same ? current : next
         })
       }
+    } else if (fridgeOpenParam === '1') {
+      setFridgeMode(true)
+      requestAnimationFrame(() => {
+        document.getElementById('lodowka')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
     }
   }, [forcedCollection, searchParams])
 
@@ -259,6 +282,17 @@ export function RecipeCatalogPage({
       track('fridge_toggled', { enabled: next, ingredient_count: next ? fridgeSelection.size : 0 })
       return next
     })
+  }
+
+  const applyFridgeStarterKit = (keys: readonly string[]) => {
+    const available = new Set(fridgePalette.map((item) => item.key))
+    const nextKeys = keys.filter((key) => available.has(key))
+    const next = new Set(nextKeys)
+    setFridgeSelection(next)
+    persistFridge(nextKeys)
+    setFridgeMode(true)
+    setShowAllFridgeChips(false)
+    track('fridge_starter_kit_applied', { ingredient_count: next.size, ingredients: nextKeys.join(',') })
   }
 
   const clearFilters = useCallback(() => {
@@ -891,7 +925,30 @@ export function RecipeCatalogPage({
               </div>
             ) : (
               <div className="mt-5 rounded-[1.55rem] border border-dashed border-[#201714]/14 bg-[#fffaf3] p-4 text-sm leading-6 text-[#201714]/65">
-                Pro tip: zaznacz 3–5 składników, które naprawdę masz. Wtedy Palnik zaczyna działać jak szybki doradca, nie jak kolejny filtr z piekła UX.
+                <div className="grid gap-4 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">start bez klikania 40 chipsów</p>
+                    <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.05em] text-[#201714]">Weź gotowy koszyk albo zaznacz swoje.</h3>
+                    <p className="mt-2 text-sm leading-6 text-[#201714]/65">
+                      Pro tip: 3–5 składników wystarczy. Palnik zaczyna wtedy działać jak szybki doradca, nie jak kolejny filtr z piekła UX.
+                    </p>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    {fridgeStarterKits.map((kit) => (
+                      <button
+                        key={kit.label}
+                        type="button"
+                        onClick={() => applyFridgeStarterKit(kit.keys)}
+                        aria-label={`Użyj startera lodówki: ${kit.label}`}
+                        className="rounded-[1.2rem] border border-[#201714]/10 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:bg-[#fff3e7] hover:shadow-[0_12px_28px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
+                      >
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a4b2a]">starter</span>
+                        <span className="mt-1 block text-base font-semibold tracking-[-0.03em] text-[#201714]">{kit.label}</span>
+                        <span className="mt-1 block text-xs leading-5 text-[#201714]/62">{kit.body}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>

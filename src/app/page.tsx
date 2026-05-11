@@ -35,7 +35,7 @@ const routes = [
     tone: 'wine',
   },
   {
-    href: '/katalog#lodowka',
+    href: '/katalog?lodowka=1#lodowka',
     eyebrow: 'mam składniki',
     title: 'Tryb lodówki',
     body: 'Zaznacz rzeczy z kuchni. Palnik pokaże, które przepisy są blisko, a gdzie trzeba dokupić pół sklepu.',
