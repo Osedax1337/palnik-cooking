@@ -466,7 +466,7 @@ export function RecipeCatalogPage({
 
   const brainRecommendations = useMemo<BrainRecommendation[]>(() => {
     const candidatePool = recipes.filter((recipe) => {
-      if (brainMode === 'sexy' && !recipe.collections.includes('atelier') && !recipe.collections.includes('na-gosci')) return false
+      if (brainMode === 'sexy' && !recipe.collections.includes('atelier')) return false
       if (brainMode !== 'sexy' && recipe.collections.includes('atelier') && !recipe.collections.includes('15-min')) return false
       if (dietFilters.length > 0 && !dietFilters.every((tag) => recipe.dietTags.includes(tag))) return false
       return true
