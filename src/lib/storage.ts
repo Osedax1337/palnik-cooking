@@ -7,6 +7,8 @@ const FAVORITES_KEY = 'palnik:favorites'
 const SHOPPING_KEY = 'palnik:shopping'
 const COMPARE_SHOPPING_KEY = 'palnik:compare-shopping'
 const PORTIONS_KEY = 'palnik:portions'
+const PANTRY_MEMORY_KEY = 'palnik:pantry-memory'
+const TASTE_MEMORY_KEY = 'palnik:taste-memory'
 const MAX_RECENT = 6
 
 function safeRead<T>(key: string, fallback: T): T {
@@ -123,6 +125,33 @@ export function setPortionFor(slug: string, portions: number) {
   notify(PORTIONS_KEY)
 }
 
+export type MemoryCounts = Record<string, number>
+
+export function getPantryMemory(): MemoryCounts {
+  return safeRead<MemoryCounts>(PANTRY_MEMORY_KEY, {})
+}
+
+export function bumpPantryKeys(keys: string[]) {
+  const current = getPantryMemory()
+  keys.filter(Boolean).forEach((key) => {
+    current[key] = (current[key] ?? 0) + 1
+  })
+  safeWrite(PANTRY_MEMORY_KEY, current)
+  notify(PANTRY_MEMORY_KEY)
+}
+
+export function getTasteMemory(): MemoryCounts {
+  return safeRead<MemoryCounts>(TASTE_MEMORY_KEY, {})
+}
+
+export function bumpTasteSignal(signal: string, weight = 1) {
+  if (!signal) return
+  const current = getTasteMemory()
+  current[signal] = (current[signal] ?? 0) + weight
+  safeWrite(TASTE_MEMORY_KEY, current)
+  notify(TASTE_MEMORY_KEY)
+}
+
 const listeners = new Map<string, Set<() => void>>()
 
 function notify(key: string) {
@@ -144,4 +173,6 @@ export const STORAGE_KEYS = {
   SHOPPING: SHOPPING_KEY,
   COMPARE_SHOPPING: COMPARE_SHOPPING_KEY,
   PORTIONS: PORTIONS_KEY,
+  PANTRY_MEMORY: PANTRY_MEMORY_KEY,
+  TASTE_MEMORY: TASTE_MEMORY_KEY,
 }

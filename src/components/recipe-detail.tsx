@@ -14,6 +14,7 @@ import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
 import {
+  bumpTasteSignal,
   getCompare,
   getFavorites,
   getFridge,
@@ -158,6 +159,16 @@ function getParallelTiming(recipe: Recipe) {
   return 'Czytaj kroki jak sekwencję przy blacie: przygotuj, zbuduj bazę, dopiero potem dopraw i wykończ.'
 }
 
+function recipeTasteSignals(recipe: Recipe) {
+  return [
+    `mood:${recipe.mood}`,
+    `cuisine:${recipe.cuisine}`,
+    recipe.minutes <= 20 ? 'tempo:szybko' : 'tempo:wolniej',
+    recipe.collections.includes('atelier') ? 'tryb:atelier' : 'tryb:codziennie',
+    ...recipe.dietTags.slice(0, 2).map((tag) => `diet:${tag}`),
+  ]
+}
+
 export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const searchParams = useSearchParams()
   const [portions, setPortions] = useState<number>(recipe.servings)
@@ -174,12 +185,13 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     const storedShopping = getShopping()[recipe.slug] ?? {}
     setShopping(storedShopping)
     pushRecent(recipe.slug)
+    recipeTasteSignals(recipe).forEach((signal) => bumpTasteSignal(signal))
     trackRecipeOpened(recipe.slug, searchParams.get('zestaw') === '1' ? 'compare_winner' : 'recipe_page', {
       cuisine: recipe.cuisine,
       collection_atelier: recipe.collections.includes('atelier'),
     })
     setHydrated(true)
-  }, [recipe.collections, recipe.cuisine, recipe.slug, searchParams])
+  }, [recipe, recipe.collections, recipe.cuisine, recipe.slug, searchParams])
 
   useEffect(() => {
     const incomingPortions = Number(searchParams.get('porcje'))

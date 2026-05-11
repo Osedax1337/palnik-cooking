@@ -23,10 +23,14 @@ import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
 import {
+  bumpPantryKeys,
+  bumpTasteSignal,
   getCompare,
   getFavorites,
   getFridge,
+  getPantryMemory,
   getRecent,
+  getTasteMemory,
   setCompare as persistCompare,
   setFridge as persistFridge,
   STORAGE_KEYS,
@@ -152,6 +156,27 @@ function scoreBrainRecipe({
   return { score, match }
 }
 
+function topCountKeys(counts: Record<string, number>, limit = 6) {
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, limit)
+}
+
+function recipeTasteSignals(recipe: Recipe) {
+  return [
+    `mood:${recipe.mood}`,
+    `cuisine:${recipe.cuisine}`,
+    recipe.minutes <= 20 ? 'tempo:szybko' : 'tempo:wolniej',
+    recipe.collections.includes('atelier') ? 'tryb:atelier' : 'tryb:codziennie',
+    ...recipe.dietTags.slice(0, 2).map((tag) => `diet:${tag}`),
+  ]
+}
+
+function tasteLabel(signal: string) {
+  const [, value = signal] = signal.split(':')
+  return value.replace('-', ' ')
+}
+
 export function RecipeCatalogPage({
   forcedCollection = 'all',
   variant = 'default',
@@ -192,6 +217,8 @@ export function RecipeCatalogPage({
   const compareSlugs = useStorageValue<string[]>(STORAGE_KEYS.COMPARE, getCompare)
   const favoriteSlugs = useStorageValue<string[]>(STORAGE_KEYS.FAVORITES, getFavorites)
   const recentSlugs = useStorageValue<string[]>(STORAGE_KEYS.RECENT, getRecent)
+  const pantryMemory = useStorageValue<Record<string, number>>(STORAGE_KEYS.PANTRY_MEMORY, getPantryMemory)
+  const tasteMemory = useStorageValue<Record<string, number>>(STORAGE_KEYS.TASTE_MEMORY, getTasteMemory)
 
   useEffect(() => {
     const moodParam = searchParams.get('mood')
@@ -339,6 +366,7 @@ export function RecipeCatalogPage({
     window.setTimeout(() => {
       setOpenRecipe(next.recipe.slug)
       setIsShuffling(false)
+      recipeTasteSignals(next.recipe).forEach((signal) => bumpTasteSignal(signal))
       trackRecipeOpened(next.recipe.slug, 'random_recipe', { result_count: filteredRecipes.length })
     }, 520)
 
@@ -356,7 +384,10 @@ export function RecipeCatalogPage({
       const next = new Set(current)
       const selected = !next.has(key)
       if (next.has(key)) next.delete(key)
-      else next.add(key)
+      else {
+        next.add(key)
+        bumpPantryKeys([key])
+      }
       persistFridge([...next])
       track('fridge_ingredient_toggled', { ingredient: key, selected, ingredient_count: next.size })
       return next
@@ -381,6 +412,7 @@ export function RecipeCatalogPage({
     const next = new Set(nextKeys)
     setFridgeSelection(next)
     persistFridge(nextKeys)
+    bumpPantryKeys(nextKeys)
     setFridgeMode(true)
     setShowAllFridgeChips(false)
     track('fridge_starter_kit_applied', { ingredient_count: next.size, ingredients: nextKeys.join(',') })
@@ -446,6 +478,8 @@ export function RecipeCatalogPage({
 
   const toggleFavorite = (slug: string) => {
     const next = toggleFavoriteStorage(slug)
+    const recipe = recipes.find((item) => item.slug === slug)
+    if (recipe && next.includes(slug)) recipeTasteSignals(recipe).forEach((signal) => bumpTasteSignal(signal, 2))
     track('favorite_toggled', { slug, selected: next.includes(slug), favorite_count: next.length })
   }
 
@@ -464,6 +498,13 @@ export function RecipeCatalogPage({
     .map((slug) => recipes.find((recipe) => recipe.slug === slug))
     .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
 
+  const pantryMemoryTop = useMemo(() => topCountKeys(pantryMemory, 7), [pantryMemory])
+  const tasteMemoryTop = useMemo(() => topCountKeys(tasteMemory, 6), [tasteMemory])
+  const effectiveFridgeSelection = useMemo(() => {
+    if (fridgeSelection.size > 0) return fridgeSelection
+    return new Set(pantryMemoryTop.map(([key]) => key))
+  }, [fridgeSelection, pantryMemoryTop])
+
   const brainRecommendations = useMemo<BrainRecommendation[]>(() => {
     const candidatePool = recipes.filter((recipe) => {
       if (brainMode === 'sexy' && !recipe.collections.includes('atelier')) return false
@@ -477,7 +518,7 @@ export function RecipeCatalogPage({
         const { score, match } = scoreBrainRecipe({
           recipe,
           mode: brainMode,
-          fridgeSelection,
+          fridgeSelection: effectiveFridgeSelection,
           moodFilter,
           cuisineFilter,
           collectionFilter,
@@ -498,9 +539,10 @@ export function RecipeCatalogPage({
       })
       .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
       .slice(0, 3)
-  }, [brainMode, collectionFilter, cuisineFilter, dietFilters, favoriteSlugs, fridgeSelection, moodFilter, recentSlugs])
+  }, [brainMode, collectionFilter, cuisineFilter, dietFilters, effectiveFridgeSelection, favoriteSlugs, moodFilter, recentSlugs])
 
   const leadBrain = brainRecommendations[0]
+  const hasProfileSignal = pantryMemoryTop.length > 0 || tasteMemoryTop.length > 0
   const brainModes = [
     { key: 'lodowka' as const, label: 'Uratuj lodówkę', body: 'najmniej zakupów' },
     { key: 'szybko' as const, label: 'Chcę jeść szybko', body: 'czas wygrywa' },
@@ -841,6 +883,7 @@ export function RecipeCatalogPage({
                         onClick={() => {
                           setOpenRecipe(leadBrain.recipe.slug)
                           scrollToSection('przepis')
+                          recipeTasteSignals(leadBrain.recipe).forEach((signal) => bumpTasteSignal(signal))
                           trackRecipeOpened(leadBrain.recipe.slug, 'brain_lead', { mode: brainMode, score: Math.round(leadBrain.score * 100) })
                         }}
                         className="rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
@@ -871,7 +914,10 @@ export function RecipeCatalogPage({
                       <button
                         key={mode.key}
                         type="button"
-                        onClick={() => setBrainMode(mode.key)}
+                        onClick={() => {
+                          setBrainMode(mode.key)
+                          bumpTasteSignal(`brain:${mode.key}`)
+                        }}
                         aria-pressed={active}
                         className={`rounded-[1.15rem] border p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_14px_34px_rgba(32,23,20,0.18)]' : 'border-[#201714]/10 bg-white/78 text-[#201714] hover:bg-white'}`}
                       >
@@ -890,6 +936,7 @@ export function RecipeCatalogPage({
                         onClick={() => {
                           setOpenRecipe(item.recipe.slug)
                           scrollToSection('przepis')
+                          recipeTasteSignals(item.recipe).forEach((signal) => bumpTasteSignal(signal))
                           trackRecipeOpened(item.recipe.slug, 'brain_card', { mode: brainMode, rank: index + 1 })
                         }}
                         aria-label={`Podejrzyj rekomendację Palnik Brain: ${item.recipe.title}`}
@@ -922,6 +969,75 @@ export function RecipeCatalogPage({
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {!isAtelierPage ? (
+        <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
+          <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[0.85fr_1.15fr]">
+            <article className="rounded-[2rem] border border-[#201714]/10 bg-white p-5 shadow-sm sm:p-6">
+              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">Twój Palnik</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em]">Pamięta kuchnię, nie zakłada konta.</h2>
+              <p className="mt-3 text-sm leading-6 text-[#201714]/62">
+                {hasProfileSignal
+                  ? 'Lokalnie łapie składniki i wybory. Brain może startować bliżej twojej kuchni, nawet zanim coś zaznaczysz.'
+                  : 'Zaznacz kilka składników albo wybierz tryb Brain. Palnik zacznie budować lokalny profil bez logowania i bez wysyłania tego na serwer.'}
+              </p>
+            </article>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <article className="rounded-[2rem] border border-[#201714]/10 bg-[#fff3e7] p-5 shadow-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">zwykle masz</p>
+                    <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Pantry Memory</h3>
+                  </div>
+                  <span className="rounded-full bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">local</span>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {pantryMemoryTop.length > 0 ? pantryMemoryTop.map(([key, count]) => {
+                    const active = fridgeSelection.has(key)
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => {
+                          if (!fridgeMode) setFridgeMode(true)
+                          if (!fridgeSelection.has(key)) toggleFridgeKey(key)
+                          scrollToSection('lodowka')
+                        }}
+                        aria-pressed={active}
+                        className={`rounded-full px-3 py-1.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'bg-white/80 text-[#201714] hover:bg-white'}`}
+                      >
+                        {key} <span className={active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}>×{count}</span>
+                      </button>
+                    )
+                  }) : (
+                    <p className="text-sm leading-6 text-[#201714]/62">Jeszcze pusto. Lodówka nauczy go szybciej niż formularz onboardingowy, spokojnie.</p>
+                  )}
+                </div>
+              </article>
+
+              <article className="rounded-[2rem] border border-[#201714]/10 bg-[#201714] p-5 text-[#fff7ee] shadow-[0_18px_50px_rgba(32,23,20,0.16)]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">co wybierasz</p>
+                    <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Taste DNA light</h3>
+                  </div>
+                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">signals</span>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {tasteMemoryTop.length > 0 ? tasteMemoryTop.map(([signal, count]) => (
+                    <span key={signal} className="rounded-full border border-white/10 bg-white/[0.055] px-3 py-1.5 text-sm font-semibold text-[#f3dfcf]">
+                      {tasteLabel(signal)} <span className="text-[#ffcf9f]">×{count}</span>
+                    </span>
+                  )) : (
+                    <p className="text-sm leading-6 text-[#f3dfcf]/70">Na razie neutralny. Kliknij sexy/szybko/ulubione i Brain zacznie mieć charakter.</p>
+                  )}
+                </div>
+              </article>
             </div>
           </div>
         </section>
