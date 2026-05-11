@@ -16,6 +16,7 @@ import { PortionSwitcher } from '@/components/portion-switcher'
 import {
   getCompare,
   getFavorites,
+  getFridge,
   getPortions,
   getShopping,
   pushRecent,
@@ -134,6 +135,29 @@ function parseCheckedKeys(raw: string | null) {
   )
 }
 
+function parseFridgeKeys(raw: string | null) {
+  if (!raw) return []
+  return raw
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+function getFirstMove(recipe: Recipe) {
+  const first = recipe.steps[0] ?? 'Przygotuj blat, składniki i garnek/patelnię.'
+  if (recipe.minutes <= 15) return `Najpierw mise en place: ${first}`
+  if (recipe.steps.some((step) => /piekarnik|piecz/i.test(step))) return `Odpal piekarnik i zacznij od: ${first}`
+  if (recipe.steps.some((step) => /ugotuj|makaron|ryż/i.test(step))) return `Wstaw wodę albo bazę od razu: ${first}`
+  return `Pierwszy ruch: ${first}`
+}
+
+function getParallelTiming(recipe: Recipe) {
+  if (recipe.steps.some((step) => /piecz/i.test(step))) return 'Gdy piekarnik robi robotę, ogarnij sos, zioła i talerze. Nie czekaj bez sensu.'
+  if (recipe.steps.some((step) => /ugotuj|makaron|ryż/i.test(step))) return 'W czasie gotowania bazy rób sos i krojenie. Końcówka ma się spotkać na patelni, nie w kolejce.'
+  if (recipe.steps.some((step) => /smaż|podsmaż|patelni/i.test(step))) return 'Patelnia jest osią czasu: najpierw składniki wymagające koloru, świeże i kwaśne rzeczy dopiero na końcu.'
+  return 'Czytaj kroki jak sekwencję przy blacie: przygotuj, zbuduj bazę, dopiero potem dopraw i wykończ.'
+}
+
 export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const searchParams = useSearchParams()
   const [portions, setPortions] = useState<number>(recipe.servings)
@@ -141,6 +165,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const [shoppingMode, setShoppingMode] = useState(false)
   const [hydrated, setHydrated] = useState(false)
   const [compareContext, setCompareContext] = useState(false)
+  const [fridgeKeys, setFridgeKeys] = useState<Set<string>>(new Set())
 
   // Hydrate persisted portions + shopping list once on client.
   useEffect(() => {
@@ -161,6 +186,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
     const shoppingModeParam = searchParams.get('lista')
     const fromCompare = searchParams.get('zestaw') === '1'
     const checkedKeys = parseCheckedKeys(searchParams.get('odhaczone'))
+    const incomingFridge = parseFridgeKeys(searchParams.get('fridge'))
+
+    setFridgeKeys(new Set(incomingFridge.length > 0 ? incomingFridge : getFridge()))
 
     if ([1, 2, 4].includes(incomingPortions)) {
       setPortions(incomingPortions)
@@ -213,6 +241,10 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   )
   const pantryLines = ingredientLines.filter((line) => line.pantry)
   const freshLines = ingredientLines.filter((line) => !line.pantry)
+  const stockedLines = ingredientLines.filter((line) => !line.pantry && !line.ingredient.optional && fridgeKeys.has(line.ingredient.key))
+  const missingLines = ingredientLines.filter((line) => !line.pantry && !line.ingredient.optional && !fridgeKeys.has(line.ingredient.key))
+  const optionalLines = ingredientLines.filter((line) => line.ingredient.optional)
+  const cockpitHasFridgeContext = fridgeKeys.size > 0
 
   const checked = ingredientLines.filter((line) => shopping[line.id]).length
   const total = ingredientLines.length
@@ -222,6 +254,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const flavorProfile = useMemo(() => getFlavorProfile(recipe), [recipe])
   const chefNote = useMemo(() => getChefNote(recipe), [recipe])
   const atelierWhy = useMemo(() => getAtelierWhy(recipe), [recipe])
+  const firstMove = useMemo(() => getFirstMove(recipe), [recipe])
+  const parallelTiming = useMemo(() => getParallelTiming(recipe), [recipe])
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -388,6 +422,57 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 <span className="hidden rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f] sm:inline-block">{portions === 1 ? '1 porcja' : portions === 2 ? '2 porcje' : '4 porcje'}</span>
               </div>
               <PortionSwitcher value={portions} onChange={setPortions} tone="light" />
+            </div>
+
+            <div className="mb-5 overflow-hidden rounded-[1.55rem] border border-[#ffcf9f]/14 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.055)] shadow-[0_20px_60px_rgba(0,0,0,0.12)]">
+              <div className="border-b border-white/8 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">Cooking Cockpit</p>
+                    <h3 className="mt-1 text-2xl font-semibold leading-none tracking-[-0.055em] text-[#fff7ee]">Najpierw ogarnij blat.</h3>
+                  </div>
+                  <span className="rounded-full bg-[#ffcf9f]/12 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">
+                    {cockpitHasFridgeContext ? `${stockedLines.length}/${stockedLines.length + missingLines.length} masz` : 'bez lodówki'}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/82">{firstMove}</p>
+              </div>
+
+              <div className="grid gap-px bg-white/8 sm:grid-cols-3">
+                <div className="bg-[#201714]/92 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#87d7a1]">masz</p>
+                  {cockpitHasFridgeContext && stockedLines.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-sm leading-5 text-[#dff5e8]">
+                      {stockedLines.slice(0, 5).map((line) => <li key={line.id}>✓ {line.text}</li>)}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/62">Brak kontekstu lodówki. Palnik zakłada tylko spiżarnię.</p>
+                  )}
+                </div>
+                <div className="bg-[#201714]/92 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">brakuje / sprawdź</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-5 text-[#f3dfcf]">
+                    {(cockpitHasFridgeContext ? missingLines : freshLines).slice(0, 6).map((line) => <li key={line.id}>• {line.text}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-[#201714]/92 p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]/80">opcjonalne / spiżarnia</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-5 text-[#f3dfcf]/74">
+                    {[...optionalLines, ...pantryLines].slice(0, 6).map((line) => <li key={line.id}>· {line.text}</li>)}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="grid gap-px bg-white/8 sm:grid-cols-2">
+                <div className="bg-white/[0.045] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">timing równoległy</p>
+                  <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/78">{parallelTiming}</p>
+                </div>
+                <div className="bg-white/[0.045] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">zasada tego przepisu</p>
+                  <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/78">{chefNote}</p>
+                </div>
+              </div>
             </div>
 
             <div className="mb-5 flex flex-wrap items-center justify-between gap-2">

@@ -596,6 +596,12 @@ export function RecipeCatalogPage({
     },
   ]
   const canUnsetCollection = forcedCollection === 'all'
+  const recipeHref = (slug: string) => {
+    if (!fridgeMode || fridgeSelection.size === 0) return `/przepisy/${slug}`
+    const params = new URLSearchParams()
+    params.set('fridge', [...fridgeSelection].join(','))
+    return `/przepisy/${slug}?${params.toString()}`
+  }
 
   return (
     <main id="main-content" className={`min-h-screen text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
@@ -841,7 +847,7 @@ export function RecipeCatalogPage({
                       >
                         Pokaż w katalogu
                       </button>
-                      <Link href={`/przepisy/${leadBrain.recipe.slug}`} className="rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
+                      <Link href={recipeHref(leadBrain.recipe.slug)} className="rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
                         Gotuj teraz
                       </Link>
                     </div>
@@ -909,7 +915,7 @@ export function RecipeCatalogPage({
                           ) : (
                             <span className="rounded-full bg-[#dff5e8] px-3 py-1.5 text-xs font-semibold text-[#18623b]">bez oczywistych braków</span>
                           )}
-                          <Link href={`/przepisy/${item.recipe.slug}`} className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee] transition hover:bg-[#3a2b25] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Gotuj</Link>
+                          <Link href={recipeHref(item.recipe.slug)} className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee] transition hover:bg-[#3a2b25] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Gotuj</Link>
                         </div>
                       </div>
                     </article>
@@ -935,7 +941,7 @@ export function RecipeCatalogPage({
               {favoriteRecipes.slice(0, 8).map((recipe) => (
                 <Link
                   key={recipe.slug}
-                  href={`/przepisy/${recipe.slug}`}
+                  href={recipeHref(recipe.slug)}
                   className="group flex w-[260px] shrink-0 items-stretch overflow-hidden rounded-[1.4rem] border border-[#201714]/8 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
                 >
                   <div className="relative h-[96px] w-[106px] shrink-0 overflow-hidden">
@@ -966,7 +972,7 @@ export function RecipeCatalogPage({
               {recentRecipes.map((recipe) => (
                 <Link
                   key={recipe.slug}
-                  href={`/przepisy/${recipe.slug}`}
+                  href={recipeHref(recipe.slug)}
                   className="group flex w-[240px] shrink-0 items-stretch overflow-hidden rounded-[1.4rem] border border-[#201714]/8 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15"
                 >
                   <div className="relative h-[88px] w-[100px] shrink-0 overflow-hidden">
@@ -1442,7 +1448,7 @@ export function RecipeCatalogPage({
                   <article key={recipe.slug} style={{ animationDelay: `${Math.min(cardIndex, 8) * 38}ms` }} className={`catalog-card-enter group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'bg-white shadow-sm hover:shadow-[0_22px_60px_rgba(32,23,20,0.14)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Link
-                        href={`/przepisy/${recipe.slug}`}
+                        href={recipeHref(recipe.slug)}
                         aria-label={`Otwórz przepis: ${recipe.title}`}
                         className="absolute inset-0 z-10 block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#fff7ee] focus-visible:ring-offset-2 focus-visible:ring-offset-[#201714]"
                       >
@@ -1517,7 +1523,7 @@ export function RecipeCatalogPage({
                         }} aria-pressed={active} aria-label={`Podejrzyj przepis niżej: ${recipe.title}`} className={`tap-pop inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
                           {active ? 'Przepis otwarty ↓' : 'Podejrzyj niżej'}
                         </button>
-                        <Link href={`/przepisy/${recipe.slug}`} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
+                        <Link href={recipeHref(recipe.slug)} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
                           Otwórz stronę
                         </Link>
                       </div>
@@ -1552,7 +1558,7 @@ export function RecipeCatalogPage({
           <div className="overflow-hidden rounded-[2.2rem] bg-white shadow-[0_18px_60px_rgba(32,23,20,0.08)]">
             <div className="group relative aspect-[4/3] w-full">
               <Link
-                href={`/przepisy/${currentRecipe.slug}`}
+                href={recipeHref(currentRecipe.slug)}
                 aria-label={`Otwórz przepis: ${currentRecipe.title}`}
                 className="absolute inset-0 z-10 block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#201714]/40"
               >
@@ -1578,7 +1584,7 @@ export function RecipeCatalogPage({
               </div>
               <p className="mt-5 rounded-[1rem] bg-[#fff3e7] px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {currentRecipe.tip}</p>
               <div className="mt-5 flex flex-wrap gap-2">
-                <Link href={`/przepisy/${currentRecipe.slug}`} className="inline-flex items-center rounded-full bg-[#201714] px-4 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
+                <Link href={recipeHref(currentRecipe.slug)} className="inline-flex items-center rounded-full bg-[#201714] px-4 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
                   Otwórz osobną stronę przepisu
                 </Link>
               </div>
