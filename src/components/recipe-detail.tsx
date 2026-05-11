@@ -617,7 +617,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                                   onClick={() => toggleItem(line.id)}
                                   aria-pressed={isChecked}
                                   aria-label={isChecked ? `Oznacz jako niekupione: ${line.text}` : `Oznacz jako kupione: ${line.text}`}
-                                  className={`group flex w-full items-start gap-3 rounded-[0.9rem] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 ${isChecked ? 'border-[#22a06b]/25 bg-[#22a06b]/10' : 'border-white/8 bg-white/5 hover:bg-white/10'}`}
+                                  className={`group flex w-full items-start gap-3 rounded-[0.9rem] border p-3 text-left transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 ${isChecked ? 'ingredient-chip-selected border-[#22a06b]/25 bg-[#22a06b]/10' : 'border-white/8 bg-white/5 hover:bg-white/10'}`}
                                 >
                                   <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition ${isChecked ? 'animate-check-pop border-[#22a06b] bg-[#22a06b] text-[#0a1f15]' : 'border-white/25 bg-transparent text-transparent group-hover:border-white/55'}`}>
                                     ✓
@@ -645,13 +645,13 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Aktywny Cook Mode</h3>
                 </div>
                 <div className="mt-3 overflow-hidden rounded-[1.35rem] border border-[#ffcf9f]/16 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
-                  <div className="p-4">
+                  <div key={activeStep} className="cook-step-swap p-4">
                     <div className="flex items-center justify-between gap-3 text-xs">
                       <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">krok {activeStep + 1}/{recipe.steps.length}</span>
                       <span className="text-[#f3dfcf]/68">~{stepMinutes} min na ten ruch</span>
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500" style={{ width: `${stepPercent}%` }} />
+                      <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500 animate-progress-glow" style={{ width: `${stepPercent}%` }} />
                     </div>
                     <p className="mt-4 text-lg font-semibold leading-7 tracking-[-0.03em] text-[#fff7ee]">{activeStepText}</p>
                     <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>

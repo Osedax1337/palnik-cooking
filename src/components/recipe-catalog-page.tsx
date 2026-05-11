@@ -884,7 +884,7 @@ export function RecipeCatalogPage({
         <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
           <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.25rem] border border-[#201714]/10 bg-[radial-gradient(circle_at_18%_8%,rgba(255,207,159,0.44),transparent_28%),linear-gradient(135deg,#201714_0%,#2c1b18_48%,#fff3e7_49%,#fffaf3_100%)] shadow-[0_28px_80px_rgba(32,23,20,0.14)]">
             <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
-              <article className="relative min-h-[26rem] overflow-hidden p-5 text-[#fff7ee] sm:p-6 lg:p-8">
+              <article key={`${brainMode}-${leadBrain.recipe.slug}`} className="brain-reveal relative min-h-[26rem] overflow-hidden p-5 text-[#fff7ee] sm:p-6 lg:p-8">
                 <div className="absolute inset-0 opacity-55">
                   <RecipeVisual recipe={leadBrain.recipe} large />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#201714] via-[#201714]/78 to-[#201714]/22" />
@@ -963,7 +963,7 @@ export function RecipeCatalogPage({
                           bumpTasteSignal(`brain:${mode.key}`)
                         }}
                         aria-pressed={active}
-                        className={`rounded-[1.15rem] border p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_14px_34px_rgba(32,23,20,0.18)]' : 'border-[#201714]/10 bg-white/78 text-[#201714] hover:bg-white'}`}
+                        className={`rounded-[1.15rem] border p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'brain-mode-active border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_14px_34px_rgba(32,23,20,0.18)]' : 'border-[#201714]/10 bg-white/78 text-[#201714] hover:bg-white'}`}
                       >
                         <span className={`block text-[10px] font-semibold uppercase tracking-[0.18em] ${active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{mode.body}</span>
                         <span className="mt-1 block text-sm font-semibold tracking-[-0.02em]">{mode.label}</span>
@@ -974,7 +974,7 @@ export function RecipeCatalogPage({
 
                 <div className="mt-4 grid gap-3">
                   {brainRecommendations.map((item, index) => (
-                    <article key={item.recipe.slug} className={`grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 shadow-sm sm:grid-cols-[116px_1fr] ${index === 0 ? 'border-[#201714]/12 bg-white' : 'border-[#201714]/8 bg-white/70'}`}>
+                    <article key={`${brainMode}-${item.recipe.slug}`} style={{ animationDelay: `${index * 65}ms` }} className={`brain-reveal grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 shadow-sm sm:grid-cols-[116px_1fr] ${index === 0 ? 'border-[#201714]/12 bg-white' : 'border-[#201714]/8 bg-white/70'}`}>
                       <button
                         type="button"
                         onClick={() => {
@@ -1278,7 +1278,7 @@ export function RecipeCatalogPage({
                     aria-label={active ? `Usuń składnik z lodówki: ${key}` : `Dodaj składnik do lodówki: ${key}`}
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${
                       active
-                        ? 'bg-[#201714] text-[#fff7ee]'
+                        ? 'ingredient-chip-selected bg-[#201714] text-[#fff7ee]'
                         : 'border border-[#201714]/12 bg-[#fffaf3] text-[#201714] hover:bg-[#fff3e7]'
                     }`}
                   >
@@ -1302,7 +1302,7 @@ export function RecipeCatalogPage({
 
             {fridgeMode && fridgeSelection.size > 0 ? (
               <div className="mt-5 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-[1.55rem] border border-[#201714]/10 bg-[#fff8ee] p-4">
+                <div key={[...fridgeSelection].join('-')} className="brain-reveal rounded-[1.55rem] border border-[#201714]/10 bg-[#fff8ee] p-4">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">diagnoza lodówki</p>
                   <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.05em]">
                     {fridgeTopRecipe && fridgeTopMatch

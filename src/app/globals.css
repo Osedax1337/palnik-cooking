@@ -243,6 +243,66 @@ body {
   }
 }
 
+@keyframes brain-lock {
+  0% {
+    opacity: 0.84;
+    transform: translateY(10px) scale(0.985);
+    filter: blur(3px);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.006);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes mode-lock-pulse {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 207, 159, 0);
+  }
+
+  55% {
+    box-shadow: 0 0 0 5px rgba(255, 207, 159, 0.18), 0 16px 38px rgba(32, 23, 20, 0.18);
+  }
+
+  100% {
+    box-shadow: 0 14px 34px rgba(32, 23, 20, 0.18);
+  }
+}
+
+@keyframes ingredient-select-pop {
+  0% {
+    transform: scale(0.94);
+  }
+
+  52% {
+    transform: scale(1.045);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes cook-step-swap {
+  from {
+    opacity: 0.72;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .animate-fade-up-soft {
   animation: fade-up-soft 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -299,6 +359,22 @@ body {
 
 .catalog-card-enter {
   animation: catalog-card-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.brain-reveal {
+  animation: brain-lock 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.brain-mode-active {
+  animation: mode-lock-pulse 520ms ease-out both;
+}
+
+.ingredient-chip-selected {
+  animation: ingredient-select-pop 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cook-step-swap {
+  animation: cook-step-swap 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .step-progress-card {
