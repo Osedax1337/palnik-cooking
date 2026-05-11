@@ -92,6 +92,35 @@ function getChefNote(recipe: Recipe) {
   return 'Najważniejsze: nie rób wszystkiego naraz. Najpierw baza, potem balans, na końcu tekstura i świeży akcent.'
 }
 
+function getAtelierWhy(recipe: Recipe) {
+  const keys = new Set(recipe.ingredients.map((ingredient) => ingredient.key.toLowerCase()))
+  const hasAny = (items: string[]) => items.some((item) => keys.has(item))
+
+  const acid = hasAny(['cytryna', 'limonka', 'yuzu', 'ponzu', 'sumak', 'rabarbar', 'ocet ryżowy', 'czarna limonka'])
+  const ferment = hasAny(['miso', 'kimchi', 'kefir', 'shio koji', 'czarny czosnek', 'tamari'])
+  const fruit = hasAny(['śliwka', 'morela', 'winogrona', 'granat', 'daktyl', 'figa', 'brzoskwinia', 'wiśnia', 'borówka', 'rabarbar'])
+  const crunch = hasAny(['pistacje', 'sezam', 'orzech laskowy', 'dukkah', 'czarny mak'])
+  const smoke = hasAny(['wędzone masło', 'wędzony jogurt', 'kawa', 'czarna limonka'])
+
+  if (ferment && fruit) {
+    return 'Ferment daje głębię i sól, owoc wpuszcza kwas albo słodycz, a główny składnik nie musi udawać gwiazdy. Cały numer to balans, nie lista dziwnych produktów.'
+  }
+  if (acid && crunch) {
+    return 'Kwas najpierw czyści podniebienie, potem chrupnięcie zatrzymuje uwagę. Dzięki temu talerz jest lekki, ale nie znika po dwóch kęsach.'
+  }
+  if (smoke || recipe.tag.includes('smoke')) {
+    return 'Dym daje scenę, ale musi zostać w tle. Najlepiej działa, gdy obok ma coś kwaśnego, kremowego albo soczystego.'
+  }
+  if (acid) {
+    return 'Tu wygrywa precyzyjny kwas: nie przykrywa składników, tylko ustawia je ostrzej i robi miejsce na kolejny kęs.'
+  }
+  if (crunch) {
+    return 'Miękka baza potrzebuje kontrapunktu. Chrupnięcie nie jest dekoracją — trzyma rytm talerza.'
+  }
+
+  return 'To danie działa przez jeden czytelny kontrast: miękkie z ostrym, słodkie z gorzkim albo tłuste z kwaśnym. Reszta ma tylko pilnować balansu.'
+}
+
 function parseCheckedKeys(raw: string | null) {
   if (!raw) return new Set<string>()
   return new Set(
@@ -189,6 +218,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const allDone = checked === total && total > 0
   const flavorProfile = useMemo(() => getFlavorProfile(recipe), [recipe])
   const chefNote = useMemo(() => getChefNote(recipe), [recipe])
+  const atelierWhy = useMemo(() => getAtelierWhy(recipe), [recipe])
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -304,7 +334,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 </p>
                 <p className="rounded-[1rem] bg-[#fff3e7] px-4 py-3.5 text-sm leading-6 text-[#201714]/80">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">dlaczego działa</span>
-                  <span className="mt-1 block">Kontrast robi robotę: baza daje komfort, akcent robi napięcie, a tekstura pilnuje, żeby talerz nie był nudny.</span>
+                  <span className="mt-1 block">{isAtelierRecipe ? atelierWhy : 'Kontrast robi robotę: baza daje komfort, akcent robi napięcie, a tekstura pilnuje, żeby talerz nie był nudny.'}</span>
                 </p>
               </div>
               <div className="mt-4">

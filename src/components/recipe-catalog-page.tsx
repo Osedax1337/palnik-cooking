@@ -504,7 +504,7 @@ export function RecipeCatalogPage({
                   </div>
                   <div>
                     <p className="max-w-[34ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                      Dania z większym ego: ferment, dym, owoce przy mięsie, sosy z napięciem. Nie szybki obiad. Mały spektakl na talerzu.
+                      Dania z napięciem: ferment, dym, owoce przy mięsie, sosy z ostrą krawędzią. Nie codzienny obiad — raczej talerz, który robi pauzę przy stole.
                     </p>
                     <div className="mt-7 flex flex-wrap gap-3">
                       <button
@@ -555,7 +555,7 @@ export function RecipeCatalogPage({
                 <article className="relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-[#ffcf9f]/12 bg-[#fff7ee] p-5 text-[#201714] shadow-[0_24px_70px_rgba(10,6,12,0.12)] sm:p-6">
                   <p className="text-[10px] uppercase tracking-[0.24em] text-[#8c3341]">manifest</p>
                   <h2 className="mt-3 max-w-[10ch] text-3xl font-semibold leading-[0.9] tracking-[-0.06em]">Nie dekoruj. Buduj napięcie.</h2>
-                  <p className="mt-4 max-w-[30ch] text-sm leading-6 text-[#201714]/66">Atelier działa, kiedy talerz ma jeden mocny konflikt: tłuszcz kontra kwas, miękkie kontra chrupiące, słodkie kontra dym.</p>
+                  <p className="mt-4 max-w-[30ch] text-sm leading-6 text-[#201714]/66">Atelier działa, gdy talerz ma jeden wyraźny konflikt: tłuszcz kontra kwas, miękkie kontra chrupiące, słodkie kontra dym. Reszta ma nie przeszkadzać.</p>
                 </article>
               </div>
             </div>
@@ -564,7 +564,7 @@ export function RecipeCatalogPage({
               <article className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 text-[#fff7ee] backdrop-blur sm:p-6">
                 <p className="text-[10px] uppercase tracking-[0.24em] text-[#ffcf9f]">degustacja domowa</p>
                 <h2 className="mt-3 max-w-[10ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em]">Wybierz napięcie, nie kategorię.</h2>
-                <p className="mt-4 text-sm leading-6 text-[#f3dfcf]">Atelier ma działać jak karta małej restauracji: mniej pozycji, mocniejsze intencje, szybciej wiesz, czy dziś chcesz dym, kwas czy aksamit.</p>
+                <p className="mt-4 text-sm leading-6 text-[#f3dfcf]">Atelier ma działać jak krótka karta małej restauracji: mniej pozycji, mocniejsze intencje, szybciej czujesz, czy dziś chcesz dym, kwas czy aksamit.</p>
               </article>
               <div className="grid gap-3 sm:grid-cols-3">
                 {['kwas przecina tłuszcz', 'dym robi scenę', 'chrup pilnuje rytmu'].map((line, index) => (
@@ -622,7 +622,7 @@ export function RecipeCatalogPage({
                 <button type="button" onClick={() => runHeroScenario('atelier')} aria-label="Przejdź do Atelier" className="rounded-[1.35rem] border border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_62%,#171217_100%)] p-4 text-left text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(32,23,20,0.18)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">ładniejszy talerz</p>
                   <p className="mt-2 text-lg font-semibold tracking-[-0.04em]">Atelier</p>
-                  <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Kiedy ma być trochę wow.</p>
+                  <p className="mt-1 text-sm leading-6 text-[#f3dfcf]">Kiedy talerz ma zrobić ciszę na sekundę.</p>
                 </button>
               </div>
             </div>
@@ -1008,7 +1008,7 @@ export function RecipeCatalogPage({
                 <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">jak w to wejść bez spiny</p>
                 <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Nie scrolluj wszystkiego. Wejdź z intencją.</h2>
                 <p className="mt-3 max-w-[58ch] text-sm leading-6 text-[#f3dfcf] sm:text-base">
-                  Atelier działa najlepiej, kiedy wybierasz intencję, nie tylko składnik. Najpierw lekki flex, morska precyzja albo ciemniejszy, cięższy talerz. Dopiero potem konkretny dish.
+                  Atelier działa najlepiej, gdy wybierasz intencję, nie tylko składnik. Najpierw lekki kwas, morska precyzja albo ciemniejszy talerz. Dopiero potem konkretny przepis.
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   {atelierEntryPoints.map((recipe, index) => (
@@ -1060,7 +1060,7 @@ export function RecipeCatalogPage({
                 <p className={`mt-2 text-sm ${isAtelierPage ? 'text-[#f3dfcf]/72' : 'text-[#201714]/65'}`}>{collectionMeta.emoji} {isAtelierPage ? 'Kolekcja' : 'Filtr'} <strong className={isAtelierPage ? 'text-[#ffcf9f]' : 'text-[#201714]'}>{collectionMeta.label}</strong> · {collectionMeta.description}</p>
               ) : null}
             </div>
-            <p className={`max-w-[46ch] text-sm leading-6 sm:text-base ${isAtelierPage ? 'text-[#f3dfcf]/78' : 'text-[#201714]/62'}`}>{isAtelierPage ? 'Tu filtrujesz jak kartę win: składnik, nastrój, kuchnia. Mniej checkboxów, więcej decyzji o tym, jaki ma być wieczór.' : 'Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.'}</p>
+            <p className={`max-w-[46ch] text-sm leading-6 sm:text-base ${isAtelierPage ? 'text-[#f3dfcf]/78' : 'text-[#201714]/62'}`}>{isAtelierPage ? 'Tu filtrujesz bardziej jak kartę win niż bazę danych: składnik, nastrój, kuchnia. Mniej checkboxów, więcej decyzji o tym, jaki ma być wieczór.' : 'Szukaj po składniku, filtruj po nastroju, dopasuj do diety i podeślij komuś gotowy link.'}</p>
           </div>
 
           <div className={`rounded-[2rem] ${isAtelierPage ? 'border border-white/10 bg-white/[0.055] p-4 shadow-[0_24px_70px_rgba(10,6,12,0.22)] backdrop-blur sm:p-5 lg:p-6' : ''}`}>
@@ -1252,7 +1252,7 @@ export function RecipeCatalogPage({
                         <DietTags tags={recipe.dietTags.slice(0, 3)} />
                       </div>
                       {isAtelier ? (
-                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[#8c3341]">fine dining energy · nieoczywiste połączenia</p>
+                        <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[#8c3341]">kontrast · tekstura · dobry powód</p>
                       ) : null}
                       {match && match.total > 0 && match.missing.length > 0 ? (
                         <p className="mt-3 text-xs text-[#201714]/55">
