@@ -13,6 +13,7 @@ import { RecipeVisual } from '@/components/recipe-visual'
 import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
+import { makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpTasteSignal,
   getCompare,
@@ -268,6 +269,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const atelierWhy = useMemo(() => getAtelierWhy(recipe), [recipe])
   const firstMove = useMemo(() => getFirstMove(recipe), [recipe])
   const parallelTiming = useMemo(() => getParallelTiming(recipe), [recipe])
+  const smartSwaps = useMemo(() => makeSmartSwaps((cockpitHasFridgeContext ? missingLines : freshLines).map((line) => line.ingredient)), [cockpitHasFridgeContext, freshLines, missingLines])
 
   const relatedRecipes = recipes.filter((item) => item.slug !== recipe.slug && item.cuisine === recipe.cuisine).slice(0, 3)
   const isAtelierRecipe = recipe.collections.includes('atelier')
@@ -474,6 +476,20 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   </ul>
                 </div>
               </div>
+
+              {smartSwaps.length > 0 ? (
+                <div className="border-t border-white/8 bg-[#ffcf9f]/[0.075] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">zamienniki bez wycieczki do sklepu</p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                    {smartSwaps.map((entry) => (
+                      <div key={entry.key} className="rounded-[1rem] border border-white/10 bg-[#201714]/45 p-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">{entry.key}</p>
+                        <p className="mt-1 text-sm leading-5 text-[#f3dfcf]/82">{entry.swaps.slice(0, 3).join(' / ')}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               <div className="grid gap-px bg-white/8 sm:grid-cols-2">
                 <div className="bg-white/[0.045] p-4">

@@ -22,6 +22,7 @@ import { RecipeVisual } from '@/components/recipe-visual'
 import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
+import { makeBrainExplanation, makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpPantryKeys,
   bumpTasteSignal,
@@ -55,6 +56,8 @@ type BrainRecommendation = {
   score: number
   verdict: string
   reason: string
+  explanation: string[]
+  swaps: ReturnType<typeof makeSmartSwaps>
   missing: string[]
   matched: number
   total: number
@@ -504,6 +507,7 @@ export function RecipeCatalogPage({
     if (fridgeSelection.size > 0) return fridgeSelection
     return new Set(pantryMemoryTop.map(([key]) => key))
   }, [fridgeSelection, pantryMemoryTop])
+  const effectiveFridgeUsesPantryMemory = fridgeSelection.size === 0 && pantryMemoryTop.length > 0
 
   const brainRecommendations = useMemo<BrainRecommendation[]>(() => {
     const candidatePool = recipes.filter((recipe) => {
@@ -532,6 +536,17 @@ export function RecipeCatalogPage({
           score,
           verdict: makeBrainVerdict(recipe, brainMode, missing, match?.score ?? 0),
           reason: makeBrainReason(recipe, brainMode, match),
+          explanation: makeBrainExplanation({
+            recipe,
+            mode: brainMode,
+            match,
+            usedPantryMemory: effectiveFridgeUsesPantryMemory,
+            pantryKeys: pantryMemoryTop.map(([key]) => key),
+            tasteSignals: tasteMemoryTop.map(([signal]) => signal),
+            isFavorite: favoriteSlugs.includes(recipe.slug),
+            isRecent: recentSlugs.includes(recipe.slug),
+          }),
+          swaps: makeSmartSwaps(match?.missing ?? []),
           missing,
           matched: match?.matched ?? 0,
           total: match?.total ?? recipe.ingredients.length,
@@ -539,7 +554,7 @@ export function RecipeCatalogPage({
       })
       .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
       .slice(0, 3)
-  }, [brainMode, collectionFilter, cuisineFilter, dietFilters, effectiveFridgeSelection, favoriteSlugs, moodFilter, recentSlugs])
+  }, [brainMode, collectionFilter, cuisineFilter, dietFilters, effectiveFridgeSelection, effectiveFridgeUsesPantryMemory, favoriteSlugs, moodFilter, pantryMemoryTop, recentSlugs, tasteMemoryTop])
 
   const leadBrain = brainRecommendations[0]
   const hasProfileSignal = pantryMemoryTop.length > 0 || tasteMemoryTop.length > 0
@@ -877,6 +892,25 @@ export function RecipeCatalogPage({
                     <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">najmocniejsza decyzja teraz</p>
                     <h3 className="mt-2 max-w-[15ch] text-3xl font-semibold leading-[0.95] tracking-[-0.055em]">{leadBrain.recipe.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{leadBrain.recipe.time} · {leadBrain.recipe.cuisine} · {leadBrain.reason}</p>
+                    <div className="mt-4 rounded-[1.25rem] border border-white/12 bg-white/[0.075] p-3 backdrop-blur">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">dlaczego to polecam</p>
+                      <ul className="mt-2 space-y-1.5 text-sm leading-5 text-[#f3dfcf]">
+                        {leadBrain.explanation.map((line) => (
+                          <li key={line} className="flex gap-2">
+                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ffcf9f]" />
+                            <span>{line}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {leadBrain.swaps.length > 0 ? (
+                      <div className="mt-3 rounded-[1.25rem] border border-[#ffcf9f]/18 bg-[#ffcf9f]/10 p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">jeśli nie chcesz sklepu</p>
+                        <p className="mt-1 text-sm leading-5 text-[#f3dfcf]">
+                          Brakuje {leadBrain.swaps[0].key}? Zamień na {leadBrain.swaps[0].swaps.slice(0, 2).join(' albo ')}.
+                        </p>
+                      </div>
+                    ) : null}
                     <div className="mt-5 flex flex-wrap gap-2">
                       <button
                         type="button"
@@ -955,6 +989,7 @@ export function RecipeCatalogPage({
                           </div>
                           <h3 className="mt-1 line-clamp-2 text-lg font-semibold leading-tight tracking-[-0.04em] text-[#201714]">{item.recipe.title}</h3>
                           <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#201714]/64">{item.reason}</p>
+                          <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#201714]/58">Bo: {item.explanation.slice(0, 2).join(' · ')}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           {item.missing.length > 0 ? (
