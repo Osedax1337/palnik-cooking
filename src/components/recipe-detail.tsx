@@ -13,7 +13,7 @@ import { RecipeVisual } from '@/components/recipe-visual'
 import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
 import { PortionSwitcher } from '@/components/portion-switcher'
-import { makeSmartSwaps } from '@/lib/recipe-intelligence'
+import { makeRecipeQualitySignals, makeRecipeSignature, makeRecipeWhy, makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpTasteSignal,
   getCompare,
@@ -286,6 +286,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const flavorProfile = useMemo(() => getFlavorProfile(recipe), [recipe])
   const chefNote = useMemo(() => getChefNote(recipe), [recipe])
   const atelierWhy = useMemo(() => getAtelierWhy(recipe), [recipe])
+  const recipeWhy = useMemo(() => makeRecipeWhy(recipe), [recipe])
+  const recipeSignature = useMemo(() => makeRecipeSignature(recipe), [recipe])
+  const qualitySignals = useMemo(() => makeRecipeQualitySignals(recipe), [recipe])
   const firstMove = useMemo(() => getFirstMove(recipe), [recipe])
   const parallelTiming = useMemo(() => getParallelTiming(recipe), [recipe])
   const smartSwaps = useMemo(() => makeSmartSwaps((cockpitHasFridgeContext ? missingLines : freshLines).map((line) => line.ingredient)), [cockpitHasFridgeContext, freshLines, missingLines])
@@ -408,16 +411,30 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                 </p>
                 <p className="rounded-[1rem] bg-[#fff3e7] px-4 py-3.5 text-sm leading-6 text-[#201714]/80">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">dlaczego działa</span>
-                  <span className="mt-1 block">{isAtelierRecipe ? atelierWhy : 'Kontrast robi robotę: baza daje komfort, akcent robi napięcie, a tekstura pilnuje, żeby talerz nie był nudny.'}</span>
+                  <span className="mt-1 block">{isAtelierRecipe ? atelierWhy : recipeWhy}</span>
                 </p>
               </div>
               <div className="mt-4">
                 <DietTags tags={recipe.dietTags} />
               </div>
+              {qualitySignals.length > 0 ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {qualitySignals.map((signal) => (
+                    <span key={signal} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">{signal}</span>
+                  ))}
+                </div>
+              ) : null}
               <p className="mt-5 rounded-[1rem] border border-[#201714]/8 bg-white px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {recipe.tip}</p>
-              <div className="mt-5 rounded-[1.25rem] bg-[#201714] px-4 py-4 text-[#fff7ee] shadow-[0_14px_36px_rgba(32,23,20,0.12)]">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">notatka szefa</p>
-                <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{chefNote}</p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-[1.25rem] bg-[#201714] px-4 py-4 text-[#fff7ee] shadow-[0_14px_36px_rgba(32,23,20,0.12)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">notatka szefa</p>
+                  <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{chefNote}</p>
+                </div>
+                <div className="rounded-[1.25rem] border border-[#201714]/8 bg-[#fff3e7] px-4 py-4 text-[#201714] shadow-[0_12px_34px_rgba(32,23,20,0.06)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">{recipeSignature.label}</p>
+                  <h2 className="mt-1 text-lg font-semibold tracking-[-0.04em]">{recipeSignature.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-[#201714]/72">{recipeSignature.body}</p>
+                </div>
               </div>
               <div className="mt-5 rounded-[1.35rem] border border-[#201714]/8 bg-[#fffaf3] p-4 shadow-[0_12px_34px_rgba(32,23,20,0.05)]">
                 <div className="mb-3 flex items-end justify-between gap-3">
