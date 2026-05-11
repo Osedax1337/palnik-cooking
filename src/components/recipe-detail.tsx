@@ -105,6 +105,9 @@ function getAtelierWhy(recipe: Recipe) {
   if (ferment && fruit) {
     return 'Ferment daje głębię i sól, owoc wpuszcza kwas albo słodycz, a główny składnik nie musi udawać gwiazdy. Cały numer to balans, nie lista dziwnych produktów.'
   }
+  if (fruit) {
+    return 'Owoc nie jest tu ozdobą. Daje słodycz, kwas albo ciemny sos, który łapie tłuszcz głównego składnika i robi z niego coś bardziej zapamiętywalnego.'
+  }
   if (acid && crunch) {
     return 'Kwas najpierw czyści podniebienie, potem chrupnięcie zatrzymuje uwagę. Dzięki temu talerz jest lekki, ale nie znika po dwóch kęsach.'
   }
