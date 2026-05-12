@@ -4,9 +4,9 @@ import { recipes } from '@/lib/recipes'
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, siteUrl } from '@/lib/seo'
 
 export const metadata = pageMetadata({
-  title: 'Palnik — gotowanie bez scrollowania w nieskończoność',
+  title: 'Palnik — wybierz przepis i gotuj',
   description:
-    'Palnik skraca drogę od głodu do decyzji: szybki katalog, tryb lodówki, porównywanie i Atelier bez kulinarnego zadęcia.',
+    'Szybki katalog przepisów, tryb lodówki i Atelier dla bardziej dopracowanych dań.',
   path: '/',
   keywords: ['przepisy', 'szybki obiad', 'co ugotować', 'gotowanie w domu', 'Palnik'],
 })
@@ -22,7 +22,7 @@ const routes = [
     href: '/katalog',
     eyebrow: 'pełny katalog',
     title: 'Przepisy na dziś',
-    body: 'Szukasz po składniku, klikasz nastrój, porównujesz 2–3 opcje. Mniej scrollowania, więcej decyzji.',
+    body: 'Filtruj po czasie, nastroju albo składniku. Klikasz przepis i przechodzisz od razu do gotowania.',
     cta: 'Wejdź do katalogu',
     tone: 'dark',
   },
@@ -30,7 +30,7 @@ const routes = [
     href: '/atelier',
     eyebrow: 'ładniejsze talerze',
     title: 'Atelier',
-    body: 'Dania z większym ego: kwas, dym, miso, owoce przy mięsie i talerze, które wyglądają jak plan.',
+    body: 'Bardziej dopracowane dania: kwas, dym, miso, owoce przy mięsie i trochę restauracyjnego klimatu.',
     cta: 'Otwórz Atelier',
     tone: 'wine',
   },
@@ -38,30 +38,11 @@ const routes = [
     href: '/katalog?lodowka=1#lodowka',
     eyebrow: 'mam składniki',
     title: 'Tryb lodówki',
-    body: 'Zaznacz rzeczy z kuchni. Palnik pokaże, które przepisy są blisko, a gdzie trzeba dokupić pół sklepu.',
+    body: 'Zaznacz, co masz. Palnik pokaże przepisy, do których jesteś najbliżej.',
     cta: 'Sprawdź lodówkę',
     tone: 'light',
   },
 ] as const
-
-const sections = [
-  ['szybkie obiady', 'Dania na moment, kiedy głód ma już buty na nogach. Masło, cytryna, patelnia, bez przemówień.'],
-  ['gotowanie z lodówki', 'Masz jajka, pół cukinii i coś podejrzanie ambitnego w szufladzie? Palnik składa z tego plan, nie wyrzuty sumienia.'],
-  ['Atelier', 'Dania z większym charakterem: ferment, dym, kwas, owoce przy mięsie i talerze, które mówią „usiądź, będzie dobrze”.'],
-]
-
-const storyBeats = [
-  ['01', 'Głód', 'Nie zaczynasz od 40 kart. Zaczynasz od sytuacji: szybko, z lodówki, dla ludzi albo z efektem wow.'],
-  ['02', 'Decyzja', 'Palnik zawęża opcje, pozwala porównać talerze i nie każe udawać, że masz czas na doktorat z obiadu.'],
-  ['03', 'Ogień', 'Otwierasz przepis, skalujesz porcje, odhaczasz składniki i gotujesz bez wracania do ściany tekstu.'],
-]
-
-const brainSteps = [
-  ['lodówka', 'Zaznaczasz, co masz. Palnik liczy dystans do obiadu, a nie pokazuje katalog dla sportu.'],
-  ['Brain', 'Dostajesz jedną mocną rekomendację z wyjaśnieniem: czas, effort, braki, pamięć i smak.'],
-  ['Cockpit', 'Po wejściu w przepis widzisz blat: masz/brakuje/zamienniki, pierwszy ruch i aktywne kroki.'],
-  ['pamięć lokalna', 'Pantry Memory i Taste DNA siedzą tylko w przeglądarce. Bez konta, bez wysyłania profilu do serwera.'],
-]
 
 export default function Home() {
   return (
@@ -75,7 +56,7 @@ export default function Home() {
             name: 'Palnik',
             url: siteUrl,
             description:
-              'Palnik skraca drogę od głodu do decyzji: szybki katalog, tryb lodówki, porównywanie i Atelier bez kulinarnego zadęcia.',
+              'Szybki katalog przepisów, tryb lodówki i Atelier dla bardziej dopracowanych dań.',
             inLanguage: 'pl-PL',
             potentialAction: {
               '@type': 'SearchAction',
@@ -119,12 +100,12 @@ export default function Home() {
               <div className="relative">
                 <p className="text-[11px] uppercase tracking-[0.25em] text-[#ffcf9f]">co dziś realnie ugotować</p>
                 <h1 className="mt-5 max-w-[9.5ch] text-[4.1rem] font-semibold leading-[0.86] tracking-[-0.075em] sm:text-7xl lg:text-8xl">
-                  Mniej scrolla.
+                  Wybierz.
                   <br />
-                  Więcej obiadu.
+                  Ugotuj.
                 </h1>
                 <p className="mt-6 max-w-[39ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                  Palnik nie jest encyklopedią przepisów. To skrót od „jestem głodny” do „wiem, co robię”: szybki obiad, lodówka, porównanie albo coś z efektem wow.
+                  Prosty wybór na dziś: szybki obiad, gotowanie z lodówki albo coś bardziej dopracowanego w Atelier. Bez przekopywania się przez ścianę przepisów.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link href="/katalog" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
@@ -193,77 +174,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.2rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_28px_90px_rgba(32,23,20,0.16)] sm:p-7 lg:p-9">
-          <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">jak to płynie</p>
-              <h2 className="mt-2 max-w-[11ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Od głodu do ognia.</h2>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {storyBeats.map(([number, title, body], index) => (
-                <article key={title} className="rounded-[1.45rem] border border-white/10 bg-white/[0.055] p-4 backdrop-blur" style={{ animationDelay: `${index * 90}ms` }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">{number}</p>
-                  <h3 className="mt-2 text-xl font-semibold tracking-[-0.045em]">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/78">{body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.35rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] shadow-[0_24px_70px_rgba(32,23,20,0.09)]">
-          <div className="grid gap-px bg-[#201714]/8 lg:grid-cols-[0.78fr_1.22fr]">
-            <article className="bg-[#201714] p-6 text-[#fff7ee] sm:p-8 lg:p-10">
-              <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">jak działa Palnik</p>
-              <h2 className="mt-3 max-w-[10ch] text-4xl font-semibold leading-[0.9] tracking-[-0.065em] sm:text-5xl">To nie jest lista. To decyzja.</h2>
-              <p className="mt-5 max-w-[38ch] text-sm leading-6 text-[#f3dfcf]/82">Palnik łączy lodówkę, preferencje i prowadzenie przy blacie. Ma skrócić drogę od “co ja mam zjeść” do pierwszego ruchu nożem.</p>
-              <Link href="/katalog?lodowka=1#lodowka" className="mt-6 inline-flex rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">Odpal lodówkę</Link>
-            </article>
-            <div className="grid gap-px bg-[#201714]/8 sm:grid-cols-2">
-              {brainSteps.map(([title, body], index) => (
-                <article key={title} className="bg-white/92 p-5 sm:p-6">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">0{index + 1}</p>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[#201714]">{title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-[#201714]/66">{body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="scroll-reveal px-4 pb-14 sm:px-6 lg:px-8 lg:pb-10">
-        <div className="mx-auto max-w-6xl rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_54%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
-          <div className="grid gap-7 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">w Palniku</p>
-              <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Od szybkiej patelni po mały spektakl.</h2>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {sections.map(([title, body]) => (
-                <article key={title} className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                  <h3 className="text-lg font-semibold tracking-[-0.04em]">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#201714]/62">{body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="scroll-reveal px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-        <div className="mx-auto flex max-w-6xl flex-col gap-5 overflow-hidden rounded-[2.2rem] border border-[#201714]/8 bg-[#201714] p-6 text-[#fff7ee] shadow-[0_28px_90px_rgba(32,23,20,0.16)] sm:p-8 lg:flex-row lg:items-end lg:justify-between lg:p-10">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">następny ruch</p>
-            <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Nie czytaj dalej. Gotuj.</h2>
-            <p className="mt-4 max-w-[48ch] text-sm leading-6 text-[#f3dfcf]/78">Wejdź do katalogu, odpal lodówkę albo idź w Atelier. Palnik ma skracać drogę do talerza, nie robić z obiadu spotkania zarządu.</p>
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_52%,#f6efe8_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">jak używać</p>
+              <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Trzy wejścia. Zero labiryntu.</h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">01</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Katalog</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Gdy chcesz szybko wybrać konkretny przepis.</p>
+              </article>
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-[#201714] p-4 text-[#fff7ee]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">02</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Lodówka</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#f3dfcf]">Gdy masz składniki i chcesz zobaczyć, co z nich realnie wyjdzie.</p>
+              </article>
+              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03</p>
+                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Atelier</h3>
+                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Gdy chcesz zrobić coś trochę bardziej popisowego.</p>
+              </article>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">Otwórz katalog</Link>
-            <Link href="/katalog?lodowka=1#lodowka" className="tap-pop inline-flex rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">Mam składniki</Link>
+          <div className="mt-7 flex flex-wrap gap-3 border-t border-[#201714]/8 pt-6">
+            <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Otwórz katalog</Link>
+            <Link href="/katalog?lodowka=1#lodowka" className="tap-pop inline-flex rounded-full border border-[#201714]/12 bg-white px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Mam składniki</Link>
           </div>
         </div>
       </section>

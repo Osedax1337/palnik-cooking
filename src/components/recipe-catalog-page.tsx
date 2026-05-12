@@ -1,6 +1,5 @@
 "use client"
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -15,13 +14,11 @@ import {
   type Recipe,
   moodFilters,
   recipes,
-  renderIngredient,
   searchRecipe,
 } from '@/lib/recipes'
 import { RecipeVisual } from '@/components/recipe-visual'
 import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
-import { PortionSwitcher } from '@/components/portion-switcher'
 import { makeBrainExplanation, makeRecipeQualitySignals, makeRecipeWhy, makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpPantryKeys,
@@ -366,23 +363,18 @@ export function RecipeCatalogPage({
     setIsShuffling(true)
 
     const pool = filteredRecipes.length > 1 ? filteredRecipes.filter((entry) => entry.recipe.slug !== openRecipe) : filteredRecipes
+    // eslint-disable-next-line react-hooks/purity -- user-triggered shuffle button, not render output
     const next = pool[Math.floor(Math.random() * pool.length)] ?? filteredRecipes[0]
     setDecisionRecipe(next.recipe)
 
     window.setTimeout(() => {
-      setOpenRecipe(next.recipe.slug)
       setIsShuffling(false)
       recipeTasteSignals(next.recipe).forEach((signal) => bumpTasteSignal(signal))
       trackRecipeOpened(next.recipe.slug, 'random_recipe', { result_count: filteredRecipes.length })
+      router.push(recipeHref(next.recipe.slug))
     }, 520)
 
     window.setTimeout(() => setDecisionRecipe(null), 1350)
-
-    if (typeof window !== 'undefined') {
-      requestAnimationFrame(() => {
-        document.getElementById('przepis')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
-    }
   }
 
   const toggleFridgeKey = useCallback((key: string) => {
@@ -743,14 +735,10 @@ export function RecipeCatalogPage({
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[1.05fr_0.95fr]">
                 {atelierEntryPoints.map((recipe, index) => (
-                  <button
+                  <Link
                     key={recipe.slug}
-                    type="button"
-                    onClick={() => {
-                      setOpenRecipe(recipe.slug)
-                      scrollToSection('przepis')
-                    }}
-                    aria-label={`Podejrzyj danie Atelier: ${recipe.title}`}
+                    href={recipeHref(recipe.slug)}
+                    aria-label={`Otwórz danie Atelier: ${recipe.title}`}
                     className={`group sheen-on-hover relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#151016] text-left shadow-[0_24px_70px_rgba(10,6,12,0.28)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(10,6,12,0.36)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 ${index === 0 ? 'sm:col-span-2 lg:col-span-1 lg:row-span-2' : ''}`}
                   >
                     <RecipeVisual recipe={recipe} large={index === 0} />
@@ -763,7 +751,7 @@ export function RecipeCatalogPage({
                       <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.92] tracking-[-0.055em]">{recipe.title}</h2>
                       <p className="mt-3 line-clamp-2 max-w-[34ch] text-sm leading-6 text-[#f3dfcf]">{recipe.intro}</p>
                     </div>
-                  </button>
+                  </Link>
                 ))}
 
                 <article className="relative min-h-[18rem] overflow-hidden rounded-[2rem] border border-[#ffcf9f]/12 bg-[#fff7ee] p-5 text-[#201714] shadow-[0_24px_70px_rgba(10,6,12,0.12)] sm:p-6">
@@ -949,18 +937,16 @@ export function RecipeCatalogPage({
                       </div>
                     ) : null}
                     <div className="mt-5 flex flex-wrap gap-2">
-                      <button
-                        type="button"
+                      <Link
+                        href={recipeHref(leadBrain.recipe.slug)}
                         onClick={() => {
-                          setOpenRecipe(leadBrain.recipe.slug)
-                          scrollToSection('przepis')
                           recipeTasteSignals(leadBrain.recipe).forEach((signal) => bumpTasteSignal(signal))
                           trackRecipeOpened(leadBrain.recipe.slug, 'brain_lead', { mode: brainMode, score: Math.round(leadBrain.score * 100) })
                         }}
                         className="rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
                       >
-                        Pokaż w katalogu
-                      </button>
+                        Otwórz przepis
+                      </Link>
                       <Link href={recipeHref(leadBrain.recipe.slug)} className="rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
                         Gotuj teraz
                       </Link>
@@ -1002,20 +988,18 @@ export function RecipeCatalogPage({
                 <div className="mt-4 grid gap-3">
                   {brainRecommendations.map((item, index) => (
                     <article key={`${brainMode}-${item.recipe.slug}`} style={{ animationDelay: `${index * 65}ms` }} className={`brain-reveal grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 shadow-sm sm:grid-cols-[116px_1fr] ${index === 0 ? 'border-[#201714]/12 bg-white' : 'border-[#201714]/8 bg-white/70'}`}>
-                      <button
-                        type="button"
+                      <Link
+                        href={recipeHref(item.recipe.slug)}
                         onClick={() => {
-                          setOpenRecipe(item.recipe.slug)
-                          scrollToSection('przepis')
                           recipeTasteSignals(item.recipe).forEach((signal) => bumpTasteSignal(signal))
                           trackRecipeOpened(item.recipe.slug, 'brain_card', { mode: brainMode, rank: index + 1 })
                         }}
-                        aria-label={`Podejrzyj rekomendację Palnik Brain: ${item.recipe.title}`}
+                        aria-label={`Otwórz rekomendację Palnik Brain: ${item.recipe.title}`}
                         className="group relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-[#201714]/10 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:aspect-auto"
                       >
                         <RecipeVisual recipe={item.recipe} />
                         <div className="absolute left-2 top-2 rounded-full bg-white/94 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#201714]">#{index + 1}</div>
-                      </button>
+                      </Link>
                       <div className="flex min-w-0 flex-col justify-between gap-3 py-1">
                         <div>
                           <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
@@ -1370,14 +1354,10 @@ export function RecipeCatalogPage({
 
                 <div className="grid gap-2 sm:grid-cols-3">
                   {fridgeBestMatches.map(({ recipe, match }, index) => (
-                    <button
+                    <Link
                       key={recipe.slug}
-                      type="button"
-                      onClick={() => {
-                        setOpenRecipe(recipe.slug)
-                        scrollToSection('przepis')
-                      }}
-                      aria-label={`Podejrzyj najlepsze dopasowanie z lodówki: ${recipe.title}`}
+                      href={recipeHref(recipe.slug)}
+                      aria-label={`Otwórz najlepsze dopasowanie z lodówki: ${recipe.title}`}
                       className={`group overflow-hidden rounded-[1.35rem] border p-2 text-left transition hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#201714]/15 bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/10 bg-white text-[#201714]'}`}
                     >
                       <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-[#201714]/10">
@@ -1390,7 +1370,7 @@ export function RecipeCatalogPage({
                         <p className="line-clamp-2 text-sm font-semibold leading-tight tracking-[-0.03em]">{recipe.title}</p>
                         <p className={`mt-1 text-[11px] uppercase tracking-[0.14em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{recipe.time} · {match?.matched}/{match?.total} masz</p>
                       </div>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -1469,19 +1449,15 @@ export function RecipeCatalogPage({
                 </p>
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   {atelierEntryPoints.map((recipe, index) => (
-                    <button
+                    <Link
                       key={recipe.slug}
-                      type="button"
-                      onClick={() => {
-                        setOpenRecipe(recipe.slug)
-                        scrollToSection('przepis')
-                      }}
+                      href={recipeHref(recipe.slug)}
                       className={`rounded-[1.35rem] border p-4 text-left transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-white/20 ${index === 1 ? 'border-[#ffcf9f]/18 bg-white/8' : 'border-white/10 bg-white/[0.03]'}`}
                     >
                       <p className="text-[10px] uppercase tracking-[0.2em] text-[#ffcf9f]">{recipe.time} · {recipe.cuisine}</p>
                       <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[#fff7ee]">{recipe.title}</p>
                       <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{recipe.intro}</p>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </article>
@@ -1636,8 +1612,6 @@ export function RecipeCatalogPage({
                 setFridgeMode(false)
               }}
               suggestions={emptyStateSuggestions}
-              setOpenRecipe={setOpenRecipe}
-              scrollToRecipe={() => scrollToSection('przepis')}
             />
           ) : (
             <div key={resultAnimationKey} className="grid gap-4 lg:grid-cols-3" aria-live="polite">
@@ -1731,14 +1705,8 @@ export function RecipeCatalogPage({
                         </p>
                       ) : null}
                       <div className="mt-auto flex flex-wrap gap-2 pt-5">
-                        <button type="button" onClick={() => {
-                          setOpenRecipe(recipe.slug)
-                          scrollToSection('przepis')
-                        }} aria-pressed={active} aria-label={`Podejrzyj przepis niżej: ${recipe.title}`} className={`tap-pop inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 ${active ? 'bg-[#201714] text-[#fff7ee] focus:ring-[#201714]/40' : 'border border-[#201714]/12 text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/25'}`}>
-                          {active ? 'Przepis otwarty ↓' : 'Podejrzyj niżej'}
-                        </button>
                         <Link href={recipeHref(recipe.slug)} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">
-                          Otwórz stronę
+                          Otwórz przepis
                         </Link>
                       </div>
                     </div>
@@ -1764,98 +1732,6 @@ export function RecipeCatalogPage({
               </button>
             </div>
           ) : null}
-        </div>
-      </section>
-
-      <section id="przepis" className="px-5 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div key={currentRecipe.slug} className="mx-auto grid max-w-6xl gap-5 animate-fade-up-soft lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="overflow-hidden rounded-[2.2rem] bg-white shadow-[0_18px_60px_rgba(32,23,20,0.08)]">
-            <div className="group relative aspect-[4/3] w-full">
-              <Link
-                href={recipeHref(currentRecipe.slug)}
-                aria-label={`Otwórz przepis: ${currentRecipe.title}`}
-                className="absolute inset-0 z-10 block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#201714]/40"
-              >
-                <RecipeVisual recipe={currentRecipe} large />
-              </Link>
-            </div>
-            <div className="p-6 lg:p-8">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#201714]/60">
-                <span className="rounded-full border border-current/10 px-3 py-1.5">{currentRecipe.time}</span>
-                <span className="rounded-full border border-current/10 px-3 py-1.5">{currentRecipe.cuisine}</span>
-                <span className="inline-flex items-center rounded-full border border-current/10 px-3 py-1.5">
-                  <EffortDots effort={currentRecipe.effort} />
-                </span>
-              </div>
-              <h2 className="mt-4 max-w-[13ch] text-3xl font-semibold leading-[1] tracking-[-0.05em] sm:text-4xl">{currentRecipe.title}</h2>
-              <p className="mt-3 text-sm leading-6 text-[#201714]/72 sm:text-base">{currentRecipe.intro}</p>
-              <p className="mt-4 rounded-[1rem] bg-[#fffaf3] px-4 py-3.5 text-sm leading-6 text-[#201714]/85">
-                <span className="block text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a4b2a]">kiedy to robić</span>
-                <span className="mt-1 block">{currentRecipe.whenToMake}</span>
-              </p>
-              <div className="mt-4">
-                <DietTags tags={currentRecipe.dietTags} />
-              </div>
-              <p className="mt-5 rounded-[1rem] bg-[#fff3e7] px-4 py-4 text-sm leading-6 text-[#201714]/80"><strong className="text-[#201714]">Tip:</strong> {currentRecipe.tip}</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Link href={recipeHref(currentRecipe.slug)} className="inline-flex items-center rounded-full bg-[#201714] px-4 py-3 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#372924] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">
-                  Otwórz osobną stronę przepisu
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[2.2rem] bg-[#201714] p-6 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.18)] lg:p-8">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold tracking-[-0.03em]">Składniki i kroki</h3>
-              <PortionSwitcher
-                value={portions}
-                onChange={(value) => setPreviewPortions(value)}
-                tone="light"
-              />
-            </div>
-            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-              <div>
-                <h4 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Składniki</h4>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-[#f3dfcf]">
-                  {currentRecipe.ingredients.map((ingredient, index) => (
-                    <li key={`${ingredient.key}-${index}`} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ffcf9f]" />
-                      <span>{renderIngredient(ingredient, ratio)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">Kroki</h4>
-                <ol className="mt-3 space-y-3 text-sm leading-6 text-[#f3dfcf]">
-                  {currentRecipe.steps.map((step, index) => {
-                    const stepImage = currentRecipe.stepImages?.[index]
-
-                    return (
-                      <li key={step} className={`overflow-hidden rounded-[1rem] border border-white/8 bg-white/5 transition hover:border-white/15 ${stepImage ? 'p-0' : 'p-3'}`}>
-                        {stepImage ? (
-                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#120c0a]">
-                            <Image
-                              src={stepImage}
-                              alt={`${currentRecipe.title} — krok ${index + 1}`}
-                              fill
-                              className="object-cover transition duration-500 hover:scale-[1.025]"
-                              sizes="(max-width: 1024px) 100vw, 420px"
-                            />
-                          </div>
-                        ) : null}
-                        <div className="flex gap-3 p-3">
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-[#ffcf9f]">{index + 1}</span>
-                          <span>{step}</span>
-                        </div>
-                      </li>
-                    )
-                  })}
-                </ol>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1909,16 +1785,12 @@ function EmptyState({
   clearFilters,
   clearFridge,
   suggestions,
-  setOpenRecipe,
-  scrollToRecipe,
 }: {
   fridgeMode: boolean
   fridgeSelectionSize: number
   clearFilters: () => void
   clearFridge: () => void
   suggestions: typeof recipes
-  setOpenRecipe: (slug: string) => void
-  scrollToRecipe: () => void
 }) {
   return (
     <div className="rounded-[2rem] border border-dashed border-[#201714]/15 bg-white/60 p-8 text-center sm:p-12">
@@ -1963,14 +1835,10 @@ function EmptyState({
         <p className="text-[11px] uppercase tracking-[0.22em] text-[#8a4b2a]">spróbuj zamiast tego</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           {suggestions.map((recipe) => (
-            <button
+            <Link
               key={recipe.slug}
-              type="button"
-              onClick={() => {
-                setOpenRecipe(recipe.slug)
-                scrollToRecipe()
-              }}
-              aria-label={`Podejrzyj sugerowany przepis: ${recipe.title}`}
+              href={`/przepisy/${recipe.slug}`}
+              aria-label={`Otwórz sugerowany przepis: ${recipe.title}`}
               className="group flex items-center gap-3 rounded-[1.4rem] border border-[#201714]/8 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(32,23,20,0.10)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20"
             >
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
@@ -1980,7 +1848,7 @@ function EmptyState({
                 <p className="truncate text-sm font-semibold tracking-[-0.02em]">{recipe.title}</p>
                 <p className="truncate text-xs text-[#201714]/55">{recipe.time} · {recipe.cuisine}</p>
               </div>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
