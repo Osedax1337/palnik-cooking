@@ -54,15 +54,15 @@ export function makeRecipeWhy(recipe: Recipe) {
   const fruit = hasAny(keys, ['śliwka', 'morela', 'winogrona', 'granat', 'daktyl', 'figa', 'brzoskwinia', 'wiśnia', 'borówka', 'rabarbar', 'pomarańcza'])
 
   if (recipe.collections.includes('atelier')) {
-    if (fruit && umami) return 'Słodycz albo kwas owocu łapie umami i robi napięcie, a nie deser. Dlatego talerz wygląda odważnie, ale nadal ma logiczny środek ciężkości.'
+    if (fruit && umami) return 'Słodycz albo kwas owocu łapie umami i buduje napięcie, a nie deser. Talerz jest odważny, ale nadal logiczny.'
     if (acid && crunch) return 'Kwas czyści podniebienie, chrupnięcie zatrzymuje uwagę. Dzięki temu talerz jest lekki, ale nie znika po dwóch kęsach.'
     return 'To danie działa przez jeden czytelny kontrast: miękkie z ostrym, słodkie z gorzkim albo tłuste z kwaśnym. Reszta ma pilnować balansu.'
   }
 
   if (acid && creamy) return 'Kremowa baza daje komfort, a kwas pilnuje, żeby całość nie zrobiła się ciężka. To jest prosty układ: miękko, jasno, jeszcze jeden kęs.'
-  if (umami && crunch) return 'Umami buduje głębię, chrupnięcie robi rytm. Bez tej tekstury danie byłoby płaskie, z nią ma konkretny powód na talerzu.'
-  if (umami) return 'Smak nie opiera się na ilości składników, tylko na głębi: sól, tłuszcz i umami robią bazę, którą łatwo doprawić bez kombinowania.'
-  if (heat && creamy) return 'Ogień ma tu amortyzator. Kremowość łagodzi pikantność, więc danie ma pazur, ale nie zmienia obiadu w test wytrzymałości.'
+  if (umami && crunch) return 'Umami buduje głębię, a chrupnięcie daje rytm. Bez tej tekstury danie byłoby płaskie.'
+  if (umami) return 'Smak nie opiera się na ilości składników, tylko na głębi: sól, tłuszcz i umami dają bazę, którą łatwo doprawić.'
+  if (heat && creamy) return 'Ostrość ma tu amortyzator. Kremowość łagodzi pikantność, więc danie jest wyraziste, ale nie męczące.'
   if (recipe.minutes <= 20) return 'Krótki czas działa, bo przepis nie walczy o złożoność. Jedna baza, jeden mocny akcent i finisz zamiast kuchennego projektu.'
   if (recipe.collections.includes('meal-prep')) return 'To jest jedzenie, które dobrze znosi czas: baza zostaje stabilna, sos albo przyprawy trzymają smak, a jutro nie jesz smutnej resztki.'
   if (recipe.collections.includes('one-pan')) return 'Jedna patelnia wymusza porządek: najpierw kolor i baza, potem sos, na końcu świeży akcent. Mało naczyń, ale smak nie jest przypadkowy.'
@@ -72,7 +72,7 @@ export function makeRecipeWhy(recipe: Recipe) {
 export function makeRecipeSignature(recipe: Recipe) {
   const keys = ingredientKeys(recipe)
   if (hasAny(keys, ['cytryna', 'limonka', 'yuzu', 'ocet', 'sumak', 'ponzu'])) {
-    return { label: 'ruch talerza', title: 'Kwas na końcu, nie na ślepo', body: 'Najpierw zbuduj bazę. Kwas dodaj dopiero po spróbowaniu — ma podnieść smak, nie przykryć całą robotę.' }
+    return { label: 'ruch talerza', title: 'Kwas na końcu, nie na ślepo', body: 'Najpierw zbuduj bazę. Kwas dodaj dopiero po spróbowaniu — ma podnieść smak, nie przykryć całości.' }
   }
   if (hasAny(keys, ['miso', 'sos sojowy', 'tamari', 'parmezan', 'bulion'])) {
     return { label: 'ruch talerza', title: 'Umami już niesie sól', body: 'Dosalaj ostrożnie. Przy mocnej bazie lepiej domknąć pieprzem, ziołami albo kwasem niż dosypać soli z automatu.' }
@@ -84,7 +84,7 @@ export function makeRecipeSignature(recipe: Recipe) {
     return { label: 'ruch talerza', title: 'Kolor przed sosem', body: 'Najpierw daj składnikom złapać rumieniec. Sos albo śmietanka wchodzą dopiero wtedy, gdy baza ma charakter.' }
   }
   if (recipe.minutes <= 20) {
-    return { label: 'ruch talerza', title: 'Mise en place albo chaos', body: 'To szybki przepis, więc pokrój i odważ rzeczy przed ogniem. Patelnia nie będzie czekać na romantyczne szukanie pieprzu.' }
+    return { label: 'ruch talerza', title: 'Mise en place albo chaos', body: 'To szybki przepis, więc pokrój i odważ rzeczy przed ogniem. Gdy patelnia będzie gorąca, nie będzie czasu na szukanie składników.' }
   }
   return { label: 'ruch talerza', title: 'Najpierw baza, potem balans', body: 'Nie rób wszystkiego naraz. Zbuduj główny smak, spróbuj, dopiero potem domykaj kwasem, tłuszczem i teksturą.' }
 }
@@ -144,7 +144,7 @@ export function makeBrainExplanation({
     reasons.push(`biorę z pamięci: ${pantryKeys.slice(0, 3).join(', ')}`)
   }
 
-  if (recipe.minutes <= 20) reasons.push(`${recipe.time}, więc głód nie robi zamachu stanu`)
+  if (recipe.minutes <= 20) reasons.push(`${recipe.time}, więc nie czekasz długo na jedzenie`)
   else if (mode === 'spokojnie') reasons.push(`${recipe.time}, ale bez nerwowego sprintu`)
 
   if (recipe.effort === 'lekko') reasons.push('mało ruchów przy blacie')

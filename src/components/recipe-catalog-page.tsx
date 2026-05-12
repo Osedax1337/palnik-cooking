@@ -19,13 +19,10 @@ import {
 import { RecipeVisual } from '@/components/recipe-visual'
 import { EffortDots } from '@/components/effort-dots'
 import { DietTags } from '@/components/recipe-meta'
-import { makeBrainExplanation, makeRecipeQualitySignals, makeRecipeWhy, makeSmartSwaps } from '@/lib/recipe-intelligence'
+import { makeBrainExplanation, makeSmartSwaps } from '@/lib/recipe-intelligence'
 import {
   bumpPantryKeys,
   bumpTasteSignal,
-  clearPalnikMemory,
-  clearPantryMemory,
-  clearTasteMemory,
   getCompare,
   getFavorites,
   getFridge,
@@ -46,8 +43,8 @@ const cuisineKeys = new Set(cuisineFilters.map((filter) => filter.key))
 const dietKeys = new Set(dietTagFilters.map((filter) => filter.key as DietTag))
 const collectionKeys = new Set(collectionDefs.map((c) => c.key as Collection))
 const recipeSlugs = new Set(recipes.map((recipe) => recipe.slug))
-const INITIAL_VISIBLE_RECIPES = 24
-const LOAD_MORE_RECIPES = 24
+const INITIAL_VISIBLE_RECIPES = 12
+const LOAD_MORE_RECIPES = 12
 
 type BrainMode = 'lodowka' | 'szybko' | 'sexy' | 'spokojnie'
 
@@ -89,10 +86,10 @@ function effortWeight(effort: Recipe['effort']) {
 }
 
 function makeBrainVerdict(recipe: Recipe, mode: BrainMode, missing: string[], matchScore: number) {
-  if (missing.length === 0 && matchScore > 0) return `Rób to. Masz wszystko, ${recipe.time} i zero zakupowego teatru.`
+  if (missing.length === 0 && matchScore > 0) return `Masz wszystko. Ten przepis zajmie ${recipe.time} i nie wymaga zakupów.`
   if (missing.length > 0 && missing.length <= 2) return `Rób to. Brakuje tylko: ${missing.join(', ')}.`
   if (mode === 'szybko') return `${recipe.time}. Krótka droga do talerza, mało filozofii.`
-  if (mode === 'sexy') return 'To jest talerz z pauzą przy stole. Trochę teatr, ale z powodem.'
+  if (mode === 'sexy') return 'To jest talerz na spokojniejszy moment: bardziej efektowny, ale nadal logiczny.'
   if (mode === 'spokojnie') return 'Bez ciśnienia. Ciepłe, wdzięczne, do ogarnięcia bez sprintu.'
   return 'Najbliższy sensowny ruch z tego, co już masz.'
 }
@@ -175,10 +172,6 @@ function recipeTasteSignals(recipe: Recipe) {
   ]
 }
 
-function tasteLabel(signal: string) {
-  const [, value = signal] = signal.split(':')
-  return value.replace('-', ' ')
-}
 
 export function RecipeCatalogPage({
   forcedCollection = 'all',
@@ -481,28 +474,6 @@ export function RecipeCatalogPage({
     track('favorite_toggled', { slug, selected: next.includes(slug), favorite_count: next.length })
   }
 
-  const resetMemory = (scope: 'all' | 'pantry' | 'taste') => {
-    if (scope === 'pantry') clearPantryMemory()
-    else if (scope === 'taste') clearTasteMemory()
-    else clearPalnikMemory()
-    track('memory_reset', { scope })
-  }
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      trackSearchUsed(searchQuery, filteredRecipes.length, isAtelierPage ? 'atelier' : 'catalog')
-    }, 700)
-    return () => window.clearTimeout(timeout)
-  }, [filteredRecipes.length, isAtelierPage, searchQuery])
-
-  const compareCount = compareSlugs.length
-  const recentRecipes = recentSlugs
-    .map((slug) => recipes.find((recipe) => recipe.slug === slug))
-    .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
-  const favoriteRecipes = favoriteSlugs
-    .map((slug) => recipes.find((recipe) => recipe.slug === slug))
-    .filter((recipe): recipe is (typeof recipes)[number] => Boolean(recipe))
-
   const pantryMemoryTop = useMemo(() => topCountKeys(pantryMemory, 7), [pantryMemory])
   const tasteMemoryTop = useMemo(() => topCountKeys(tasteMemory, 6), [tasteMemory])
   const effectiveFridgeSelection = useMemo(() => {
@@ -559,11 +530,13 @@ export function RecipeCatalogPage({
   }, [brainMode, collectionFilter, cuisineFilter, dietFilters, effectiveFridgeSelection, effectiveFridgeUsesPantryMemory, favoriteSlugs, moodFilter, pantryMemoryTop, recentSlugs, tasteMemoryTop])
 
   const leadBrain = brainRecommendations[0]
-  const hasProfileSignal = pantryMemoryTop.length > 0 || tasteMemoryTop.length > 0
+  const compareCount = compareSlugs.length
+  const favoriteRecipes = useMemo(() => favoriteSlugs.map((slug) => recipes.find((recipe) => recipe.slug === slug)).filter(Boolean) as Recipe[], [favoriteSlugs])
+  const recentRecipes = useMemo(() => recentSlugs.map((slug) => recipes.find((recipe) => recipe.slug === slug)).filter(Boolean) as Recipe[], [recentSlugs])
   const brainModes = [
     { key: 'lodowka' as const, label: 'Uratuj lodówkę', body: 'najmniej zakupów' },
     { key: 'szybko' as const, label: 'Chcę jeść szybko', body: 'czas wygrywa' },
-    { key: 'sexy' as const, label: 'Zrób coś sexy', body: 'efekt przy stole' },
+    { key: 'sexy' as const, label: 'Ma zrobić efekt', body: 'przy stole' },
     { key: 'spokojnie' as const, label: 'Bez spiny', body: 'komfort i niski chaos' },
   ]
 
@@ -587,9 +560,9 @@ export function RecipeCatalogPage({
         .map((entry) => entry.recipe)
     : recipes.slice(0, 3)
   const closureSteps = [
-    ['1', 'Wybierz sytuację', 'Szybko, z lodówki, efekt przy stole albo bez spiny. Palnik zaczyna od problemu, nie od listy.'],
-    ['2', 'Brain zawęża', 'Rekomendacja tłumaczy, czemu ma sens: składniki, czas, effort, pamięć i smak.'],
-    ['3', 'Cockpit prowadzi', 'W przepisie widzisz pierwszy ruch, braki, zamienniki i aktywny krok przy blacie.'],
+    ['1', 'Wybierz sytuację', 'Szybko, z lodówki, efekt przy stole albo spokojny obiad. Palnik zaczyna od sytuacji, nie od długiej listy.'],
+    ['2', 'Dostajesz krótki wybór', 'Rekomendacja mówi wprost: co pasuje do składników, czasu i ochoty.'],
+    ['3', 'Gotujesz bez chaosu', 'W przepisie widzisz pierwszy ruch, braki, zamienniki i aktywny krok przy blacie.'],
   ]
 
   const decisionCards = [
@@ -604,7 +577,7 @@ export function RecipeCatalogPage({
     {
       eyebrow: 'lodówka-chaos',
       title: 'Mam składniki, nie mam planu',
-      body: 'Zaznaczasz to, co już leży w kuchni. Palnik nie udaje szefa kuchni, tylko skraca listę.',
+      body: 'Zaznaczasz to, co już leży w kuchni. Palnik skraca listę do przepisów, które są najbliżej.',
       scenario: 'lodowka' as const,
       recipe: recipes.find((recipe) => recipe.slug === 'frittata-cukinia') ?? recipes[1],
       accent: 'bg-[#fff3e7] text-[#201714]',
@@ -647,7 +620,7 @@ export function RecipeCatalogPage({
     {
       label: 'kontrast',
       title: 'Słodkie nie znaczy deserowe',
-      body: 'Daktyl, śliwka, rabarbar albo brzoskwinia pracują tu jak sos: podbijają tłuszcz, kwas i umami, nie robią cukierni.',
+      body: 'Daktyl, śliwka, rabarbar albo brzoskwinia działają tu jak sos: podbijają tłuszcz, kwas i umami, bez skręcania w deser.',
     },
     {
       label: 'precyzja',
@@ -710,7 +683,7 @@ export function RecipeCatalogPage({
                   </div>
                   <div>
                     <p className="max-w-[34ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                      Dania z napięciem: ferment, dym, owoce przy mięsie, sosy z ostrą krawędzią. Nie codzienny obiad — raczej talerz, który robi pauzę przy stole.
+                      Dania z napięciem: ferment, dym, owoce przy mięsie i sosy z ostrą krawędzią. Nie codzienny obiad — raczej coś na spokojniejszy wieczór.
                     </p>
                     <div className="mt-7 flex flex-wrap gap-3">
                       <button
@@ -769,7 +742,7 @@ export function RecipeCatalogPage({
                 <p className="mt-4 text-sm leading-6 text-[#f3dfcf]">Atelier ma działać jak krótka karta małej restauracji: mniej pozycji, mocniejsze intencje, szybciej czujesz, czy dziś chcesz dym, kwas czy aksamit.</p>
               </article>
               <div className="grid gap-3 sm:grid-cols-3">
-                {['kwas przecina tłuszcz', 'dym robi scenę', 'chrup pilnuje rytmu'].map((line, index) => (
+                {['kwas przecina tłuszcz', 'dym daje tło', 'chrup pilnuje rytmu'].map((line, index) => (
                   <article key={line} className="rounded-[1.55rem] border border-[#ffcf9f]/14 bg-[#0f0b0e]/42 p-4 text-[#fff7ee]">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">zasada 0{index + 1}</p>
                     <p className="mt-2 text-lg font-semibold leading-tight tracking-[-0.04em]">{line}</p>
@@ -841,7 +814,7 @@ export function RecipeCatalogPage({
             <article className="rounded-[2rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.14)] sm:p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">pierwsza ścieżka</p>
               <h2 className="mt-2 max-w-[10ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em]">Jak działa Palnik?</h2>
-              <p className="mt-4 text-sm leading-6 text-[#f3dfcf]/78">Wybierasz sytuację, Brain zawęża decyzję, Cockpit prowadzi przy blacie. Jeśli pamięć pomaga, działa lokalnie w tej przeglądarce.</p>
+              <p className="mt-4 text-sm leading-6 text-[#f3dfcf]/78">Wybierasz sytuację, Palnik zawęża decyzję i prowadzi przy blacie. Jeśli pamięć pomaga, działa tylko w tej przeglądarce.</p>
             </article>
             <div className="grid gap-3 sm:grid-cols-3">
               {closureSteps.map(([number, title, body]) => (
@@ -872,7 +845,7 @@ export function RecipeCatalogPage({
                   key={card.eyebrow}
                   type="button"
                   onClick={() => runHeroScenario(card.scenario)}
-                  className={`group relative min-h-[315px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[300px] ${card.accent}`}
+                  className={`group relative min-h-[220px] overflow-hidden rounded-[1.85rem] border border-[#201714]/10 p-4 text-left shadow-[0_14px_34px_rgba(32,23,20,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/20 sm:min-h-[220px] ${card.accent}`}
                 >
                   <div className="absolute right-3 top-3 z-10 rounded-full border border-current/10 bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur">0{index + 1}</div>
                   <div className="absolute inset-x-3 bottom-3 h-[92px] overflow-hidden rounded-[1.2rem] bg-[#201714]/8 opacity-95 transition duration-300 group-hover:scale-[1.025] sm:h-[88px]">
@@ -886,7 +859,7 @@ export function RecipeCatalogPage({
                   <div className="relative z-10 pr-10">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-60">{card.eyebrow}</p>
                     <h3 className="mt-2 max-w-[11ch] text-xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-[1.35rem]">{card.title}</h3>
-                    <p className="sr-only">{card.body}</p>
+                    <p className="mt-2 line-clamp-2 max-w-[22ch] text-sm leading-5 opacity-70">{card.body}</p>
                   </div>
                 </button>
               ))}
@@ -897,217 +870,57 @@ export function RecipeCatalogPage({
 
       {!isAtelierPage && leadBrain ? (
         <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
-          <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.25rem] border border-[#201714]/10 bg-[radial-gradient(circle_at_18%_8%,rgba(255,207,159,0.44),transparent_28%),linear-gradient(135deg,#201714_0%,#2c1b18_48%,#fff3e7_49%,#fffaf3_100%)] shadow-[0_28px_80px_rgba(32,23,20,0.14)]">
-            <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
-              <article key={`${brainMode}-${leadBrain.recipe.slug}`} className="brain-reveal relative min-h-[26rem] overflow-hidden p-5 text-[#fff7ee] sm:p-6 lg:p-8">
-                <div className="absolute inset-0 opacity-55">
-                  <RecipeVisual recipe={leadBrain.recipe} large />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#201714] via-[#201714]/78 to-[#201714]/22" />
-                </div>
-                <div className="relative flex min-h-[23rem] flex-col justify-between">
-                  <div>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-[#ffcf9f]/20 bg-[#ffcf9f]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#ffcf9f]" />
-                      Palnik Brain / God Mode
-                    </div>
-                    <h2 className="mt-4 max-w-[9ch] text-5xl font-semibold leading-[0.86] tracking-[-0.075em] sm:text-6xl">Gotuj to.</h2>
-                    <p className="mt-4 max-w-[34ch] text-base leading-7 text-[#f3dfcf]">{leadBrain.verdict}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">najmocniejsza decyzja teraz</p>
-                    <h3 className="mt-2 max-w-[15ch] text-3xl font-semibold leading-[0.95] tracking-[-0.055em]">{leadBrain.recipe.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{leadBrain.recipe.time} · {leadBrain.recipe.cuisine} · {leadBrain.reason}</p>
-                    <div className="mt-4 rounded-[1.25rem] border border-white/12 bg-white/[0.075] p-3 backdrop-blur">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">dlaczego to polecam</p>
-                      <ul className="mt-2 space-y-1.5 text-sm leading-5 text-[#f3dfcf]">
-                        {leadBrain.explanation.map((line) => (
-                          <li key={line} className="flex gap-2">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ffcf9f]" />
-                            <span>{line}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    {leadBrain.swaps.length > 0 ? (
-                      <div className="mt-3 rounded-[1.25rem] border border-[#ffcf9f]/18 bg-[#ffcf9f]/10 p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">jeśli nie chcesz sklepu</p>
-                        <p className="mt-1 text-sm leading-5 text-[#f3dfcf]">
-                          Brakuje {leadBrain.swaps[0].key}? Zamień na {leadBrain.swaps[0].swaps.slice(0, 2).join(' albo ')}.
-                        </p>
-                      </div>
-                    ) : null}
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      <Link
-                        href={recipeHref(leadBrain.recipe.slug)}
-                        onClick={() => {
-                          recipeTasteSignals(leadBrain.recipe).forEach((signal) => bumpTasteSignal(signal))
-                          trackRecipeOpened(leadBrain.recipe.slug, 'brain_lead', { mode: brainMode, score: Math.round(leadBrain.score * 100) })
-                        }}
-                        className="rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]"
-                      >
-                        Otwórz przepis
-                      </Link>
-                      <Link href={recipeHref(leadBrain.recipe.slug)} className="rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
-                        Gotuj teraz
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <div className="p-5 sm:p-6 lg:p-7">
-                <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">tryb decyzji</p>
-                    <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Nie szukaj za długo. Wybierz kierunek.</h2>
-                  </div>
-                  <p className="max-w-[33ch] text-sm leading-6 text-[#201714]/62">Brain łączy lodówkę, czas, wysiłek, filtry i ostatnie wybory. Na końcu dostajesz krótką listę sensownych opcji.</p>
-                </div>
-
-                <div className="grid gap-2 sm:grid-cols-4">
-                  {brainModes.map((mode) => {
-                    const active = brainMode === mode.key
-                    return (
-                      <button
-                        key={mode.key}
-                        type="button"
-                        onClick={() => {
-                          setBrainMode(mode.key)
-                          bumpTasteSignal(`brain:${mode.key}`)
-                        }}
-                        aria-pressed={active}
-                        className={`rounded-[1.15rem] border p-3 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'brain-mode-active border-transparent bg-[#201714] text-[#fff7ee] shadow-[0_14px_34px_rgba(32,23,20,0.18)]' : 'border-[#201714]/10 bg-white/78 text-[#201714] hover:bg-white'}`}
-                      >
-                        <span className={`block text-[10px] font-semibold uppercase tracking-[0.18em] ${active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{mode.body}</span>
-                        <span className="mt-1 block text-sm font-semibold tracking-[-0.02em]">{mode.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-
-                <div className="mt-4 grid gap-3">
-                  {brainRecommendations.map((item, index) => (
-                    <article key={`${brainMode}-${item.recipe.slug}`} style={{ animationDelay: `${index * 65}ms` }} className={`brain-reveal grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 shadow-sm sm:grid-cols-[116px_1fr] ${index === 0 ? 'border-[#201714]/12 bg-white' : 'border-[#201714]/8 bg-white/70'}`}>
-                      <Link
-                        href={recipeHref(item.recipe.slug)}
-                        onClick={() => {
-                          recipeTasteSignals(item.recipe).forEach((signal) => bumpTasteSignal(signal))
-                          trackRecipeOpened(item.recipe.slug, 'brain_card', { mode: brainMode, rank: index + 1 })
-                        }}
-                        aria-label={`Otwórz rekomendację Palnik Brain: ${item.recipe.title}`}
-                        className="group relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-[#201714]/10 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:aspect-auto"
-                      >
-                        <RecipeVisual recipe={item.recipe} />
-                        <div className="absolute left-2 top-2 rounded-full bg-white/94 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#201714]">#{index + 1}</div>
-                      </Link>
-                      <div className="flex min-w-0 flex-col justify-between gap-3 py-1">
-                        <div>
-                          <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
-                            <span>{item.recipe.time}</span>
-                            <span>·</span>
-                            <span>{item.recipe.effort}</span>
-                            {fridgeSelection.size > 0 ? <span>· {item.matched}/{item.total} masz</span> : null}
-                          </div>
-                          <h3 className="mt-1 line-clamp-2 text-lg font-semibold leading-tight tracking-[-0.04em] text-[#201714]">{item.recipe.title}</h3>
-                          <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#201714]/64">{item.reason}</p>
-                          <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#201714]/58">Bo: {item.explanation.slice(0, 2).join(' · ')}</p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          {item.missing.length > 0 ? (
-                            <span className="rounded-full bg-[#fff3e7] px-3 py-1.5 text-xs font-semibold text-[#8a4b2a]">dokup: {item.missing.join(', ')}</span>
-                          ) : (
-                            <span className="rounded-full bg-[#dff5e8] px-3 py-1.5 text-xs font-semibold text-[#18623b]">bez oczywistych braków</span>
-                          )}
-                          <Link href={recipeHref(item.recipe.slug)} className="rounded-full bg-[#201714] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee] transition hover:bg-[#3a2b25] focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Gotuj</Link>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+          <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">Palnik wybiera</p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Krótka lista zamiast kolejnego scrolla.</h2>
               </div>
+              <p className="max-w-[38ch] text-sm leading-6 text-[#201714]/62">Wybierz kierunek, a Palnik pokaże kilka przepisów, które mają teraz najwięcej sensu.</p>
             </div>
-          </div>
-        </section>
-      ) : null}
 
-      {!isAtelierPage ? (
-        <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
-          <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[0.85fr_1.15fr]">
-            <article className="rounded-[2rem] border border-[#201714]/10 bg-white p-5 shadow-sm sm:p-6">
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">Twój Palnik</p>
-              <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em]">Pamięta kuchnię, nie zakłada konta.</h2>
-              <p className="mt-3 text-sm leading-6 text-[#201714]/62">
-                {hasProfileSignal
-                  ? 'Lokalnie łapie składniki i wybory. Brain może startować bliżej twojej kuchni, nawet zanim coś zaznaczysz.'
-                  : 'Zaznacz kilka składników albo wybierz tryb Brain. Palnik zacznie budować lokalny profil bez logowania i bez wysyłania tego na serwer.'}
-              </p>
-              <p className="mt-3 rounded-[1rem] border border-[#201714]/8 bg-[#fffaf3] px-3 py-2 text-xs leading-5 text-[#201714]/62">
-                Prywatność po ludzku: ta pamięć siedzi tylko w localStorage tej przeglądarki. Reset niżej czyści ją od razu — bez konta, bez profilu w chmurze.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" onClick={() => resetMemory('pantry')} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
-                  wyczyść składniki
-                </button>
-                <button type="button" onClick={() => resetMemory('taste')} className="rounded-full border border-[#201714]/10 bg-[#fffaf3] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
-                  wyczyść smak
-                </button>
-                <button type="button" onClick={() => resetMemory('all')} className="rounded-full border border-[#c9572d]/20 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#c9572d] transition hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#c9572d]/20">
-                  reset pamięci
-                </button>
-              </div>
-            </article>
+            <div className="mb-4 flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {brainModes.map((mode) => {
+                const active = brainMode === mode.key
+                return (
+                  <button
+                    key={mode.key}
+                    type="button"
+                    onClick={() => {
+                      setBrainMode(mode.key)
+                      bumpTasteSignal(`brain:${mode.key}`)
+                    }}
+                    aria-pressed={active}
+                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'border-transparent bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/10 bg-[#fffaf3] text-[#201714] hover:bg-[#fff3e7]'}`}
+                  >
+                    {mode.label}
+                  </button>
+                )
+              })}
+            </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <article className="rounded-[2rem] border border-[#201714]/10 bg-[#fff3e7] p-5 shadow-sm">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">zwykle masz</p>
-                    <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Pantry Memory</h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {brainRecommendations.slice(0, 3).map((item, index) => (
+                <Link
+                  key={`${brainMode}-${item.recipe.slug}`}
+                  href={recipeHref(item.recipe.slug)}
+                  onClick={() => {
+                    recipeTasteSignals(item.recipe).forEach((signal) => bumpTasteSignal(signal))
+                    trackRecipeOpened(item.recipe.slug, 'decision_shortlist', { mode: brainMode, rank: index + 1 })
+                  }}
+                  className={`group grid gap-3 overflow-hidden rounded-[1.45rem] border p-3 transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${index === 0 ? 'border-[#201714]/12 bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/8 bg-[#fffaf3] text-[#201714]'}`}
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-[#201714]/10">
+                    <RecipeVisual recipe={item.recipe} />
+                    <div className="absolute left-2 top-2 rounded-full bg-white/94 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#201714]">#{index + 1}</div>
                   </div>
-                  <span className="rounded-full bg-white/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">local</span>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {pantryMemoryTop.length > 0 ? pantryMemoryTop.map(([key, count]) => {
-                    const active = fridgeSelection.has(key)
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => {
-                          if (!fridgeMode) setFridgeMode(true)
-                          if (!fridgeSelection.has(key)) toggleFridgeKey(key)
-                          scrollToSection('lodowka')
-                        }}
-                        aria-pressed={active}
-                        className={`rounded-full px-3 py-1.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#201714]/15 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'bg-white/80 text-[#201714] hover:bg-white'}`}
-                      >
-                        {key} <span className={active ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}>×{count}</span>
-                      </button>
-                    )
-                  }) : (
-                    <p className="text-sm leading-6 text-[#201714]/62">Jeszcze pusto. Lodówka nauczy go szybciej niż formularz onboardingowy, spokojnie.</p>
-                  )}
-                </div>
-              </article>
-
-              <article className="rounded-[2rem] border border-[#201714]/10 bg-[#201714] p-5 text-[#fff7ee] shadow-[0_18px_50px_rgba(32,23,20,0.16)]">
-                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">co wybierasz</p>
-                    <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Taste DNA light</h3>
+                    <p className={`text-[10px] font-semibold uppercase tracking-[0.16em] ${index === 0 ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>{item.recipe.time} · {item.recipe.effort}</p>
+                    <h3 className="mt-1 line-clamp-2 text-lg font-semibold leading-tight tracking-[-0.04em]">{item.recipe.title}</h3>
+                    <p className={`mt-1 line-clamp-2 text-sm leading-5 ${index === 0 ? 'text-[#f3dfcf]/78' : 'text-[#201714]/62'}`}>{item.reason}</p>
                   </div>
-                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">signals</span>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {tasteMemoryTop.length > 0 ? tasteMemoryTop.map(([signal, count]) => (
-                    <span key={signal} className="rounded-full border border-white/10 bg-white/[0.055] px-3 py-1.5 text-sm font-semibold text-[#f3dfcf]">
-                      {tasteLabel(signal)} <span className="text-[#ffcf9f]">×{count}</span>
-                    </span>
-                  )) : (
-                    <p className="text-sm leading-6 text-[#f3dfcf]/70">Na razie neutralny. Kliknij sexy/szybko/ulubione i Brain zacznie mieć charakter.</p>
-                  )}
-                </div>
-              </article>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
@@ -1406,43 +1219,13 @@ export function RecipeCatalogPage({
         </div>
       </section>
 
-      <section className="px-5 pt-6 sm:px-6 lg:px-8 lg:pt-8">
-        <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f7efe7_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-6 lg:p-7">
-          <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">jak Palnik wybiera</p>
-              <h2 className="mt-2 max-w-[12ch] text-3xl font-semibold leading-[0.96] tracking-[-0.055em] sm:text-4xl">Mniej lista. Bardziej decyzja.</h2>
-              <p className="mt-3 max-w-[46ch] text-sm leading-6 text-[#201714]/65">
-                Ranking nie jest od „najładniejszego zdjęcia”. Palnik patrzy na dystans do talerza: czas, składniki, nastrój, kolekcję i to, czy danie ma sens na dziś.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">01 / czas</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Najpierw realność</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">15 minut to nie kategoria estetyczna. To stan człowieka, który chce jeść.</p>
-              </article>
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-[#201714] p-4 text-[#fff7ee]">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">02 / lodówka</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Potem dystans</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#f3dfcf]">Jeśli brakuje dwóch rzeczy, to jest plan. Jeśli siedmiu — to inspiracja na zakupy.</p>
-              </article>
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03 / ochota</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Na końcu ochota</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Comfort, świeże, brunch, Atelier. Bo obiad ma pasować do dnia, nie do tabelki.</p>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
         </>
       ) : (
         <section className="px-4 pb-3 pt-1 sm:px-6 lg:px-8 lg:pb-6">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)]">
               <article className="overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#1b1519_0%,#231820_48%,#121116_100%)] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(15,10,16,0.24)] lg:p-7">
-                <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">jak w to wejść bez spiny</p>
+                <p className="text-[11px] uppercase tracking-[0.24em] text-[#ffcf9f]">jak w to wejść</p>
                 <h2 className="mt-2 max-w-[14ch] text-3xl font-semibold leading-[0.96] tracking-[-0.05em] sm:text-4xl">Nie scrolluj wszystkiego. Wejdź z intencją.</h2>
                 <p className="mt-3 max-w-[58ch] text-sm leading-6 text-[#f3dfcf] sm:text-base">
                   Atelier działa najlepiej, gdy wybierasz intencję, nie tylko składnik. Najpierw lekki kwas, morska precyzja albo ciemniejszy talerz. Dopiero potem konkretny przepis.
@@ -1621,8 +1404,6 @@ export function RecipeCatalogPage({
                 const isFavorite = favoriteSlugs.includes(recipe.slug)
                 const compareDisabled = !isInCompare && compareCount >= 3
                 const isAtelier = recipe.collections.includes('atelier')
-                const cardWhy = makeRecipeWhy(recipe)
-                const cardSignals = makeRecipeQualitySignals(recipe)
                 return (
                   <article key={recipe.slug} style={{ animationDelay: `${Math.min(cardIndex, 8) * 38}ms` }} className={`catalog-card-enter group recipe-card-lift relative flex h-full flex-col overflow-hidden rounded-[1.9rem] transition duration-300 ${isAtelierPage ? 'border border-white/10 bg-[linear-gradient(160deg,#fff8f1_0%,#fffdfa_42%,#f6edf4_100%)] shadow-[0_24px_70px_rgba(10,6,12,0.22)] hover:shadow-[0_32px_90px_rgba(10,6,12,0.32)]' : 'palnik-card-surface sheen-on-hover hover:shadow-[0_26px_70px_rgba(32,23,20,0.16)]'} ${active ? 'ring-2 ring-[#201714]/10 shadow-[0_20px_50px_rgba(32,23,20,0.12)]' : ''}`}>
                     <div className="palnik-image-glow relative aspect-[4/3] w-full overflow-hidden">
@@ -1687,15 +1468,6 @@ export function RecipeCatalogPage({
                       </div>
                       {isAtelier ? (
                         <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[#8c3341]">kontrast · tekstura · dobry powód</p>
-                      ) : (
-                        <p className="mt-3 line-clamp-2 text-xs leading-5 text-[#201714]/56">Dlaczego: {cardWhy}</p>
-                      )}
-                      {cardSignals.length > 0 ? (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {cardSignals.map((signal) => (
-                            <span key={signal} className="rounded-full bg-[#fff3e7] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">{signal}</span>
-                          ))}
-                        </div>
                       ) : null}
                       {match && match.total > 0 && match.missing.length > 0 ? (
                         <p className="mt-3 text-xs text-[#201714]/55">
@@ -1807,7 +1579,7 @@ function EmptyState({
         <div className="mx-auto mt-4 grid max-w-2xl gap-2 text-left sm:grid-cols-3">
           <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj białko</strong> jajko, tofu, kurczak, feta albo fasola często odblokują danie.</div>
           <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj kwas</strong> cytryna, ocet, jogurt albo pomidor spinają resztki w coś sensownego.</div>
-          <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj bazę</strong> makaron, ryż, pieczywo albo ziemniak robią z chaosu posiłek.</div>
+          <div className="rounded-[1rem] bg-[#fff3e7] p-3 text-xs leading-5 text-[#201714]/68"><strong className="block text-[#201714]">Dodaj bazę</strong> makaron, ryż, pieczywo albo ziemniak zmieniają luźne składniki w posiłek.</div>
         </div>
       ) : null}
       <div className="mt-5 flex flex-wrap justify-center gap-2">
