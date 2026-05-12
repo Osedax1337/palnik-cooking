@@ -72,7 +72,7 @@ const fridgeStarterKits = [
   },
   {
     label: 'makaron ratunkowy',
-    body: 'makaron, cytryna, parmezan — trzy rzeczy i nagle życie mniej ssie.',
+    body: 'makaron, cytryna, parmezan — trzy rzeczy i szybki obiad jest blisko.',
     keys: ['makaron', 'cytryna', 'parmezan'],
   },
   {
@@ -959,9 +959,9 @@ export function RecipeCatalogPage({
                 <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">tryb decyzji</p>
-                    <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Nie szukaj. Wydaj rozkaz.</h2>
+                    <h2 className="mt-1 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">Nie szukaj za długo. Wybierz kierunek.</h2>
                   </div>
-                  <p className="max-w-[33ch] text-sm leading-6 text-[#201714]/62">Brain miesza lodówkę, czas, effort, filtry i historię. Wynik ma być decyzją, nie tablicą ogłoszeń.</p>
+                  <p className="max-w-[33ch] text-sm leading-6 text-[#201714]/62">Brain łączy lodówkę, czas, wysiłek, filtry i ostatnie wybory. Na końcu dostajesz krótką listę sensownych opcji.</p>
                 </div>
 
                 <div className="grid gap-2 sm:grid-cols-4">
@@ -1381,7 +1381,7 @@ export function RecipeCatalogPage({
                     <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">start bez klikania 40 chipsów</p>
                     <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-[-0.05em] text-[#201714]">Weź gotowy koszyk albo zaznacz swoje.</h3>
                     <p className="mt-2 text-sm leading-6 text-[#201714]/65">
-                      Pro tip: 3–5 składników wystarczy. Palnik zaczyna wtedy działać jak szybki doradca, nie jak kolejny filtr z piekła UX.
+                      Wystarczy 3–5 składników. Palnik zaczyna wtedy działać jak szybki doradca, a nie kolejna długa lista filtrów.
                     </p>
                   </div>
                   <div className="grid gap-2 sm:grid-cols-3">
@@ -1428,7 +1428,7 @@ export function RecipeCatalogPage({
                 <p className="mt-1.5 text-sm leading-6 text-[#f3dfcf]">Jeśli brakuje dwóch rzeczy, to jest plan. Jeśli siedmiu — to inspiracja na zakupy.</p>
               </article>
               <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03 / vibe</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03 / ochota</p>
                 <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Na końcu ochota</h3>
                 <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Comfort, świeże, brunch, Atelier. Bo obiad ma pasować do dnia, nie do tabelki.</p>
               </article>

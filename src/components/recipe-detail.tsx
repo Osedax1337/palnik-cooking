@@ -69,8 +69,8 @@ function getFlavorProfile(recipe: Recipe): FlavorProfile[] {
 
   return [
     { label: 'kwas', value: acid, note: acid >= 4 ? 'tnie tłuszcz' : 'raczej miękko' },
-    { label: 'umami', value: umami, note: umami >= 4 ? 'głębia robi robotę' : 'lekka baza' },
-    { label: 'comfort', value: comfort, note: comfort >= 4 ? 'miska szczęścia' : 'lżejszy vibe' },
+    { label: 'umami', value: umami, note: umami >= 4 ? 'dużo głębi' : 'lekka baza' },
+    { label: 'comfort', value: comfort, note: comfort >= 4 ? 'miska szczęścia' : 'lżejszy klimat' },
     { label: 'ogień', value: heat, note: heat >= 4 ? 'jest kopnięcie' : 'bez alarmu' },
     { label: 'chrup', value: crunch, note: crunch >= 4 ? 'tekstura gra' : 'miękka sprawa' },
   ]
@@ -90,7 +90,7 @@ function getChefNote(recipe: Recipe) {
     return 'Sól dodawaj ostrożnie. Umami już niesie dużo ciężaru, więc lepiej dosolić po spróbowaniu niż ratować przesoloną patelnię.'
   }
   if (recipe.minutes <= 15) {
-    return 'Przygotuj składniki przed ogniem. Ten przepis jest szybki, więc patelnia nie będzie czekać, aż romantycznie pokroisz cebulę.'
+    return 'Przygotuj składniki przed ogniem. Ten przepis jest szybki, więc lepiej mieć wszystko pokrojone przed rozgrzaniem patelni.'
   }
   return 'Najważniejsze: nie rób wszystkiego naraz. Najpierw baza, potem balans, na końcu tekstura i świeży akcent.'
 }
@@ -154,20 +154,20 @@ function getFirstMove(recipe: Recipe) {
 }
 
 function getParallelTiming(recipe: Recipe) {
-  if (recipe.steps.some((step) => /piecz/i.test(step))) return 'Gdy piekarnik robi robotę, ogarnij sos, zioła i talerze. Nie czekaj bez sensu.'
+  if (recipe.steps.some((step) => /piecz/i.test(step))) return 'Gdy piekarnik pracuje, przygotuj sos, zioła i talerze. Nie zostawiaj wszystkiego na koniec.'
   if (recipe.steps.some((step) => /ugotuj|makaron|ryż/i.test(step))) return 'W czasie gotowania bazy rób sos i krojenie. Końcówka ma się spotkać na patelni, nie w kolejce.'
   if (recipe.steps.some((step) => /smaż|podsmaż|patelni/i.test(step))) return 'Patelnia jest osią czasu: najpierw składniki wymagające koloru, świeże i kwaśne rzeczy dopiero na końcu.'
   return 'Czytaj kroki jak sekwencję przy blacie: przygotuj, zbuduj bazę, dopiero potem dopraw i wykończ.'
 }
 
 function getStepCoach(step: string, index: number, total: number) {
-  if (/piekarnik|piecz/i.test(step)) return 'To jest moment na sos, zioła i ogarnięcie blatu. Piekarnik pracuje, ty nie stoisz jak NPC.'
+  if (/piekarnik|piecz/i.test(step)) return 'To jest moment na sos, zioła i ogarnięcie blatu. Piekarnik pracuje, więc wykorzystaj ten czas.'
   if (/ugotuj|makaron|ryż|wod/i.test(step)) return 'Wstaw bazę i równolegle szykuj resztę. Czekanie nad garnkiem nie dodaje smaku.'
   if (/smaż|podsmaż|patelni|zarumien/i.test(step)) return 'Patelnia lubi spokój. Daj składnikom złapać kolor, nie mieszaj jak DJ na panice.'
   if (/dopraw|sok|skórk|cytryn|ocet/i.test(step)) return 'Doprawiaj po trochu i próbuj. Kwas ma podnieść danie, nie zrobić alarm.'
   if (index === 0) return 'Pierwszy ruch ustawia tempo. Wyciągnij sprzęt i składniki zanim odpalisz chaos.'
   if (index === total - 1) return 'Finisz. Teraz tekstura, świeży akcent i talerz — nie rozgotuj zwycięstwa.'
-  return 'Zrób ten krok do końca, dopiero potem następny. Multitasking w kuchni często jest tylko bałaganem w garniturze.'
+  return 'Zrób ten krok do końca, dopiero potem następny. W kuchni za dużo rzeczy naraz szybko kończy się chaosem.'
 }
 
 function estimateStepMinutes(recipe: Recipe) {

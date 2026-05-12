@@ -66,7 +66,7 @@ export function makeRecipeWhy(recipe: Recipe) {
   if (recipe.minutes <= 20) return 'Krótki czas działa, bo przepis nie walczy o złożoność. Jedna baza, jeden mocny akcent i finisz zamiast kuchennego projektu.'
   if (recipe.collections.includes('meal-prep')) return 'To jest jedzenie, które dobrze znosi czas: baza zostaje stabilna, sos albo przyprawy trzymają smak, a jutro nie jesz smutnej resztki.'
   if (recipe.collections.includes('one-pan')) return 'Jedna patelnia wymusza porządek: najpierw kolor i baza, potem sos, na końcu świeży akcent. Mało naczyń, ale smak nie jest przypadkowy.'
-  return 'Kontrast robi robotę: baza daje komfort, akcent robi napięcie, a tekstura pilnuje, żeby talerz nie był nudny.'
+  return 'Kontrast trzyma danie w ryzach: baza daje komfort, akcent dodaje napięcia, a tekstura pilnuje, żeby talerz nie był nudny.'
 }
 
 export function makeRecipeSignature(recipe: Recipe) {
