@@ -93,6 +93,38 @@ function makeQuickDecisionReason(recipe: Recipe, match: ReturnType<typeof fridge
   return parts.slice(0, 3).join(' · ') || 'najprostszy sensowny wybór z aktualnych ustawień'
 }
 
+function quickIngredientWeight(index: number, ingredient: Recipe['ingredients'][number]) {
+  if (ingredient.optional) return 0.35
+  if (index <= 2) return 1.45
+  if (index <= 4) return 1.05
+  return 0.75
+}
+
+function scoreQuickRecipe(recipe: Recipe, selected: Set<string>, timeLimit: QuickTimeLimit) {
+  const match = selected.size > 0 ? fridgeMatch(recipe, selected) : null
+  const required = recipe.ingredients.filter((ingredient) => !ingredient.pantry)
+  const weightedTotal = required.reduce((sum, ingredient, index) => sum + quickIngredientWeight(index, ingredient), 0)
+  const weightedMatched = required.reduce((sum, ingredient, index) => (selected.has(ingredient.key) ? sum + quickIngredientWeight(index, ingredient) : sum), 0)
+  const weightedScore = weightedTotal > 0 ? weightedMatched / weightedTotal : 0
+  const missingCount = match?.missing.filter((ingredient) => !ingredient.optional).length ?? 0
+  const mainMissingCount = required.slice(0, 3).filter((ingredient) => !ingredient.optional && !selected.has(ingredient.key)).length
+  const timeScore = Math.max(0, 1 - recipe.minutes / Math.max(timeLimit, 1))
+  const effortScore = effortWeight(recipe.effort)
+
+  let score = timeScore * 0.9 + effortScore * 0.65
+  if (selected.size > 0) {
+    score += weightedScore * 5.2
+    score -= missingCount * 0.2
+    score -= mainMissingCount * 0.42
+    if (missingCount === 0) score += 1.25
+    if (mainMissingCount === 0) score += 0.45
+  }
+  if (recipe.collections.includes('one-pan')) score += 0.18
+  if (recipe.collections.includes('15-min') && timeLimit === 15) score += 0.18
+
+  return { match, score, weightedScore, missingCount, mainMissingCount }
+}
+
 function effortWeight(effort: Recipe['effort']) {
   if (effort === 'lekko') return 1
   if (effort === 'średnio') return 0.62
@@ -556,17 +588,15 @@ export function RecipeCatalogPage({
       .filter((recipe) => recipe.minutes <= quickTimeLimit)
       .filter((recipe) => !recipe.collections.includes('atelier'))
       .map((recipe) => {
-        const match = selected.size > 0 ? fridgeMatch(recipe, selected) : null
-        const matchScore = match?.score ?? 0
-        const timeScore = Math.max(0, 1 - recipe.minutes / Math.max(quickTimeLimit, 1))
-        const effortScore = effortWeight(recipe.effort)
-        const missingPenalty = match ? Math.min(0.6, match.missing.length * 0.075) : 0
-        const score = matchScore * 3.2 + timeScore * 1.2 + effortScore * 0.8 - missingPenalty
+        const { match, score, weightedScore, missingCount, mainMissingCount } = scoreQuickRecipe(recipe, selected, quickTimeLimit)
 
         return {
           recipe,
           match,
           score,
+          weightedScore,
+          missingCount,
+          mainMissingCount,
           reason: makeQuickDecisionReason(recipe, match, quickTimeLimit),
           missing: match?.missing.slice(0, 3).map((ingredient) => ingredient.key) ?? [],
         }
@@ -867,7 +897,10 @@ export function RecipeCatalogPage({
                     <button
                       key={limit}
                       type="button"
-                      onClick={() => setQuickTimeLimit(limit)}
+                      onClick={() => {
+                        setQuickTimeLimit(limit)
+                        track('quick_decision_time_selected', { time_limit: limit, ingredient_count: fridgeSelection.size })
+                      }}
                       aria-pressed={active}
                       className={`rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35 ${active ? 'bg-[#ffcf9f] text-[#201714]' : 'border border-white/12 bg-white/6 text-[#f3dfcf] hover:bg-white/10'}`}
                     >
@@ -885,8 +918,10 @@ export function RecipeCatalogPage({
                       key={ingredient.key}
                       type="button"
                       onClick={() => {
+                        const selected = !fridgeSelection.has(ingredient.key)
                         if (!fridgeMode) setFridgeMode(true)
                         toggleFridgeKey(ingredient.key)
+                        track('quick_decision_ingredient_toggled', { ingredient: ingredient.key, selected, ingredient_count: selected ? fridgeSelection.size + 1 : Math.max(0, fridgeSelection.size - 1), time_limit: quickTimeLimit })
                       }}
                       aria-pressed={active}
                       className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35 ${active ? 'bg-[#22a06b] text-white' : 'border border-white/10 bg-white/7 text-[#f3dfcf] hover:bg-white/12'}`}
@@ -900,14 +935,20 @@ export function RecipeCatalogPage({
               <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#f3dfcf]/68">
                 <button
                   type="button"
-                  onClick={() => applyFridgeStarterKit(['makaron', 'cytryna', 'parmezan'])}
+                  onClick={() => {
+                    applyFridgeStarterKit(['makaron', 'cytryna', 'parmezan'])
+                    track('quick_decision_starter_selected', { starter: 'makaron', ingredient_count: 3, time_limit: quickTimeLimit })
+                  }}
                   className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
                 >
                   starter: makaron
                 </button>
                 <button
                   type="button"
-                  onClick={() => applyFridgeStarterKit(['ryż', 'sos sojowy', 'jajko'])}
+                  onClick={() => {
+                    applyFridgeStarterKit(['ryż', 'sos sojowy', 'jajko'])
+                    track('quick_decision_starter_selected', { starter: 'ryz', ingredient_count: 3, time_limit: quickTimeLimit })
+                  }}
                   className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
                 >
                   starter: ryż
@@ -920,6 +961,7 @@ export function RecipeCatalogPage({
                       persistFridge([])
                       setFridgeMode(false)
                       setFridgePanelOpen(false)
+                      track('quick_decision_cleared', { ingredient_count: fridgeSelection.size, time_limit: quickTimeLimit })
                     }}
                     className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
                   >
@@ -934,6 +976,20 @@ export function RecipeCatalogPage({
                 <Link
                   key={entry.recipe.slug}
                   href={recipeHref(entry.recipe.slug)}
+                  onClick={() => {
+                    track('quick_decision_recipe_clicked', {
+                      slug: entry.recipe.slug,
+                      rank: index + 1,
+                      time_limit: quickTimeLimit,
+                      ingredient_count: fridgeSelection.size,
+                      matched: entry.match?.matched ?? 0,
+                      total: entry.match?.total ?? 0,
+                      missing_count: entry.missingCount,
+                      main_missing_count: entry.mainMissingCount,
+                      weighted_score: Number(entry.weightedScore.toFixed(2)),
+                    })
+                    trackRecipeOpened(entry.recipe.slug, 'quick_decision', { rank: index + 1, time_limit: quickTimeLimit, ingredient_count: fridgeSelection.size })
+                  }}
                   className="group grid gap-3 rounded-[1.55rem] border border-white/10 bg-[#fff7ee] p-3 text-[#201714] shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:grid-cols-[112px_1fr]"
                 >
                   <div className="relative min-h-[96px] overflow-hidden rounded-[1.2rem] bg-[#201714]/10 sm:min-h-full">
