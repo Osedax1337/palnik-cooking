@@ -642,7 +642,7 @@ export function RecipeCatalogPage({
   }
 
   return (
-    <main id="main-content" className={`min-h-screen text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
+    <main id="main-content" className={`min-h-screen overflow-x-hidden text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] ${isAtelierPage ? 'bg-[radial-gradient(circle_at_top,#2a1622_0%,#171317_28%,#fffaf3_72%)]' : 'bg-[#fffaf3]'}`}>
       {isAtelierPage ? (
         <section className="relative overflow-hidden px-4 pb-10 pt-4 text-[#fff7ee] sm:px-6 lg:px-8 lg:pb-16 lg:pt-7">
           <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_22%_0%,rgba(216,124,74,0.34),transparent_32%),radial-gradient(circle_at_82%_10%,rgba(140,51,65,0.45),transparent_34%),linear-gradient(180deg,#151016_0%,#21141b_58%,rgba(33,20,27,0)_100%)]" />
@@ -809,7 +809,7 @@ export function RecipeCatalogPage({
       )}
 
       {!isAtelierPage ? (
-        <section className="px-5 pb-4 pt-2 sm:px-6 lg:px-8 lg:pb-6">
+        <section className="hidden px-5 pb-4 pt-2 sm:px-6 md:block lg:px-8 lg:pb-6">
           <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[0.72fr_1.28fr]">
             <article className="rounded-[2rem] bg-[#201714] p-5 text-[#fff7ee] shadow-[0_22px_70px_rgba(32,23,20,0.14)] sm:p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-[#ffcf9f]">pierwsza ścieżka</p>
@@ -830,7 +830,7 @@ export function RecipeCatalogPage({
       ) : null}
 
       {!isAtelierPage ? (
-        <section className="px-5 pb-4 pt-2 sm:px-6 lg:px-8 lg:pb-6">
+        <section className="hidden px-5 pb-4 pt-2 sm:px-6 md:block lg:px-8 lg:pb-6">
           <div className="mx-auto max-w-6xl">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
@@ -869,7 +869,7 @@ export function RecipeCatalogPage({
       ) : null}
 
       {!isAtelierPage && leadBrain ? (
-        <section className="px-5 pb-3 pt-3 sm:px-6 lg:px-8 lg:pb-5">
+        <section className="hidden px-5 pb-3 pt-3 sm:px-6 md:block lg:px-8 lg:pb-5">
           <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm sm:p-6">
             <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -927,7 +927,7 @@ export function RecipeCatalogPage({
       ) : null}
 
       {!isAtelierPage && favoriteRecipes.length > 0 ? (
-        <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
+        <section className="hidden px-5 pb-2 pt-2 sm:px-6 md:block lg:px-8">
           <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#c9572d]/15 bg-[#fff3e7] p-5 shadow-sm">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
@@ -959,7 +959,7 @@ export function RecipeCatalogPage({
       ) : null}
 
       {!isAtelierPage && recentRecipes.length > 0 ? (
-        <section className="px-5 pb-2 pt-2 sm:px-6 lg:px-8">
+        <section className="hidden px-5 pb-2 pt-2 sm:px-6 md:block lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div>
@@ -991,7 +991,7 @@ export function RecipeCatalogPage({
 
       {!isAtelierPage ? (
         <>
-          <section className="px-5 pt-6 sm:px-6 lg:px-8 lg:pt-10">
+          <section className="hidden px-5 pt-6 sm:px-6 md:block lg:px-8 lg:pt-10">
             <div className="mx-auto max-w-6xl">
               <div className="mb-3 flex items-end justify-between gap-3">
                 <div>
@@ -1048,7 +1048,7 @@ export function RecipeCatalogPage({
             </div>
           </section>
 
-          <section id="lodowka" className="px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+          <section id="lodowka" className={`px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10 ${fridgeMode ? '' : 'hidden md:block'}`}>
         <div className="mx-auto max-w-6xl">
           <div className="rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1509,9 +1509,9 @@ export function RecipeCatalogPage({
 
       {/* Sticky compare tray */}
       {compareCount > 0 ? (
-        <div className="fixed bottom-20 left-1/2 z-30 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 lg:bottom-6">
-          <div className="flex items-center gap-3 rounded-full border border-[#201714]/10 bg-white/95 p-2 pl-4 shadow-[0_18px_40px_rgba(32,23,20,0.18)] backdrop-blur">
-            <p className="text-sm">
+        <div className="fixed bottom-4 left-1/2 z-30 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 lg:bottom-6">
+          <div className="flex items-center gap-2 rounded-[1.4rem] border border-[#201714]/10 bg-white/95 p-2 pl-3 shadow-[0_18px_40px_rgba(32,23,20,0.18)] backdrop-blur sm:gap-3 sm:rounded-full sm:pl-4">
+            <p className="min-w-0 flex-1 text-sm leading-tight sm:flex-none">
               <strong className="text-[#201714]">{compareCount}</strong>
               <span className="text-[#201714]/60"> {compareCount === 1 ? 'przepis' : 'przepisy'} do porównania</span>
             </p>
