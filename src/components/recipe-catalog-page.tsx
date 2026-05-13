@@ -47,6 +47,7 @@ const INITIAL_VISIBLE_RECIPES = 12
 const LOAD_MORE_RECIPES = 12
 
 type BrainMode = 'lodowka' | 'szybko' | 'sexy' | 'spokojnie'
+type QuickTimeLimit = 15 | 25 | 40
 
 type BrainRecommendation = {
   recipe: Recipe
@@ -78,6 +79,19 @@ const fridgeStarterKits = [
     keys: ['ryż', 'sos sojowy', 'jajko'],
   },
 ] as const
+
+const quickTimeLimits: QuickTimeLimit[] = [15, 25, 40]
+
+function makeQuickDecisionReason(recipe: Recipe, match: ReturnType<typeof fridgeMatch> | null, timeLimit: QuickTimeLimit) {
+  const parts = []
+  if (recipe.minutes <= timeLimit) parts.push(`${recipe.time}, mieści się w czasie`)
+  if (match && match.total > 0) parts.push(`${match.matched}/${match.total} składników już masz`)
+  if (recipe.effort === 'lekko') parts.push('mało ruchów')
+  if (recipe.collections.includes('one-pan')) parts.push('jedna patelnia')
+  if (recipe.collections.includes('meal-prep')) parts.push('zostaje też na jutro')
+
+  return parts.slice(0, 3).join(' · ') || 'najprostszy sensowny wybór z aktualnych ustawień'
+}
 
 function effortWeight(effort: Recipe['effort']) {
   if (effort === 'lekko') return 1
@@ -194,11 +208,13 @@ export function RecipeCatalogPage({
   const [isShuffling, setIsShuffling] = useState(false)
   const [decisionRecipe, setDecisionRecipe] = useState<(typeof recipes)[number] | null>(null)
   const [fridgeMode, setFridgeMode] = useState(false)
+  const [fridgePanelOpen, setFridgePanelOpen] = useState(false)
   const [fridgeSelection, setFridgeSelection] = useState<Set<string>>(new Set())
   const [showAllFridgeChips, setShowAllFridgeChips] = useState(false)
   const [previewPortions, setPreviewPortions] = useState<number | null>(null)
   const [visibleRecipeCount, setVisibleRecipeCount] = useState(INITIAL_VISIBLE_RECIPES)
   const [brainMode, setBrainMode] = useState<BrainMode>('lodowka')
+  const [quickTimeLimit, setQuickTimeLimit] = useState<QuickTimeLimit>(25)
 
   // Load persistent fridge selection on mount.
   useEffect(() => {
@@ -258,6 +274,7 @@ export function RecipeCatalogPage({
       }
     } else if (fridgeOpenParam === '1') {
       setFridgeMode(true)
+      setFridgePanelOpen(true)
       requestAnimationFrame(() => {
         document.getElementById('lodowka')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       })
@@ -390,8 +407,10 @@ export function RecipeCatalogPage({
       const next = !current
       if (!next) {
         setFridgeSelection(new Set())
+        setFridgePanelOpen(false)
         persistFridge([])
       }
+      if (next) setFridgePanelOpen(true)
       track('fridge_toggled', { enabled: next, ingredient_count: next ? fridgeSelection.size : 0 })
       return next
     })
@@ -436,11 +455,13 @@ export function RecipeCatalogPage({
 
       if (scenario === 'lodowka') {
         setFridgeMode(true)
+        setFridgePanelOpen(true)
         scrollToSection('lodowka')
         return
       }
 
       setFridgeMode(false)
+      setFridgePanelOpen(false)
       setFridgeSelection(new Set())
       persistFridge([])
 
@@ -528,6 +549,32 @@ export function RecipeCatalogPage({
       .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
       .slice(0, 3)
   }, [brainMode, collectionFilter, cuisineFilter, dietFilters, effectiveFridgeSelection, effectiveFridgeUsesPantryMemory, favoriteSlugs, moodFilter, pantryMemoryTop, recentSlugs, tasteMemoryTop])
+
+  const quickDecisionRecipes = useMemo(() => {
+    const selected = fridgeSelection
+    const pool = recipes
+      .filter((recipe) => recipe.minutes <= quickTimeLimit)
+      .filter((recipe) => !recipe.collections.includes('atelier'))
+      .map((recipe) => {
+        const match = selected.size > 0 ? fridgeMatch(recipe, selected) : null
+        const matchScore = match?.score ?? 0
+        const timeScore = Math.max(0, 1 - recipe.minutes / Math.max(quickTimeLimit, 1))
+        const effortScore = effortWeight(recipe.effort)
+        const missingPenalty = match ? Math.min(0.6, match.missing.length * 0.075) : 0
+        const score = matchScore * 3.2 + timeScore * 1.2 + effortScore * 0.8 - missingPenalty
+
+        return {
+          recipe,
+          match,
+          score,
+          reason: makeQuickDecisionReason(recipe, match, quickTimeLimit),
+          missing: match?.missing.slice(0, 3).map((ingredient) => ingredient.key) ?? [],
+        }
+      })
+      .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
+
+    return pool.slice(0, 3)
+  }, [fridgeSelection, quickTimeLimit])
 
   const leadBrain = brainRecommendations[0]
   const compareCount = compareSlugs.length
@@ -805,6 +852,116 @@ export function RecipeCatalogPage({
         </div>
       </section>
 
+      <section className="px-5 pb-5 sm:px-6 lg:px-8 lg:pb-8">
+        <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#201714]/10 bg-[#201714] p-4 text-[#fff7ee] shadow-[0_24px_70px_rgba(32,23,20,0.18)] sm:p-6 lg:rounded-[2.35rem] lg:p-7">
+          <div className="grid gap-5 lg:grid-cols-[0.88fr_1.12fr] lg:items-start">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#ffcf9f]">szybka decyzja</p>
+              <h2 className="mt-2 max-w-[11ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-4xl">Mam czas i składniki. Co gotuję?</h2>
+              <p className="mt-3 max-w-[42ch] text-sm leading-6 text-[#f3dfcf]/78">Wybierz limit czasu, kliknij 3–5 rzeczy z lodówki, a Palnik zawęzi wybór do trzech sensownych dań. Bez scrollowania katalogu jak nekrologu.</p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {quickTimeLimits.map((limit) => {
+                  const active = quickTimeLimit === limit
+                  return (
+                    <button
+                      key={limit}
+                      type="button"
+                      onClick={() => setQuickTimeLimit(limit)}
+                      aria-pressed={active}
+                      className={`rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35 ${active ? 'bg-[#ffcf9f] text-[#201714]' : 'border border-white/12 bg-white/6 text-[#f3dfcf] hover:bg-white/10'}`}
+                    >
+                      do {limit} min
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {fridgePalette.slice(0, 12).map((ingredient) => {
+                  const active = fridgeSelection.has(ingredient.key)
+                  return (
+                    <button
+                      key={ingredient.key}
+                      type="button"
+                      onClick={() => {
+                        if (!fridgeMode) setFridgeMode(true)
+                        toggleFridgeKey(ingredient.key)
+                      }}
+                      aria-pressed={active}
+                      className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35 ${active ? 'bg-[#22a06b] text-white' : 'border border-white/10 bg-white/7 text-[#f3dfcf] hover:bg-white/12'}`}
+                    >
+                      {active ? '✓ ' : '+ '}{ingredient.key}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#f3dfcf]/68">
+                <button
+                  type="button"
+                  onClick={() => applyFridgeStarterKit(['makaron', 'cytryna', 'parmezan'])}
+                  className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
+                >
+                  starter: makaron
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyFridgeStarterKit(['ryż', 'sos sojowy', 'jajko'])}
+                  className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
+                >
+                  starter: ryż
+                </button>
+                {fridgeSelection.size > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFridgeSelection(new Set())
+                      persistFridge([])
+                      setFridgeMode(false)
+                      setFridgePanelOpen(false)
+                    }}
+                    className="rounded-full border border-white/10 px-3 py-1.5 transition hover:bg-white/8"
+                  >
+                    wyczyść
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              {quickDecisionRecipes.map((entry, index) => (
+                <Link
+                  key={entry.recipe.slug}
+                  href={recipeHref(entry.recipe.slug)}
+                  className="group grid gap-3 rounded-[1.55rem] border border-white/10 bg-[#fff7ee] p-3 text-[#201714] shadow-[0_18px_50px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(0,0,0,0.18)] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/40 sm:grid-cols-[112px_1fr]"
+                >
+                  <div className="relative min-h-[96px] overflow-hidden rounded-[1.2rem] bg-[#201714]/10 sm:min-h-full">
+                    <RecipeVisual recipe={entry.recipe} />
+                    <div className="absolute left-2 top-2 rounded-full bg-[#201714]/88 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">#{index + 1}</div>
+                  </div>
+                  <div className="min-w-0 py-1">
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+                      <span>{entry.recipe.time}</span>
+                      <span>·</span>
+                      <span>{entry.recipe.cuisine}</span>
+                      {entry.match && entry.match.total > 0 ? <span>· {entry.match.matched}/{entry.match.total} masz</span> : null}
+                    </div>
+                    <h3 className="mt-1 text-xl font-semibold leading-tight tracking-[-0.045em] group-hover:underline">{entry.recipe.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-[#201714]/66">{entry.reason}</p>
+                    {entry.missing.length > 0 ? (
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#c9572d]">brakuje: {entry.missing.join(', ')}</p>
+                    ) : fridgeSelection.size > 0 ? (
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#22a06b]">możesz gotować bez zakupów</p>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       </>
       )}
 
@@ -1048,7 +1205,7 @@ export function RecipeCatalogPage({
             </div>
           </section>
 
-          <section id="lodowka" className={`px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10 ${fridgeMode ? '' : 'hidden md:block'}`}>
+          <section id="lodowka" className={`px-5 pt-8 sm:px-6 lg:px-8 lg:pt-10 ${fridgePanelOpen ? '' : 'hidden md:block'}`}>
         <div className="mx-auto max-w-6xl">
           <div className="rounded-[2rem] border border-[#201714]/8 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
             <div className="flex flex-wrap items-start justify-between gap-3">
