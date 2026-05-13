@@ -292,8 +292,19 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const firstMove = useMemo(() => getFirstMove(recipe), [recipe])
   const parallelTiming = useMemo(() => getParallelTiming(recipe), [recipe])
   const smartSwaps = useMemo(() => makeSmartSwaps((cockpitHasFridgeContext ? missingLines : freshLines).map((line) => line.ingredient)), [cockpitHasFridgeContext, freshLines, missingLines])
+  const shoppingGapLines = cockpitHasFridgeContext ? missingLines : freshLines.filter((line) => !line.ingredient.optional)
+  const shoppingGapPreview = shoppingGapLines.slice(0, 4).map((line) => line.ingredient.key)
+  const shoppingGapRest = Math.max(0, shoppingGapLines.length - shoppingGapPreview.length)
+  const ownedCount = cockpitHasFridgeContext ? stockedLines.length : pantryLines.length
+  const neededCount = cockpitHasFridgeContext ? stockedLines.length + missingLines.length : freshLines.filter((line) => !line.ingredient.optional).length
   const activeStepText = recipe.steps[activeStep] ?? recipe.steps[0] ?? 'Gotuj spokojnie.'
   const activeStepCoach = useMemo(() => getStepCoach(activeStepText, activeStep, recipe.steps.length), [activeStep, activeStepText, recipe.steps.length])
+  const activeStepIngredients = useMemo(() => {
+    const normalized = activeStepText.toLowerCase()
+    const direct = ingredientLines.filter((line) => normalized.includes(line.ingredient.key.toLowerCase()) || normalized.includes(line.ingredient.name.toLowerCase().split(' ')[0]))
+    return (direct.length > 0 ? direct : freshLines.slice(0, 3)).slice(0, 4)
+  }, [activeStepText, freshLines, ingredientLines])
+  const nextStepText = recipe.steps[activeStep + 1]
   const stepMinutes = useMemo(() => estimateStepMinutes(recipe), [recipe])
   const stepPercent = recipe.steps.length === 0 ? 0 : Math.round(((activeStep + 1) / recipe.steps.length) * 100)
 
@@ -311,6 +322,17 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const resetShopping = () => {
     setShopping({})
     track('shopping_reset', { slug: recipe.slug })
+  }
+
+  const openShoppingGap = () => {
+    const gapIds = new Set(shoppingGapLines.map((line) => line.id))
+    const next: Record<string, boolean> = {}
+    ingredientLines.forEach((line) => {
+      next[line.id] = !gapIds.has(line.id)
+    })
+    setShopping(next)
+    setShoppingMode(true)
+    track('shopping_gap_opened', { slug: recipe.slug, missing_count: shoppingGapLines.length, fridge_context: cockpitHasFridgeContext })
   }
 
   const toggleCompare = () => {
@@ -482,14 +504,21 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
               <div className="border-b border-white/8 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">Cooking Cockpit</p>
-                    <h3 className="mt-1 text-2xl font-semibold leading-none tracking-[-0.055em] text-[#fff7ee]">Najpierw ogarnij blat.</h3>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ffcf9f]">Cook Mode 2.0</p>
+                    <h3 className="mt-1 text-2xl font-semibold leading-none tracking-[-0.055em] text-[#fff7ee]">Jeden krok naraz.</h3>
                   </div>
                   <span className="rounded-full bg-[#ffcf9f]/12 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">
                     {cockpitHasFridgeContext ? `${stockedLines.length}/${stockedLines.length + missingLines.length} masz` : 'bez lodówki'}
                   </span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/82">{firstMove}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-2 rounded-[1rem] border border-[#ffcf9f]/14 bg-[#ffcf9f]/8 px-3 py-2 text-xs leading-5 text-[#f3dfcf]">
+                  <strong className="text-[#ffcf9f]">Masz {ownedCount}/{neededCount || total}</strong>
+                  <span>kup: {shoppingGapPreview.length > 0 ? `${shoppingGapPreview.join(', ')}${shoppingGapRest > 0 ? `, +${shoppingGapRest}` : ''}` : 'nic pilnego'}</span>
+                  {shoppingGapLines.length > 0 ? (
+                    <button type="button" onClick={openShoppingGap} className="ml-auto rounded-full bg-[#fff7ee] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#201714] transition hover:bg-[#ffe0c0] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35">lista braków</button>
+                  ) : null}
+                </div>
               </div>
 
               <div className="grid gap-px bg-white/8 sm:grid-cols-3">
@@ -524,7 +553,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     {smartSwaps.map((entry) => (
                       <div key={entry.key} className="rounded-[1rem] border border-white/10 bg-[#201714]/45 p-3">
                         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">{entry.key}</p>
-                        <p className="mt-1 text-sm leading-5 text-[#f3dfcf]/82">{entry.swaps.slice(0, 3).join(' / ')}</p>
+                        <p className="mt-1 text-sm leading-5 text-[#f3dfcf]/82">{entry.swaps.length > 0 ? entry.swaps.slice(0, 3).join(' / ') : 'możesz pominąć'}</p>
+                        <p className="mt-2 text-xs leading-5 text-[#f3dfcf]/62">{entry.advice}</p>
                       </div>
                     ))}
                   </div>
@@ -645,7 +675,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Aktywny Cook Mode</h3>
                 </div>
                 <div className="mt-3 overflow-hidden rounded-[1.35rem] border border-[#ffcf9f]/16 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
-                  <div key={activeStep} className="cook-step-swap p-4">
+                  <div key={activeStep} aria-live="polite" className="cook-step-swap p-4 sm:p-5">
                     <div className="flex items-center justify-between gap-3 text-xs">
                       <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">krok {activeStep + 1}/{recipe.steps.length}</span>
                       <span className="text-[#f3dfcf]/68">~{stepMinutes} min na ten ruch</span>
@@ -653,8 +683,18 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500 animate-progress-glow" style={{ width: `${stepPercent}%` }} />
                     </div>
-                    <p className="mt-4 text-lg font-semibold leading-7 tracking-[-0.03em] text-[#fff7ee]">{activeStepText}</p>
-                    <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>
+                    <p className="mt-5 text-2xl font-semibold leading-8 tracking-[-0.04em] text-[#fff7ee] sm:text-3xl sm:leading-10">{activeStepText}</p>
+                    <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">pod ręką</p>
+                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{activeStepIngredients.map((line) => line.text).join(' · ')}</p>
+                      </div>
+                      <div className="rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">następny ruch</p>
+                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/72">{nextStepText ?? 'Finisz — podaj, zanim danie zacznie stygnąć.'}</p>
+                      </div>
+                    </div>
                   </div>
                   <div className="grid gap-px bg-white/8 sm:grid-cols-3">
                     <button
@@ -682,7 +722,8 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     </button>
                   </div>
                 </div>
-                <ol className="mt-4 space-y-4 text-sm leading-6 text-[#f3dfcf]">
+                <p className="mt-4 hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]/72 md:block">pełna sekwencja</p>
+                <ol className="mt-3 hidden space-y-4 text-sm leading-6 text-[#f3dfcf] md:block">
                   {recipe.steps.map((step, index) => {
                     const stepImage = recipe.stepImages?.[index]
                     const stepProgress = Math.round(((index + 1) / recipe.steps.length) * 100)

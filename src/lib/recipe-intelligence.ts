@@ -29,6 +29,14 @@ const SWAPS: Record<string, string[]> = {
   chilli: ['harissa', 'płatki chilli', 'ostra papryka'],
   sos_sojowy: ['tamari', 'miso rozrobione z wodą', 'sól + odrobina miodu'],
   'sos sojowy': ['tamari', 'miso rozrobione z wodą', 'sól + odrobina miodu'],
+  tahini: ['masło orzechowe + cytryna', 'jogurt grecki + oliwa', 'pesto jako inny kierunek'],
+  pesto: ['bazylia + oliwa + orzechy', 'rukola + oliwa + parmezan', 'salsa verde z natki'],
+  orzo: ['drobny makaron', 'ryż', 'kasza perłowa'],
+  tuńczyk: ['sardynki', 'jajko na twardo', 'ciecierzyca + oliwa'],
+  kapary: ['ogórek kiszony drobno', 'oliwki', 'skórka cytryny + sól'],
+  ogórek: ['seler naciowy', 'rzodkiewka', 'sałata dla chrupnięcia'],
+  'mozzarella bufala': ['zwykła mozzarella', 'burrata', 'feta + więcej oliwy'],
+  orzechy: ['migdały', 'pestki słonecznika', 'pestki dyni'],
 }
 
 function cleanSignal(signal: string) {
@@ -102,15 +110,28 @@ export function makeRecipeQualitySignals(recipe: Recipe) {
   return signals.slice(0, 3)
 }
 
+function makeSwapAdvice(ingredient: Ingredient, hasSwaps: boolean) {
+  if (ingredient.optional) return 'Możesz pominąć. To dodatek, nie konstrukcja przepisu.'
+  if (hasSwaps) return 'Zamień 1:1 i pilnuj balansu: sól, kwas, tłuszcz.'
+  if (/zioł|bazyl|mięt|natk|kolendr|tymian/i.test(`${ingredient.key} ${ingredient.name}`)) return 'Możesz pominąć albo dać inne świeże zioło. Danie straci aromat, nie sens.'
+  if (/cytryn|limonk|ocet/i.test(`${ingredient.key} ${ingredient.name}`)) return 'Nie pomijaj całkiem kwasu. Daj cokolwiek kwaśnego, nawet odrobinę octu.'
+  return 'Jeśli to główny składnik, lepiej dokupić. Jeśli poboczny — zmniejsz ambicję i gotuj dalej.'
+}
+
 export function makeSmartSwaps(missing: Ingredient[], limit = 3) {
   return missing
-    .filter((ingredient) => !ingredient.pantry && !ingredient.optional)
-    .map((ingredient) => ({
-      key: ingredient.key,
-      label: ingredient.name,
-      swaps: SWAPS[ingredient.key] ?? SWAPS[ingredient.name.toLowerCase()] ?? [],
-    }))
-    .filter((entry) => entry.swaps.length > 0)
+    .filter((ingredient) => !ingredient.pantry)
+    .map((ingredient) => {
+      const swaps = SWAPS[ingredient.key] ?? SWAPS[ingredient.name.toLowerCase()] ?? []
+      return {
+        key: ingredient.key,
+        label: ingredient.name,
+        swaps,
+        canSkip: Boolean(ingredient.optional || /zioł|bazyl|mięt|natk|kolendr|tymian/i.test(`${ingredient.key} ${ingredient.name}`)),
+        advice: makeSwapAdvice(ingredient, swaps.length > 0),
+      }
+    })
+    .filter((entry) => entry.swaps.length > 0 || entry.canSkip)
     .slice(0, limit)
 }
 

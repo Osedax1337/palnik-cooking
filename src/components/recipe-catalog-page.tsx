@@ -125,6 +125,48 @@ function scoreQuickRecipe(recipe: Recipe, selected: Set<string>, timeLimit: Quic
   return { match, score, weightedScore, missingCount, mainMissingCount }
 }
 
+function scorePersonalFit({
+  recipe,
+  favoriteSlugs,
+  recentSlugs,
+  tasteMemoryTop,
+  pantryMemoryTop,
+  selected,
+}: {
+  recipe: Recipe
+  favoriteSlugs: string[]
+  recentSlugs: string[]
+  tasteMemoryTop: [string, number][]
+  pantryMemoryTop: [string, number][]
+  selected: Set<string>
+}) {
+  let score = 0
+  const reasons: string[] = []
+  const signals = new Set(recipeTasteSignals(recipe))
+  const ingredientKeys = new Set(recipe.ingredients.map((ingredient) => ingredient.key))
+  const tasteHits = tasteMemoryTop.filter(([signal]) => signals.has(signal)).slice(0, 2)
+  const pantryHits = pantryMemoryTop.filter(([key]) => ingredientKeys.has(key) && !selected.has(key)).slice(0, 2)
+
+  if (favoriteSlugs.includes(recipe.slug)) {
+    score += 0.8
+    reasons.push('ulubione')
+  }
+  if (recentSlugs.includes(recipe.slug)) {
+    score += 0.28
+    reasons.push('ostatnio oglądane')
+  }
+  if (tasteHits.length > 0) {
+    score += tasteHits.reduce((sum, [, count]) => sum + Math.min(0.34, 0.08 * count), 0)
+    reasons.push(`twój smak: ${tasteHits.map(([signal]) => signal.split(':')[1] ?? signal).join(' / ')}`)
+  }
+  if (pantryHits.length > 0) {
+    score += pantryHits.reduce((sum, [, count]) => sum + Math.min(0.22, 0.05 * count), 0)
+    reasons.push(`często masz: ${pantryHits.map(([key]) => key).join(', ')}`)
+  }
+
+  return { score: Math.min(score, 1.35), reasons: reasons.slice(0, 2) }
+}
+
 function effortWeight(effort: Recipe['effort']) {
   if (effort === 'lekko') return 1
   if (effort === 'średnio') return 0.62
@@ -589,22 +631,24 @@ export function RecipeCatalogPage({
       .filter((recipe) => !recipe.collections.includes('atelier'))
       .map((recipe) => {
         const { match, score, weightedScore, missingCount, mainMissingCount } = scoreQuickRecipe(recipe, selected, quickTimeLimit)
+        const personalFit = scorePersonalFit({ recipe, favoriteSlugs, recentSlugs, tasteMemoryTop, pantryMemoryTop, selected })
 
         return {
           recipe,
           match,
-          score,
+          score: score + personalFit.score,
           weightedScore,
           missingCount,
           mainMissingCount,
           reason: makeQuickDecisionReason(recipe, match, quickTimeLimit),
+          personalReasons: personalFit.reasons,
           missing: match?.missing.slice(0, 3).map((ingredient) => ingredient.key) ?? [],
         }
       })
       .sort((a, b) => b.score - a.score || a.recipe.minutes - b.recipe.minutes)
 
     return pool.slice(0, 3)
-  }, [fridgeSelection, quickTimeLimit])
+  }, [favoriteSlugs, fridgeSelection, pantryMemoryTop, quickTimeLimit, recentSlugs, tasteMemoryTop])
 
   const leadBrain = brainRecommendations[0]
   const compareCount = compareSlugs.length
@@ -888,7 +932,7 @@ export function RecipeCatalogPage({
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#ffcf9f]">szybka decyzja</p>
               <h2 className="mt-2 max-w-[11ch] text-3xl font-semibold leading-[0.92] tracking-[-0.06em] sm:text-4xl">Mam czas i składniki. Co gotuję?</h2>
-              <p className="mt-3 max-w-[42ch] text-sm leading-6 text-[#f3dfcf]/78">Wybierz limit czasu, kliknij 3–5 rzeczy z lodówki, a Palnik zawęzi wybór do trzech sensownych dań. Bez scrollowania katalogu jak nekrologu.</p>
+              <p className="mt-3 max-w-[42ch] text-sm leading-6 text-[#f3dfcf]/78">Wybierz limit czasu i 3–5 rzeczy z lodówki. Palnik dorzuca pamięć ulubionych, ostatnich wyborów i składników, które często klikasz — bez konta i backendu.</p>
 
               <div className="mt-5 flex flex-wrap gap-2">
                 {quickTimeLimits.map((limit) => {
@@ -987,6 +1031,7 @@ export function RecipeCatalogPage({
                       missing_count: entry.missingCount,
                       main_missing_count: entry.mainMissingCount,
                       weighted_score: Number(entry.weightedScore.toFixed(2)),
+                      personal_reason_count: entry.personalReasons.length,
                     })
                     trackRecipeOpened(entry.recipe.slug, 'quick_decision', { rank: index + 1, time_limit: quickTimeLimit, ingredient_count: fridgeSelection.size })
                   }}
@@ -1005,6 +1050,9 @@ export function RecipeCatalogPage({
                     </div>
                     <h3 className="mt-1 text-xl font-semibold leading-tight tracking-[-0.045em] group-hover:underline">{entry.recipe.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-[#201714]/66">{entry.reason}</p>
+                    {entry.personalReasons.length > 0 ? (
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">pamięć: {entry.personalReasons.join(' · ')}</p>
+                    ) : null}
                     {entry.missing.length > 0 ? (
                       <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#c9572d]">brakuje: {entry.missing.join(', ')}</p>
                     ) : fridgeSelection.size > 0 ? (
