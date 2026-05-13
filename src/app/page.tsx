@@ -38,6 +38,21 @@ const secondaryRoutes = [
   },
 ] as const
 
+const homeFridgeBase = ['makaron', 'cytryna', 'parmezan'] as const
+const homeIngredientChips = ['makaron', 'cytryna', 'parmezan', 'jajko', 'sos sojowy', 'pomidor'] as const
+
+function catalogFridgeHref(keys: readonly string[]) {
+  return `/katalog?fridge=${keys.map(encodeURIComponent).join(',')}#main-content`
+}
+
+function toggleHomeIngredientHref(ingredient: string) {
+  const next = homeFridgeBase.includes(ingredient as (typeof homeFridgeBase)[number])
+    ? homeFridgeBase.filter((key) => key !== ingredient)
+    : [...homeFridgeBase, ingredient]
+
+  return next.length > 0 ? catalogFridgeHref(next) : '/katalog#main-content'
+}
+
 export default function Home() {
   return (
     <main id="main-content" className="min-h-screen overflow-hidden bg-[#fffaf3] pb-36 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
@@ -117,20 +132,26 @@ export default function Home() {
             </article>
 
             <aside className="grid gap-3 rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] p-4 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-5 lg:p-6">
-              <div className="flex flex-wrap gap-2">
-                {['do 15 min', 'do 25 min', 'do 40 min'].map((label, index) => (
-                  <span key={label} className={`rounded-full px-4 py-2 text-sm font-semibold ${index === 1 ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#8a4b2a]'}`}>
-                    {label}
-                  </span>
-                ))}
+              <div className="flex flex-wrap gap-2" aria-label="Wybierz limit czasu w katalogu">
+                {[15, 25, 40].map((limit) => {
+                  const active = limit === 25
+                  return (
+                    <Link key={limit} href={`/katalog?czas=${limit}&fridge=makaron%2Ccytryna%2Cparmezan#main-content`} aria-pressed={active} className={`rounded-full px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#8a4b2a] hover:border-[#201714]/20'}`}>
+                      do {limit} min
+                    </Link>
+                  )
+                })}
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {['makaron', 'cytryna', 'parmezan', 'jajko', 'sos sojowy', 'pomidor'].map((ingredient, index) => (
-                  <span key={ingredient} className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${index < 3 ? 'bg-[#22a06b] text-white' : 'border border-[#201714]/10 bg-white text-[#8a4b2a]'}`}>
-                    {index < 3 ? '✓ ' : '+ '}{ingredient}
-                  </span>
-                ))}
+              <div className="flex flex-wrap gap-2" aria-label="Kliknij składniki, żeby otworzyć katalog z tym wyborem">
+                {homeIngredientChips.map((ingredient) => {
+                  const active = homeFridgeBase.includes(ingredient as (typeof homeFridgeBase)[number])
+                  return (
+                    <Link key={ingredient} href={toggleHomeIngredientHref(ingredient)} aria-pressed={active} className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#22a06b] text-white shadow-[0_8px_20px_rgba(34,160,107,0.24)]' : 'border border-[#201714]/14 bg-white text-[#8a4b2a] hover:border-[#201714]/24 hover:bg-[#fff7ee]'}`}>
+                      {active ? '✓ ' : '+ '}{ingredient}
+                    </Link>
+                  )
+                })}
               </div>
 
               <div className="grid gap-3">

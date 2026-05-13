@@ -315,6 +315,7 @@ export function RecipeCatalogPage({
     const dietParam = searchParams.get('diet')
     const fridgeParam = searchParams.get('fridge')
     const fridgeOpenParam = searchParams.get('lodowka')
+    const quickTimeParam = Number(searchParams.get('czas')) as QuickTimeLimit
 
     const nextMood = moodParam && moodKeys.has(moodParam as (typeof moodFilters)[number]['key']) ? (moodParam as (typeof moodFilters)[number]['key']) : 'all'
     const nextCuisine = cuisineParam && cuisineKeys.has(cuisineParam as (typeof cuisineFilters)[number]['key']) ? (cuisineParam as (typeof cuisineFilters)[number]['key']) : 'all'
@@ -335,6 +336,9 @@ export function RecipeCatalogPage({
     setOpenRecipe((current) => (current === nextRecipe ? current : nextRecipe))
     setCollectionFilter((current) => (current === nextCollection ? current : nextCollection))
     setDietFilters((current) => (current.join(',') === nextDiet.join(',') ? current : nextDiet))
+    if (quickTimeLimits.includes(quickTimeParam)) {
+      setQuickTimeLimit((current) => (current === quickTimeParam ? current : quickTimeParam))
+    }
 
     if (fridgeParam) {
       const keys = fridgeParam.split(',').filter(Boolean)
