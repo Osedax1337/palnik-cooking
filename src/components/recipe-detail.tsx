@@ -669,46 +669,46 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                   ) : null,
                 )}
               </div>
-              <div>
+              <div className="min-w-0">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]/75">prowadzenie</p>
+                  <p className="text-[10px] uppercase tracking-[0.14em] text-[#ffcf9f]/75 sm:tracking-[0.22em]">prowadzenie</p>
                   <h3 className="mt-1 text-lg font-semibold tracking-[-0.035em] text-[#fff7ee]">Aktywny Cook Mode</h3>
                 </div>
-                <div className="mt-3 overflow-hidden rounded-[1.35rem] border border-[#ffcf9f]/16 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+                <div className="mt-3 min-w-0 overflow-hidden rounded-[1.35rem] border border-[#ffcf9f]/16 bg-[radial-gradient(circle_at_12%_0%,rgba(255,207,159,0.16),transparent_32%),rgba(255,255,255,0.06)] shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
                   <div key={activeStep} aria-live="polite" className="cook-step-swap p-4 sm:p-5">
-                    <div className="flex items-center justify-between gap-3 text-xs">
-                      <span className="font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">krok {activeStep + 1}/{recipe.steps.length}</span>
+                    <div className="flex flex-col gap-1.5 text-xs min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between min-[430px]:gap-3">
+                      <span className="font-semibold uppercase tracking-[0.12em] text-[#ffcf9f] sm:tracking-[0.18em]">krok {activeStep + 1}/{recipe.steps.length}</span>
                       <span className="text-[#f3dfcf]/68">~{stepMinutes} min na ten ruch</span>
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500 animate-progress-glow" style={{ width: `${stepPercent}%` }} />
                     </div>
-                    <p className="mt-5 text-2xl font-semibold leading-8 tracking-[-0.04em] text-[#fff7ee] sm:text-3xl sm:leading-10">{activeStepText}</p>
+                    <p className="mt-5 text-[1.65rem] font-semibold leading-[1.12] tracking-[-0.045em] text-[#fff7ee] sm:text-3xl sm:leading-10">{activeStepText}</p>
                     <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">pod ręką</p>
-                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf]">{activeStepIngredients.map((line) => line.text).join(' · ')}</p>
+                    <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                      <div className="min-w-0 rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.11em] text-[#ffcf9f] sm:tracking-[0.18em]">pod ręką</p>
+                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf] break-words">{activeStepIngredients.map((line) => line.text).join(' · ')}</p>
                       </div>
-                      <div className="rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f]">następny ruch</p>
-                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/72">{nextStepText ?? 'Finisz — podaj, zanim danie zacznie stygnąć.'}</p>
+                      <div className="min-w-0 rounded-[1rem] border border-white/8 bg-white/[0.055] p-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.11em] text-[#ffcf9f] sm:tracking-[0.18em]">następny ruch</p>
+                        <p className="mt-2 text-sm leading-6 text-[#f3dfcf]/72 break-words">{nextStepText ?? 'Finisz — podaj, zanim danie zacznie stygnąć.'}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="grid gap-px bg-white/8 sm:grid-cols-3">
+                  <div className="grid gap-px bg-white/8 lg:grid-cols-3">
                     <button
                       type="button"
                       onClick={() => setActiveStep((current) => Math.max(0, current - 1))}
                       disabled={activeStep === 0}
-                      className="bg-[#201714]/55 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:text-[#f3dfcf]/30 disabled:hover:bg-[#201714]/55"
+                      className="min-w-0 bg-[#201714]/55 px-3 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#ffcf9f] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:text-[#f3dfcf]/30 disabled:hover:bg-[#201714]/55 sm:tracking-[0.14em]"
                     >
                       ← poprzedni
                     </button>
                     <button
                       type="button"
                       onClick={() => setShoppingMode(true)}
-                      className="bg-[#201714]/55 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#f3dfcf] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30"
+                      className="min-w-0 bg-[#201714]/55 px-3 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#f3dfcf] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 sm:tracking-[0.14em]"
                     >
                       lista zakupów
                     </button>
@@ -716,7 +716,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                       type="button"
                       onClick={() => setActiveStep((current) => Math.min(recipe.steps.length - 1, current + 1))}
                       disabled={activeStep >= recipe.steps.length - 1}
-                      className="bg-[#ffcf9f] px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#201714] transition hover:bg-[#ffe0c0] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-[#f3dfcf]/30"
+                      className="min-w-0 bg-[#ffcf9f] px-3 py-3 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#201714] transition hover:bg-[#ffe0c0] focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/30 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-[#f3dfcf]/30 sm:tracking-[0.14em]"
                     >
                       następny →
                     </button>
