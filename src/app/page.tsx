@@ -4,49 +4,43 @@ import { recipes } from '@/lib/recipes'
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, siteUrl } from '@/lib/seo'
 
 export const metadata = pageMetadata({
-  title: 'Palnik — wybierz przepis i gotuj',
+  title: 'Palnik — obiad z czasu i składników',
   description:
-    'Szybki katalog przepisów, tryb lodówki i Atelier dla bardziej dopracowanych dań.',
+    'Powiedz, ile masz czasu i co leży w lodówce. Palnik wybierze trzy sensowne przepisy bez scrollowania katalogu.',
   path: '/',
-  keywords: ['przepisy', 'szybki obiad', 'co ugotować', 'gotowanie w domu', 'Palnik'],
+  keywords: ['przepisy', 'szybki obiad', 'co ugotować', 'gotowanie w domu', 'Palnik', 'przepisy z lodówki'],
 })
 
-const heroRecipes = [
-  recipes.find((recipe) => recipe.slug === 'baklazan-miso-daktyle') ?? recipes[0],
-  recipes.find((recipe) => recipe.slug === 'makaron-cytryna') ?? recipes[1],
-  recipes.find((recipe) => recipe.slug === 'przegrzebki-kimchi-beurre-blanc') ?? recipes[2],
+const quickRecipes = [
+  recipes.find((recipe) => recipe.slug === 'makaron-cytryna') ?? recipes[0],
+  recipes.find((recipe) => recipe.slug === 'pesto-bazylia-orzechy') ?? recipes[1],
+  recipes.find((recipe) => recipe.slug === 'makaron-tahini-pomidor') ?? recipes[2],
 ]
 
-const routes = [
+const proofPoints = [
+  ['czas', '15 / 25 / 40 min', 'Najpierw limit, potem decyzja. Nie odwrotnie.'],
+  ['lodówka', '3–5 składników', 'Klikasz to, co masz. Palnik premiuje mniej braków.'],
+  ['wynik', '3 przepisy', 'Krótka lista z powodem wyboru i brakującymi składnikami.'],
+] as const
+
+const secondaryRoutes = [
   {
-    href: '/katalog',
-    eyebrow: 'pełny katalog',
-    title: 'Przepisy na dziś',
-    body: 'Filtruj po czasie, nastroju albo składniku. Klikasz przepis i przechodzisz od razu do gotowania.',
-    cta: 'Wejdź do katalogu',
-    tone: 'dark',
+    href: '/katalog?lodowka=1#lodowka',
+    title: 'Tryb lodówki',
+    body: 'Gdy chcesz dokładniej zaznaczyć składniki i zobaczyć pełne dopasowanie.',
+    cta: 'Otwórz lodówkę',
   },
   {
     href: '/atelier',
-    eyebrow: 'ładniejsze talerze',
     title: 'Atelier',
-    body: 'Bardziej dopracowane dania: kwas, dym, miso, owoce przy mięsie i trochę restauracyjnego klimatu.',
-    cta: 'Otwórz Atelier',
-    tone: 'wine',
-  },
-  {
-    href: '/katalog?lodowka=1#lodowka',
-    eyebrow: 'mam składniki',
-    title: 'Tryb lodówki',
-    body: 'Zaznacz, co masz. Palnik pokaże przepisy, do których jesteś najbliżej.',
-    cta: 'Sprawdź lodówkę',
-    tone: 'light',
+    body: 'Gdy obiad ma być bardziej popisowy: ferment, kwas, dym, owoce przy mięsie.',
+    cta: 'Wejdź do Atelier',
   },
 ] as const
 
 export default function Home() {
   return (
-    <main id="main-content" className="min-h-screen overflow-hidden bg-[#fffaf3] pb-44 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
+    <main id="main-content" className="min-h-screen overflow-hidden bg-[#fffaf3] pb-36 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:pb-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -56,7 +50,7 @@ export default function Home() {
             name: 'Palnik',
             url: siteUrl,
             description:
-              'Szybki katalog przepisów, tryb lodówki i Atelier dla bardziej dopracowanych dań.',
+              'Powiedz, ile masz czasu i co leży w lodówce. Palnik wybierze trzy sensowne przepisy bez scrollowania katalogu.',
             inLanguage: 'pl-PL',
             potentialAction: {
               '@type': 'SearchAction',
@@ -73,13 +67,13 @@ export default function Home() {
         }}
       />
 
-      <section className="relative px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7 animate-fade-up-soft">
-        <div className="ember-drift absolute left-1/2 top-[-10rem] h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-[#ffd7b5]/75 blur-3xl" />
-        <div className="ember-drift absolute right-[-8rem] top-24 h-80 w-80 rounded-full bg-[#c9572d]/20 blur-3xl [animation-delay:1.4s]" />
-        <div className="absolute bottom-0 left-[-8rem] h-80 w-80 rounded-full bg-[#7c2433]/10 blur-3xl" />
+      <section className="relative px-4 pb-8 pt-4 sm:px-6 lg:px-8 lg:pb-12 lg:pt-7">
+        <div className="ember-drift absolute left-1/2 top-[-12rem] h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[#ffd7b5]/75 blur-3xl" />
+        <div className="absolute right-[-9rem] top-32 h-80 w-80 rounded-full bg-[#c9572d]/16 blur-3xl" />
+        <div className="absolute bottom-[-8rem] left-[-8rem] h-80 w-80 rounded-full bg-[#7c2433]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl">
-          <nav className="mb-8 flex items-center justify-between gap-4">
+          <nav className="mb-7 flex items-center justify-between gap-4">
             <Link href="/" className="rounded-full border border-[#201714]/10 bg-white/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">
               Palnik
             </Link>
@@ -93,122 +87,115 @@ export default function Home() {
             </div>
           </nav>
 
-          <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
+          <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
             <article className="relative overflow-hidden rounded-[2.1rem] bg-[#201714] px-6 pb-7 pt-7 text-[#fff7ee] shadow-[0_28px_90px_rgba(32,23,20,0.18)] sm:rounded-[2.8rem] sm:px-8 sm:pb-9 sm:pt-9 lg:px-11 lg:pb-11 lg:pt-11">
               <div className="absolute -right-12 -top-10 h-44 w-44 rounded-full bg-[#ffb36b]/70 blur-3xl" />
               <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-[#8c3341]/50 blur-3xl" />
-              <div className="relative">
-                <p className="text-[11px] uppercase tracking-[0.25em] text-[#ffcf9f]">co dziś realnie ugotować</p>
-                <h1 className="mt-5 max-w-[9.5ch] text-[4.1rem] font-semibold leading-[0.86] tracking-[-0.075em] sm:text-7xl lg:text-8xl">
-                  Wybierz.
-                  <br />
-                  Ugotuj.
-                </h1>
-                <p className="mt-6 max-w-[39ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
-                  Prosty wybór na dziś: szybki obiad, gotowanie z lodówki albo coś bardziej dopracowanego w Atelier. Bez przekopywania się przez ścianę przepisów.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="/katalog" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
-                    Otwórz katalog
+              <div className="relative flex h-full flex-col justify-between gap-10">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-[#ffcf9f]">obiad bez zgadywania</p>
+                  <h1 className="mt-5 max-w-[10ch] text-[3.8rem] font-semibold leading-[0.86] tracking-[-0.075em] sm:text-7xl lg:text-8xl">
+                    Masz czas.
+                    <br />
+                    Masz składniki.
+                    <br />
+                    Palnik wybiera.
+                  </h1>
+                  <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
+                    Wybierz, czy masz 15, 25 czy 40 minut. Kliknij kilka rzeczy z lodówki. Dostajesz trzy przepisy, które mają sens teraz — nie katalog do przekopania.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/katalog#main-content" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
+                    Wybierz obiad teraz
                   </Link>
-                  <Link href="/atelier" className="inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
-                    Zobacz Atelier
+                  <Link href="/katalog?lodowka=1#lodowka" className="inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
+                    Mam składniki
                   </Link>
                 </div>
               </div>
             </article>
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:min-h-[34rem] lg:grid-cols-[0.92fr_1.08fr]">
-              <Link href={`/przepisy/${heroRecipes[0].slug}`} className="group float-slow relative min-h-[24rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_24px_70px_rgba(32,23,20,0.16)] sm:col-span-2 sm:min-h-[28rem] lg:col-span-1 lg:row-span-2 lg:min-h-0">
-                <RecipeVisual recipe={heroRecipes[0]} large />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/96 via-[#201714]/48 to-[#201714]/8" />
-                <div className="absolute bottom-0 left-0 right-0 p-5 text-[#fff7ee] sm:p-6">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-[#ffcf9f]">dzisiejszy talerz</p>
-                  <h2 className="mt-2 max-w-[13ch] text-3xl font-semibold leading-[0.95] tracking-[-0.055em]">{heroRecipes[0].title}</h2>
-                  <p className="mt-2 line-clamp-3 max-w-[32ch] text-sm leading-6 text-[#f3dfcf]">{heroRecipes[0].intro}</p>
-                </div>
-              </Link>
+            <aside className="grid gap-3 rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] p-4 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-5 lg:p-6">
+              <div className="flex flex-wrap gap-2">
+                {['do 15 min', 'do 25 min', 'do 40 min'].map((label, index) => (
+                  <span key={label} className={`rounded-full px-4 py-2 text-sm font-semibold ${index === 1 ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#8a4b2a]'}`}>
+                    {label}
+                  </span>
+                ))}
+              </div>
 
-              {heroRecipes.slice(1).map((recipe) => (
-                <Link key={recipe.slug} href={`/przepisy/${recipe.slug}`} className="group float-slower relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[#201714] shadow-[0_18px_50px_rgba(32,23,20,0.12)] sm:min-h-[16rem]">
-                  <RecipeVisual recipe={recipe} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#201714]/92 via-[#201714]/42 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-[#fff7ee]">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#ffcf9f]">{recipe.time} · {recipe.cuisine}</p>
-                    <h2 className="mt-1 text-xl font-semibold leading-tight tracking-[-0.04em]">{recipe.title}</h2>
-                  </div>
-                </Link>
-              ))}
-            </div>
+              <div className="flex flex-wrap gap-2">
+                {['makaron', 'cytryna', 'parmezan', 'jajko', 'sos sojowy', 'pomidor'].map((ingredient, index) => (
+                  <span key={ingredient} className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] ${index < 3 ? 'bg-[#22a06b] text-white' : 'border border-[#201714]/10 bg-white text-[#8a4b2a]'}`}>
+                    {index < 3 ? '✓ ' : '+ '}{ingredient}
+                  </span>
+                ))}
+              </div>
+
+              <div className="grid gap-3">
+                {quickRecipes.map((recipe, index) => (
+                  <Link key={recipe.slug} href={`/przepisy/${recipe.slug}?fridge=makaron%2Ccytryna%2Cparmezan`} className="group grid gap-3 rounded-[1.55rem] border border-[#201714]/8 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(32,23,20,0.12)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:grid-cols-[108px_1fr]">
+                    <div className="relative min-h-[92px] overflow-hidden rounded-[1.15rem] bg-[#201714]/8">
+                      <RecipeVisual recipe={recipe} />
+                      <span className="absolute left-2 top-2 rounded-full bg-[#201714]/88 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#ffcf9f]">#{index + 1}</span>
+                    </div>
+                    <div className="min-w-0 py-1">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">{recipe.time} · {recipe.cuisine}</p>
+                      <h2 className="mt-1 text-xl font-semibold leading-tight tracking-[-0.045em] group-hover:underline">{recipe.title}</h2>
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#201714]/62">
+                        {index === 0 ? 'Najbliżej tego, co masz. Brakuje tylko dwóch rzeczy.' : index === 1 ? 'Szybkie, lekkie i dalej blisko lodówki.' : 'Trochę więcej roboty, ale nadal mieści się w czasie.'}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
-      <section className="scroll-reveal px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
+      <section className="px-4 pb-8 sm:px-6 lg:px-8 lg:pb-12">
         <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-3">
-          {routes.map((route, index) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className={`group sheen-on-hover min-h-[20rem] overflow-hidden rounded-[2rem] border p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(32,23,20,0.14)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:p-6 ${
-                route.tone === 'dark'
-                  ? 'border-transparent bg-[#201714] text-[#fff7ee]'
-                  : route.tone === 'wine'
-                    ? 'border-transparent bg-[linear-gradient(135deg,#6e1f1f_0%,#2f1b27_60%,#171217_100%)] text-[#fff7ee]'
-                    : 'border-[#201714]/10 bg-white text-[#201714]'
-              }`}
-            >
-              <div className="flex h-full flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-3">
-                    <p className={`text-[10px] font-semibold uppercase tracking-[0.22em] ${route.tone === 'light' ? 'text-[#8a4b2a]' : 'text-[#ffcf9f]'}`}>{route.eyebrow}</p>
-                    <span className="rounded-full border border-current/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] opacity-70">0{index + 1}</span>
-                  </div>
-                  <h2 className="mt-5 max-w-[11ch] text-4xl font-semibold leading-[0.9] tracking-[-0.07em]">{route.title}</h2>
-                  <p className={`mt-4 max-w-[34ch] text-sm leading-6 ${route.tone === 'light' ? 'text-[#201714]/64' : 'text-[#f3dfcf]'}`}>{route.body}</p>
-                </div>
-                <span className={`mt-8 inline-flex w-fit items-center rounded-full px-4 py-2.5 text-sm font-semibold transition group-hover:translate-x-1 ${route.tone === 'light' ? 'bg-[#201714] text-[#fff7ee]' : 'bg-white/10 text-[#fff7ee]'}`}>{route.cta} →</span>
-              </div>
-            </Link>
+          {proofPoints.map(([eyebrow, title, body], index) => (
+            <article key={eyebrow} className={`rounded-[2rem] border p-5 shadow-sm sm:p-6 ${index === 1 ? 'border-transparent bg-[#201714] text-[#fff7ee]' : 'border-[#201714]/8 bg-white text-[#201714]'}`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.22em] ${index === 1 ? 'text-[#ffcf9f]' : 'text-[#8a4b2a]'}`}>0{index + 1} · {eyebrow}</p>
+              <h2 className="mt-3 text-3xl font-semibold leading-[0.92] tracking-[-0.06em]">{title}</h2>
+              <p className={`mt-3 text-sm leading-6 ${index === 1 ? 'text-[#f3dfcf]' : 'text-[#201714]/62'}`}>{body}</p>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="scroll-reveal px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_52%,#f6efe8_100%)] p-5 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-7 lg:p-9">
-          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">jak używać</p>
-              <h2 className="mt-2 max-w-[12ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Trzy wejścia. Zero labiryntu.</h2>
+      <section className="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+        <div className="mx-auto grid max-w-6xl gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+          <article className="overflow-hidden rounded-[2.2rem] border border-[#201714]/8 bg-white p-5 shadow-[0_18px_50px_rgba(32,23,20,0.06)] sm:p-7 lg:p-9">
+            <p className="text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">główna ścieżka</p>
+            <h2 className="mt-2 max-w-[13ch] text-4xl font-semibold leading-[0.92] tracking-[-0.065em] sm:text-5xl">Nie wybierasz przepisu. Wybierasz sytuację.</h2>
+            <p className="mt-4 max-w-[58ch] text-base leading-7 text-[#201714]/66">
+              Palnik zaczyna od ograniczeń, które naprawdę masz: czas, lodówka, energia po pracy. Dopiero potem pokazuje przepisy. To jest różnica między aplikacją kucharską a czymś, co pomaga zjeść dziś.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Przejdź do wyboru</Link>
+              <Link href="/atelier" className="tap-pop inline-flex rounded-full border border-[#201714]/12 bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Zobacz Atelier</Link>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">01</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Katalog</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Gdy chcesz szybko wybrać konkretny przepis.</p>
-              </article>
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-[#201714] p-4 text-[#fff7ee]">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">02</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Lodówka</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#f3dfcf]">Gdy masz składniki i chcesz zobaczyć, co z nich realnie wyjdzie.</p>
-              </article>
-              <article className="rounded-[1.45rem] border border-[#201714]/8 bg-white p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">03</p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.04em]">Atelier</h3>
-                <p className="mt-1.5 text-sm leading-6 text-[#201714]/62">Gdy chcesz zrobić coś trochę bardziej popisowego.</p>
-              </article>
-            </div>
-          </div>
-          <div className="mt-7 flex flex-wrap gap-3 border-t border-[#201714]/8 pt-6">
-            <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Otwórz katalog</Link>
-            <Link href="/katalog?lodowka=1#lodowka" className="tap-pop inline-flex rounded-full border border-[#201714]/12 bg-white px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Mam składniki</Link>
+          </article>
+
+          <div className="grid gap-3">
+            {secondaryRoutes.map((route) => (
+              <Link key={route.href} href={route.href} className="group rounded-[2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_52%,#f6efe8_100%)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(32,23,20,0.1)] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:p-6">
+                <h2 className="text-2xl font-semibold tracking-[-0.055em]">{route.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-[#201714]/62">{route.body}</p>
+                <span className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#8a4b2a] transition group-hover:translate-x-1">{route.cta} →</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1.5 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
         <Link href="/katalog" className="rounded-full bg-[#201714] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">
-          Katalog
+          Wybierz
         </Link>
         <Link href="/katalog?lodowka=1#lodowka" className="rounded-full bg-white px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">
           Lodówka
