@@ -230,6 +230,13 @@ export const recipes: Recipe[] = [
       'Wymieszaj wszystko z sosem sojowym, dymką i chilli.',
       'Na końcu dodaj odrobinę masła, żeby ryż zrobił się błyszczący.',
     ],
+    stepImages: [
+      '/recipes/steps/ryz-smazony-jajko-chilli-step-1.webp',
+      '/recipes/steps/ryz-smazony-jajko-chilli-step-2.webp',
+      '/recipes/steps/ryz-smazony-jajko-chilli-step-3.webp',
+      '/recipes/steps/ryz-smazony-jajko-chilli-step-4.webp',
+      '/recipes/steps/ryz-smazony-jajko-chilli-step-5.webp',
+    ],
     tip: 'Świeży ryż będzie się mazał. Jeśli masz tylko świeży, rozłóż go cienko na talerzu i daj mu 5 minut odparować.',
   },
   {
