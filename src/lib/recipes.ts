@@ -3258,6 +3258,12 @@ export const recipes: Recipe[] = [
       'Pod koniec wmieszaj starte albo drobno pokrojone buraki.',
       'Na wierzch daj kozi ser i tymianek.',
     ],
+    stepImages: [
+      '/recipes/steps/kaszotto-burak-kozi-ser-step-1.webp',
+      '/recipes/steps/kaszotto-burak-kozi-ser-step-2.webp',
+      '/recipes/steps/kaszotto-burak-kozi-ser-step-3.webp',
+      '/recipes/steps/kaszotto-burak-kozi-ser-step-4.webp',
+    ],
     tip: 'Odrobina octu balsamicznego trzyma słodycz buraka w ryzach.',
   },
   {
@@ -3405,6 +3411,13 @@ export const recipes: Recipe[] = [
       'Zblenduj z mlekiem kokosowym na gładko.',
       'Skrop limonką przed podaniem, żeby zupa nie była płaska.',
     ],
+    stepImages: [
+      '/recipes/steps/zupa-marchew-imbir-kokos-step-1.webp',
+      '/recipes/steps/zupa-marchew-imbir-kokos-step-2.webp',
+      '/recipes/steps/zupa-marchew-imbir-kokos-step-3.webp',
+      '/recipes/steps/zupa-marchew-imbir-kokos-step-4.webp',
+      '/recipes/steps/zupa-marchew-imbir-kokos-step-5.webp',
+    ],
     tip: 'Chrupiące pestki albo chilli oil dają dobry kontrast do gładkiej bazy.',
   },
   {
@@ -3510,6 +3523,12 @@ export const recipes: Recipe[] = [
       'Posmaruj stracciatellą, dodaj gorące kurki.',
       'Dopraw pieprzem i odrobiną soli.',
     ],
+    stepImages: [
+      '/recipes/steps/kurki-tost-stracciatella-step-1.webp',
+      '/recipes/steps/kurki-tost-stracciatella-step-2.webp',
+      '/recipes/steps/kurki-tost-stracciatella-step-3.webp',
+      '/recipes/steps/kurki-tost-stracciatella-step-4.webp',
+    ],
     tip: 'Kilka kropli cytryny na końcu daje idealny finisz.',
   },
   {
@@ -3542,6 +3561,13 @@ export const recipes: Recipe[] = [
       'Gotuj 25–30 minut do miękkości.',
       'Lekko rozgnieć część zupy, żeby była gęstsza.',
       'Dodaj majeranek i dopraw.',
+    ],
+    stepImages: [
+      '/recipes/steps/grochowka-wege-szybka-step-1.webp',
+      '/recipes/steps/grochowka-wege-szybka-step-2.webp',
+      '/recipes/steps/grochowka-wege-szybka-step-3.webp',
+      '/recipes/steps/grochowka-wege-szybka-step-4.webp',
+      '/recipes/steps/grochowka-wege-szybka-step-5.webp',
     ],
     tip: 'Łyżka masła na koniec ociepla smak bardziej, niż by się wydawało.',
   },
