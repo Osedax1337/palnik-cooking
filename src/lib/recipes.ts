@@ -310,6 +310,13 @@ export const recipes: Recipe[] = [
       'Smaż na suchej patelni z obu stron, aż tortilla będzie chrupka, a ser stopiony.',
       'Pokrój w trójkąty i podaj z jogurtem oraz awokado.',
     ],
+    stepImages: [
+      '/recipes/steps/quesadilla-kurczak-ser-step-1.webp',
+      '/recipes/steps/quesadilla-kurczak-ser-step-2.webp',
+      '/recipes/steps/quesadilla-kurczak-ser-step-3.webp',
+      '/recipes/steps/quesadilla-kurczak-ser-step-4.webp',
+      '/recipes/steps/quesadilla-kurczak-ser-step-5.webp',
+    ],
     tip: 'Jalapeño albo kwaśna salsa pilnują, żeby ser nie zamienił całości w cegłę szczęścia.',
   },
   {
