@@ -270,6 +270,13 @@ export const recipes: Recipe[] = [
       'Zblenduj z mascarpone, potem dodaj cytrynę stopniowo.',
       'Dopraw solą i pieprzem. Podaj z oliwą albo ziołami.',
     ],
+    stepImages: [
+      '/recipes/steps/krem-z-cukinii-step-1.webp',
+      '/recipes/steps/krem-z-cukinii-step-2.webp',
+      '/recipes/steps/krem-z-cukinii-step-3.webp',
+      '/recipes/steps/krem-z-cukinii-step-4.webp',
+      '/recipes/steps/krem-z-cukinii-step-5.webp',
+    ],
     tip: 'Mięta daje świeżość, bazylia bardziej klasyczny kierunek. Wybierz jedno, żeby smak był czytelny.',
   },
   {
