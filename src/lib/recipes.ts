@@ -116,6 +116,13 @@ export const recipes: Recipe[] = [
       'Podgrzej, dodaj śmietankę i dopraw.',
       'Podaj z bazylią i pieczywem.',
     ],
+    stepImages: [
+      '/recipes/steps/pomidorowa-z-pieca-step-1.webp',
+      '/recipes/steps/pomidorowa-z-pieca-step-2.webp',
+      '/recipes/steps/pomidorowa-z-pieca-step-3.webp',
+      '/recipes/steps/pomidorowa-z-pieca-step-4.webp',
+      '/recipes/steps/pomidorowa-z-pieca-step-5.webp',
+    ],
     tip: 'Łyżka masła przed blendowaniem zaokrągla smak lepiej niż kolejna dekoracyjna garść bazylii.',
   },
   {
@@ -350,6 +357,13 @@ export const recipes: Recipe[] = [
       'Piecz 25 minut w 180°C.',
       'Podawaj na ciepło.',
     ],
+    stepImages: [
+      '/recipes/steps/owsianka-pieczona-borowki-step-1.webp',
+      '/recipes/steps/owsianka-pieczona-borowki-step-2.webp',
+      '/recipes/steps/owsianka-pieczona-borowki-step-3.webp',
+      '/recipes/steps/owsianka-pieczona-borowki-step-4.webp',
+      '/recipes/steps/owsianka-pieczona-borowki-step-5.webp',
+    ],
     tip: 'Na drugi dzień pokrój w kostkę i podsmaż na maśle. Udaje deser, ale nadal można mówić „śniadanie”.',
   },
   {
@@ -460,6 +474,13 @@ export const recipes: Recipe[] = [
       'Smaż lub piecz, aż brzegi będą chrupiące i złote.',
       'Podaj z jajkiem, ziołami i pieprzem.',
     ],
+    stepImages: [
+      '/recipes/steps/socca-jajko-ziola-step-1.webp',
+      '/recipes/steps/socca-jajko-ziola-step-2.webp',
+      '/recipes/steps/socca-jajko-ziola-step-3.webp',
+      '/recipes/steps/socca-jajko-ziola-step-4.webp',
+      '/recipes/steps/socca-jajko-ziola-step-5.webp',
+    ],
     tip: 'Ciasto powinno być rzadsze niż naleśnikowe. Za gęste zrobi ciężki placek, nie soccę.',
   },
   {
@@ -533,6 +554,13 @@ export const recipes: Recipe[] = [
       'Połącz z makaronem i pomidorami.',
       'Dopraw i podawaj.',
     ],
+    stepImages: [
+      '/recipes/steps/makaron-tahini-pomidor-step-1.webp',
+      '/recipes/steps/makaron-tahini-pomidor-step-2.webp',
+      '/recipes/steps/makaron-tahini-pomidor-step-3.webp',
+      '/recipes/steps/makaron-tahini-pomidor-step-4.webp',
+      '/recipes/steps/makaron-tahini-pomidor-step-5.webp',
+    ],
     tip: 'Rozluźnij tahini wodą z makaronu, nie samą oliwą. Sos ma być kremowy, nie ciężki.',
   },
   {
@@ -568,6 +596,14 @@ export const recipes: Recipe[] = [
       'Wlej wino, odparuj, potem dolewaj bulion chochlami i mieszaj.',
       'Po 18 minutach dorzuć grzyby, parmezan i resztę masła.',
       'Zdejmij z ognia, przykryj na 2 minuty i podaj.',
+    ],
+    stepImages: [
+      '/recipes/steps/risotto-grzyby-lesne-step-1.webp',
+      '/recipes/steps/risotto-grzyby-lesne-step-2.webp',
+      '/recipes/steps/risotto-grzyby-lesne-step-3.webp',
+      '/recipes/steps/risotto-grzyby-lesne-step-4.webp',
+      '/recipes/steps/risotto-grzyby-lesne-step-5.webp',
+      '/recipes/steps/risotto-grzyby-lesne-step-6.webp',
     ],
     tip: 'Suszone borowiki zalej wrzątkiem i użyj tego płynu jako części bulionu. Smak będzie dużo głębszy.',
   },
