@@ -1158,6 +1158,14 @@ export const recipes: Recipe[] = [
       'Złóż w miskach: ryż na dole, kurczak, fasola, kukurydza, awokado.',
       'Skrop limonką i polej oliwą albo jogurtem.',
     ],
+    stepImages: [
+      '/recipes/steps/burrito-bowl-kurczak-step-1.webp',
+      '/recipes/steps/burrito-bowl-kurczak-step-2.webp',
+      '/recipes/steps/burrito-bowl-kurczak-step-3.webp',
+      '/recipes/steps/burrito-bowl-kurczak-step-4.webp',
+      '/recipes/steps/burrito-bowl-kurczak-step-5.webp',
+      '/recipes/steps/burrito-bowl-kurczak-step-6.webp',
+    ],
     tip: 'Łyżka jogurtu greckiego zamiast śmietany daje lżejszy, kremowy finisz.',
   },
   {
@@ -1193,6 +1201,13 @@ export const recipes: Recipe[] = [
       'Duś 20 minut na małym ogniu, aż sos zgęstnieje.',
       'Dopraw i podawaj z ryżem, chlebem albo łyżką jogurtu.',
     ],
+    stepImages: [
+      '/recipes/steps/chili-sin-carne-step-1.webp',
+      '/recipes/steps/chili-sin-carne-step-2.webp',
+      '/recipes/steps/chili-sin-carne-step-3.webp',
+      '/recipes/steps/chili-sin-carne-step-4.webp',
+      '/recipes/steps/chili-sin-carne-step-5.webp',
+    ],
     tip: 'Kostka gorzkiej czekolady na koniec przyciemnia tło. To nie deser, tylko bas w sosie.',
   },
   {
@@ -1227,6 +1242,13 @@ export const recipes: Recipe[] = [
       'Przykryj patelnię i gotuj, aż białka się zetną, a żółtka zostaną miękkie.',
       'Tortille podgrzej osobno. Podaj jajka z awokado i kolendrą.',
     ],
+    stepImages: [
+      '/recipes/steps/huevos-rancheros-step-1.webp',
+      '/recipes/steps/huevos-rancheros-step-2.webp',
+      '/recipes/steps/huevos-rancheros-step-3.webp',
+      '/recipes/steps/huevos-rancheros-step-4.webp',
+      '/recipes/steps/huevos-rancheros-step-5.webp',
+    ],
     tip: 'Kruszyna fety albo cotija na końcu — solony akcent, który tu pasuje.',
   },
   {
@@ -1259,6 +1281,13 @@ export const recipes: Recipe[] = [
       'Drobno posiekaj cebulę, jalapeño i kolendrę.',
       'Wymieszaj wszystko z sokiem z limonki, ostrożnie, żeby awokado zostało w kawałkach.',
       'Podaj z tortilla chips albo na grillowanym chlebie.',
+    ],
+    stepImages: [
+      '/recipes/steps/salsa-fresca-awokado-step-1.webp',
+      '/recipes/steps/salsa-fresca-awokado-step-2.webp',
+      '/recipes/steps/salsa-fresca-awokado-step-3.webp',
+      '/recipes/steps/salsa-fresca-awokado-step-4.webp',
+      '/recipes/steps/salsa-fresca-awokado-step-5.webp',
     ],
     tip: 'Limonka chroni awokado przed brązowieniem — dodaj od razu po pokrojeniu.',
   },
