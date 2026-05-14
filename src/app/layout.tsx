@@ -1,11 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { Suspense } from 'react'
 import { PostHogProvider } from '@/components/posthog-provider'
 import { defaultOgImage, siteUrl } from '@/lib/seo'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -67,7 +64,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className={`${inter.className} antialiased`}>
+      <body className="antialiased">
         <a href="#main-content" className="skip-link">
           Przejdź do treści
         </a>

@@ -75,6 +75,13 @@ export const recipes: Recipe[] = [
       'Wrzuć makaron, sok i skórkę z cytryny, pieprz oraz trochę wody z makaronu.',
       'Zdejmij z ognia, dodaj parmezan i wymieszaj na gładki sos.',
     ],
+    stepImages: [
+      '/recipes/steps/makaron-cytryna-step-1.webp',
+      '/recipes/steps/makaron-cytryna-step-2.webp',
+      '/recipes/steps/makaron-cytryna-step-3.webp',
+      '/recipes/steps/makaron-cytryna-step-4.webp',
+      '/recipes/steps/makaron-cytryna-step-5.webp',
+    ],
     tip: 'Nie pal masła na czarno. Ma pachnieć orzechami, nie przypominać patelni po przejściach.',
   },
   {
