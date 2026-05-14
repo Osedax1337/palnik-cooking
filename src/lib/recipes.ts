@@ -383,6 +383,13 @@ export const recipes: Recipe[] = [
       'Dodaj halloumi i polej oliwą z miodem.',
       'Dopraw pieprzem.',
     ],
+    stepImages: [
+      '/recipes/steps/salatka-halloumi-pomarancza-step-1.webp',
+      '/recipes/steps/salatka-halloumi-pomarancza-step-2.webp',
+      '/recipes/steps/salatka-halloumi-pomarancza-step-3.webp',
+      '/recipes/steps/salatka-halloumi-pomarancza-step-4.webp',
+      '/recipes/steps/salatka-halloumi-pomarancza-step-5.webp',
+    ],
     tip: 'Mięta jeszcze bardziej podkręca świeżość.',
   },
   {
