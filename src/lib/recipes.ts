@@ -3069,6 +3069,12 @@ export const recipes: Recipe[] = [
       'Wmieszaj miód, musztardę i masło.',
       'Duś jeszcze kilka minut, aż sos oblepi mięso.',
     ],
+    stepImages: [
+      '/recipes/steps/kurczak-miod-musztarda-fasolka-step-1.webp',
+      '/recipes/steps/kurczak-miod-musztarda-fasolka-step-2.webp',
+      '/recipes/steps/kurczak-miod-musztarda-fasolka-step-3.webp',
+      '/recipes/steps/kurczak-miod-musztarda-fasolka-step-4.webp',
+    ],
     tip: 'Jeśli sos jest zbyt gęsty, łyżka wody załatwia temat bez histerii.',
   },
   {
@@ -3101,6 +3107,13 @@ export const recipes: Recipe[] = [
       'Przykryj na kilka minut, aż białka się zetną, a żółtka zostaną miękkie.',
       'Posyp fetą i podaj z jogurtem.',
     ],
+    stepImages: [
+      '/recipes/steps/shakshuka-zielona-step-1.webp',
+      '/recipes/steps/shakshuka-zielona-step-2.webp',
+      '/recipes/steps/shakshuka-zielona-step-3.webp',
+      '/recipes/steps/shakshuka-zielona-step-4.webp',
+      '/recipes/steps/shakshuka-zielona-step-5.webp',
+    ],
     tip: 'Jeśli szpinak puści dużo wody, odparuj ją przed jajkami. Inaczej zamiast shakshuki dostaniesz zieloną zupę z jajkiem.',
   },
   {
@@ -3132,6 +3145,13 @@ export const recipes: Recipe[] = [
       'Na patelni rozpuść anchois w oliwie z czosnkiem, bez przypalania czosnku.',
       'Dodaj makaron z brokułem i trochę wody z gotowania.',
       'Wymieszaj energicznie, aż brokuł lekko się rozpadnie i zrobi zielony sos.',
+    ],
+    stepImages: [
+      '/recipes/steps/makaron-brokul-anchovies-step-1.webp',
+      '/recipes/steps/makaron-brokul-anchovies-step-2.webp',
+      '/recipes/steps/makaron-brokul-anchovies-step-3.webp',
+      '/recipes/steps/makaron-brokul-anchovies-step-4.webp',
+      '/recipes/steps/makaron-brokul-anchovies-step-5.webp',
     ],
     tip: 'Prażona bułka tarta zamiast sera — bardzo włoski ruch.',
   },
@@ -3196,6 +3216,13 @@ export const recipes: Recipe[] = [
       'Skrop miodem, dodaj bazylię i dużo pieprzu.',
       'Jeśli chcesz, włóż jeszcze na minutę pod grill.',
     ],
+    stepImages: [
+      '/recipes/steps/tost-mozzarella-brzoskwinia-step-1.webp',
+      '/recipes/steps/tost-mozzarella-brzoskwinia-step-2.webp',
+      '/recipes/steps/tost-mozzarella-brzoskwinia-step-3.webp',
+      '/recipes/steps/tost-mozzarella-brzoskwinia-step-4.webp',
+      '/recipes/steps/tost-mozzarella-brzoskwinia-step-5.webp',
+    ],
     tip: 'Kilka kropel octu balsamicznego dodaje głębi i przełamuje słodycz.',
   },
   {
@@ -3226,6 +3253,12 @@ export const recipes: Recipe[] = [
       'Fasolę podgrzej z wędzoną papryką i passatą, aż zrobi się gęsta.',
       'Natnij bataty i rozgnieć środek widelcem z odrobiną soli.',
       'Nałóż fasolę, posyp cheddarem i zapiecz jeszcze 5 minut.',
+    ],
+    stepImages: [
+      '/recipes/steps/faszerowane-batat-fasola-cheddar-step-1.webp',
+      '/recipes/steps/faszerowane-batat-fasola-cheddar-step-2.webp',
+      '/recipes/steps/faszerowane-batat-fasola-cheddar-step-3.webp',
+      '/recipes/steps/faszerowane-batat-fasola-cheddar-step-4.webp',
     ],
     tip: 'Limonka i kolendra na końcu odcinają słodycz batata idealnie.',
   },
