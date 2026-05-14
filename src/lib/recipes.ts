@@ -150,6 +150,13 @@ export const recipes: Recipe[] = [
       'Chleb zrumień na suchej patelni albo w tosterze.',
       'Posmaruj tosty ricottą i nałóż gorące grzyby od razu.',
     ],
+    stepImages: [
+      '/recipes/steps/tost-grzyby-ricotta-step-1.webp',
+      '/recipes/steps/tost-grzyby-ricotta-step-2.webp',
+      '/recipes/steps/tost-grzyby-ricotta-step-3.webp',
+      '/recipes/steps/tost-grzyby-ricotta-step-4.webp',
+      '/recipes/steps/tost-grzyby-ricotta-step-5.webp',
+    ],
     tip: 'Miód daje łagodny kontrast, a płatki chilli ostrzejszy finisz. Obie wersje działają.',
   },
   {
