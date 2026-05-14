@@ -2525,6 +2525,13 @@ export const recipes: Recipe[] = [
       'Dodaj cukinię oraz parmezan.',
       'Dopraw pieprzem i podawaj od razu albo na zimno.',
     ],
+    stepImages: [
+      '/recipes/steps/orzo-pesto-cukinia-step-1.webp',
+      '/recipes/steps/orzo-pesto-cukinia-step-2.webp',
+      '/recipes/steps/orzo-pesto-cukinia-step-3.webp',
+      '/recipes/steps/orzo-pesto-cukinia-step-4.webp',
+      '/recipes/steps/orzo-pesto-cukinia-step-5.webp',
+    ],
     tip: 'Zostaw trochę wody z orzo. Pesto z parmezanem potrzebuje jej, żeby oblepić makaron zamiast siedzieć w grudkach.',
   },
   {
@@ -2558,6 +2565,13 @@ export const recipes: Recipe[] = [
       'Jogurt wymieszaj z sokiem z cytryny.',
       'Wyłóż jogurt na talerz, dorzuć kalafior i zioła.',
     ],
+    stepImages: [
+      '/recipes/steps/kalafior-harissa-jogurt-step-1.webp',
+      '/recipes/steps/kalafior-harissa-jogurt-step-2.webp',
+      '/recipes/steps/kalafior-harissa-jogurt-step-3.webp',
+      '/recipes/steps/kalafior-harissa-jogurt-step-4.webp',
+      '/recipes/steps/kalafior-harissa-jogurt-step-5.webp',
+    ],
     tip: 'Ciecierzyca z puszki pieczona obok dodaje chrupnięcie i zmienia przekąskę w obiad.',
   },
   {
@@ -2590,6 +2604,13 @@ export const recipes: Recipe[] = [
       'Wrzuć udon i dokładnie wymieszaj.',
       'Wykończ dymką i sezamem albo chilli oil.',
     ],
+    stepImages: [
+      '/recipes/steps/udon-miso-maslo-step-1.webp',
+      '/recipes/steps/udon-miso-maslo-step-2.webp',
+      '/recipes/steps/udon-miso-maslo-step-3.webp',
+      '/recipes/steps/udon-miso-maslo-step-4.webp',
+      '/recipes/steps/udon-miso-maslo-step-5.webp',
+    ],
     tip: 'Miękkie jajko na wierzchu zmienia to w pełny talerz, nie tylko miskę makaronu z nieprzyzwoicie dobrym sosem.',
   },
   {
@@ -2621,6 +2642,12 @@ export const recipes: Recipe[] = [
       'Wymieszaj z fetą, jajkiem, mąką i ziołami.',
       'Smaż małe placki na średnim ogniu po 3 minuty z każdej strony.',
       'Podawaj z jogurtem greckim.',
+    ],
+    stepImages: [
+      '/recipes/steps/placki-cukinia-feta-step-1.webp',
+      '/recipes/steps/placki-cukinia-feta-step-2.webp',
+      '/recipes/steps/placki-cukinia-feta-step-3.webp',
+      '/recipes/steps/placki-cukinia-feta-step-4.webp',
     ],
     tip: 'Jeśli masa jest mokra, nie prowadź negocjacji. Odciśnij cukinię albo dosyp łyżkę mąki.',
   },
@@ -2684,6 +2711,12 @@ export const recipes: Recipe[] = [
       'Posmaruj tahini jeszcze na ciepło, cienko — ma być sos, nie zaprawa murarska.',
       'Ułóż pokrojone truskawki i lekko je dociśnij.',
       'Skrop miodem, posyp sezamem i dodaj szczyptę soli.',
+    ],
+    stepImages: [
+      '/recipes/steps/tost-tahini-truskawki-step-1.webp',
+      '/recipes/steps/tost-tahini-truskawki-step-2.webp',
+      '/recipes/steps/tost-tahini-truskawki-step-3.webp',
+      '/recipes/steps/tost-tahini-truskawki-step-4.webp',
     ],
     tip: 'Jeśli tahini jest gorzkie, wymieszaj je z kroplą wody i miodu. Zrobi się jaśniejsze, gładsze i mniej agresywne.',
   },
