@@ -190,6 +190,13 @@ export const recipes: Recipe[] = [
       'Dodaj fetę, dużo pieprzu i wymieszaj, aż sos oblepi gnocchi.',
       'Podawaj od razu, zanim sos zgęstnieje za bardzo.',
     ],
+    stepImages: [
+      '/recipes/steps/gnocchi-szpinak-feta-step-1.webp',
+      '/recipes/steps/gnocchi-szpinak-feta-step-2.webp',
+      '/recipes/steps/gnocchi-szpinak-feta-step-3.webp',
+      '/recipes/steps/gnocchi-szpinak-feta-step-4.webp',
+      '/recipes/steps/gnocchi-szpinak-feta-step-5.webp',
+    ],
     tip: 'Prażone pestki dyni dodają chrupnięcie, którego temu miękkiemu daniu naprawdę potrzeba.',
   },
   {
