@@ -298,6 +298,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const ownedCount = cockpitHasFridgeContext ? stockedLines.length : pantryLines.length
   const neededCount = cockpitHasFridgeContext ? stockedLines.length + missingLines.length : freshLines.filter((line) => !line.ingredient.optional).length
   const activeStepText = recipe.steps[activeStep] ?? recipe.steps[0] ?? 'Gotuj spokojnie.'
+  const activeStepImage = recipe.stepImages?.[activeStep]
   const activeStepCoach = useMemo(() => getStepCoach(activeStepText, activeStep, recipe.steps.length), [activeStep, activeStepText, recipe.steps.length])
   const activeStepIngredients = useMemo(() => {
     const normalized = activeStepText.toLowerCase()
@@ -683,6 +684,20 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div className="h-full rounded-full bg-[#ffcf9f]/90 transition-[width] duration-500 animate-progress-glow" style={{ width: `${stepPercent}%` }} />
                     </div>
+                    {activeStepImage ? (
+                      <div className="relative mt-4 aspect-[5/4] overflow-hidden rounded-[1.05rem] bg-[#120c0a] md:hidden">
+                        <Image
+                          src={activeStepImage}
+                          alt={`${recipe.title} — krok ${activeStep + 1}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 520px"
+                        />
+                        <div className="absolute left-3 top-3 rounded-full bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffcf9f] backdrop-blur">
+                          krok {String(activeStep + 1).padStart(2, '0')}
+                        </div>
+                      </div>
+                    ) : null}
                     <p className="mt-5 text-[1.65rem] font-semibold leading-[1.12] tracking-[-0.045em] text-[#fff7ee] sm:text-3xl sm:leading-10">{activeStepText}</p>
                     <p className="mt-3 text-sm leading-6 text-[#f3dfcf]/76">{activeStepCoach}</p>
                     <div className="mt-4 grid gap-3 lg:grid-cols-2">

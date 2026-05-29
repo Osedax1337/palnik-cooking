@@ -42,7 +42,7 @@ const homeFridgeBase = ['makaron', 'cytryna', 'parmezan'] as const
 const homeIngredientChips = ['makaron', 'cytryna', 'parmezan', 'jajko', 'sos sojowy', 'pomidor'] as const
 
 function catalogFridgeHref(keys: readonly string[]) {
-  return `/katalog?fridge=${keys.map(encodeURIComponent).join(',')}#main-content`
+  return `/katalog?fridge=${keys.map(encodeURIComponent).join(',')}#katalog`
 }
 
 function toggleHomeIngredientHref(ingredient: string) {
@@ -50,7 +50,7 @@ function toggleHomeIngredientHref(ingredient: string) {
     ? homeFridgeBase.filter((key) => key !== ingredient)
     : [...homeFridgeBase, ingredient]
 
-  return next.length > 0 ? catalogFridgeHref(next) : '/katalog#main-content'
+  return next.length > 0 ? catalogFridgeHref(next) : '/katalog#katalog'
 }
 
 export default function Home() {
@@ -88,15 +88,15 @@ export default function Home() {
         <div className="absolute bottom-[-8rem] left-[-8rem] h-80 w-80 rounded-full bg-[#7c2433]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-6xl">
-          <nav className="mb-7 flex items-center justify-between gap-4">
-            <Link href="/" className="rounded-full border border-[#201714]/10 bg-white/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">
+          <nav aria-label="Główna nawigacja" className="mb-7 flex items-center justify-between gap-4">
+            <Link href="/" className="inline-flex min-h-11 items-center rounded-full border border-[#201714]/10 bg-white/80 px-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a4b2a] backdrop-blur">
               Palnik
             </Link>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
-              <Link href="/katalog" className="rounded-full px-3 py-2 text-[#201714]/58 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+              <Link href="/katalog" className="inline-flex min-h-11 items-center rounded-full px-3 text-[#201714]/75 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                 Katalog
               </Link>
-              <Link href="/atelier" className="rounded-full px-3 py-2 text-[#201714]/58 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
+              <Link href="/atelier" className="inline-flex min-h-11 items-center rounded-full px-3 text-[#201714]/75 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                 Atelier
               </Link>
             </div>
@@ -109,19 +109,19 @@ export default function Home() {
               <div className="relative flex h-full flex-col justify-between gap-10">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.25em] text-[#ffcf9f]">obiad bez zgadywania</p>
-                  <h1 className="mt-5 max-w-[10ch] text-[3.8rem] font-semibold leading-[0.86] tracking-[-0.075em] sm:text-7xl lg:text-8xl">
-                    Masz czas.
+                  <h1 className="mt-5 max-w-none text-[2.25rem] font-semibold leading-[0.98] sm:max-w-[10ch] sm:text-7xl sm:leading-[0.86] sm:tracking-[-0.075em] lg:text-8xl">
+                    Czas.
                     <br />
-                    Masz składniki.
+                    Składniki.
                     <br />
-                    Palnik wybiera.
+                    Palnik.
                   </h1>
                   <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#f3dfcf] sm:text-lg">
                     Wybierz, czy masz 15, 25 czy 40 minut. Kliknij kilka rzeczy z lodówki. Dostajesz trzy przepisy, które mają sens teraz — nie katalog do przekopania.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/katalog#main-content" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
+                  <Link href="/katalog#katalog" className="inline-flex items-center rounded-full bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#fff7ee] focus:ring-offset-2 focus:ring-offset-[#201714]">
                     Wybierz obiad teraz
                   </Link>
                   <Link href="/katalog?lodowka=1#lodowka" className="inline-flex items-center rounded-full border border-white/16 px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f] focus:ring-offset-2 focus:ring-offset-[#201714]">
@@ -131,12 +131,12 @@ export default function Home() {
               </div>
             </article>
 
-            <aside className="grid gap-3 rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] p-4 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-5 lg:p-6">
+            <div className="grid gap-3 rounded-[2.2rem] border border-[#201714]/8 bg-[linear-gradient(135deg,#fff7ed_0%,#fffaf3_48%,#f6efe8_100%)] p-4 shadow-[0_18px_50px_rgba(32,23,20,0.07)] sm:p-5 lg:p-6">
               <div className="flex flex-wrap gap-2" aria-label="Wybierz limit czasu w katalogu">
                 {[15, 25, 40].map((limit) => {
                   const active = limit === 25
                   return (
-                    <Link key={limit} href={`/katalog?czas=${limit}&fridge=makaron%2Ccytryna%2Cparmezan#main-content`} aria-pressed={active} className={`rounded-full px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#8a4b2a] hover:border-[#201714]/20'}`}>
+                    <Link key={limit} href={`/katalog?czas=${limit}&fridge=makaron%2Ccytryna%2Cparmezan#katalog`} aria-current={active ? 'true' : undefined} className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#201714] text-[#fff7ee]' : 'border border-[#201714]/10 bg-white text-[#8a4b2a] hover:border-[#201714]/20'}`}>
                       do {limit} min
                     </Link>
                   )
@@ -147,7 +147,7 @@ export default function Home() {
                 {homeIngredientChips.map((ingredient) => {
                   const active = homeFridgeBase.includes(ingredient as (typeof homeFridgeBase)[number])
                   return (
-                    <Link key={ingredient} href={toggleHomeIngredientHref(ingredient)} aria-pressed={active} className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#22a06b] text-white shadow-[0_8px_20px_rgba(34,160,107,0.24)]' : 'border border-[#201714]/14 bg-white text-[#8a4b2a] hover:border-[#201714]/24 hover:bg-[#fff7ee]'}`}>
+                    <Link key={ingredient} href={toggleHomeIngredientHref(ingredient)} aria-current={active ? 'true' : undefined} className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-semibold uppercase tracking-[0.12em] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#201714]/20 ${active ? 'bg-[#18623b] text-white shadow-[0_8px_20px_rgba(24,98,59,0.24)]' : 'border border-[#201714]/14 bg-white text-[#8a4b2a] hover:border-[#201714]/24 hover:bg-[#fff7ee]'}`}>
                       {active ? '✓ ' : '+ '}{ingredient}
                     </Link>
                   )
@@ -171,7 +171,7 @@ export default function Home() {
                   </Link>
                 ))}
               </div>
-            </aside>
+            </div>
           </div>
         </div>
       </section>
@@ -197,7 +197,7 @@ export default function Home() {
               Palnik zaczyna od ograniczeń, które naprawdę masz: czas, lodówka, energia po pracy. Dopiero potem pokazuje przepisy. To jest różnica między aplikacją kucharską a czymś, co pomaga zjeść dziś.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/katalog" className="tap-pop inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Przejdź do wyboru</Link>
+              <Link href="/katalog#katalog" className="tap-pop inline-flex rounded-full bg-[#201714] px-5 py-3 text-sm font-semibold text-[#fff7ee] transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#201714]/20">Przejdź do wyboru</Link>
               <Link href="/atelier" className="tap-pop inline-flex rounded-full border border-[#201714]/12 bg-[#fff7ee] px-5 py-3 text-sm font-semibold text-[#201714] transition hover:-translate-y-0.5 hover:bg-[#fff3e7] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">Zobacz Atelier</Link>
             </div>
           </article>
@@ -214,8 +214,8 @@ export default function Home() {
         </div>
       </section>
 
-      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1.5 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
-        <Link href="/katalog" className="rounded-full bg-[#201714] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">
+      <nav aria-label="Skróty mobilne" className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-3 gap-1.5 rounded-full border border-[#201714]/10 bg-[#fffaf3]/92 p-1.5 shadow-[0_18px_60px_rgba(32,23,20,0.18)] backdrop-blur sm:hidden">
+        <Link href="/katalog#katalog" className="rounded-full bg-[#201714] px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#fff7ee]">
           Wybierz
         </Link>
         <Link href="/katalog?lodowka=1#lodowka" className="rounded-full bg-white px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">

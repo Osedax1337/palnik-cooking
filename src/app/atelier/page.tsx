@@ -26,7 +26,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Atelier to selekcja bardziej wysublimowanych dań Palnika: ferment, dym, kwas, fine dining energy i nieoczywiste połączenia smaków.',
   path: '/atelier',
-  image: '/recipes/baklazan-miso-daktyle.png',
+  image: '/recipes/baklazan-miso-daktyle.webp',
   keywords: ['Atelier Palnika', 'fine dining w domu', 'orientalne przepisy', 'ferment', 'nieoczywiste przepisy'],
 })
 
