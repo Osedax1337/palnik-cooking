@@ -25,6 +25,12 @@ const proofPoints = [
 
 const secondaryRoutes = [
   {
+    href: '/kuchnie/bliski-wschod',
+    title: 'Bliski Wschód',
+    body: 'Smakowy pokój z tahini, zaatarem, granatem, jogurtem i przypieczonym bakłażanem.',
+    cta: 'Wejdź w kuchnię',
+  },
+  {
     href: '/katalog?lodowka=1#lodowka',
     title: 'Tryb lodówki',
     body: 'Gdy chcesz dokładniej zaznaczyć składniki i zobaczyć pełne dopasowanie.',
@@ -95,6 +101,9 @@ export default function Home() {
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
               <Link href="/katalog" className="inline-flex min-h-11 items-center rounded-full px-3 text-[#201714]/75 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                 Katalog
+              </Link>
+              <Link href="/kuchnie/bliski-wschod" className="hidden min-h-11 items-center rounded-full px-3 text-[#201714]/75 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15 sm:inline-flex">
+                Kuchnie
               </Link>
               <Link href="/atelier" className="inline-flex min-h-11 items-center rounded-full px-3 text-[#201714]/75 transition hover:bg-white hover:text-[#201714] focus:outline-none focus:ring-2 focus:ring-[#201714]/15">
                 Atelier
@@ -221,8 +230,8 @@ export default function Home() {
         <Link href="/katalog?lodowka=1#lodowka" className="rounded-full bg-white px-3 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#8a4b2a]">
           Lodówka
         </Link>
-        <Link href="/atelier" className="rounded-full bg-white px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
-          Atelier
+        <Link href="/kuchnie/bliski-wschod" className="rounded-full bg-white px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-[#8a4b2a]">
+          Kuchnie
         </Link>
       </nav>
     </main>

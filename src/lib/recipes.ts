@@ -1,5 +1,7 @@
+import { regionalRecipes } from './regional-recipes'
+
 export type Mood = 'comfort' | 'fresh' | 'brunch' | 'soup' | 'quick'
-export type Cuisine = 'włoska' | 'polska' | 'tex-mex' | 'azjatycka' | 'śródziemnomorska' | 'bliskowschodnia' | 'francuska'
+export type Cuisine = 'włoska' | 'polska' | 'tex-mex' | 'azjatycka' | 'śródziemnomorska' | 'bliskowschodnia' | 'francuska' | 'libańska' | 'turecka' | 'izraelska'
 export type Effort = 'lekko' | 'średnio' | 'więcej ruchów'
 export type DietTag = 'bezmięsne' | 'high-protein' | 'comfort' | 'lunchbox' | 'budżetowo' | 'bez glutenu' | 'dla dzieci'
 export type Collection = '15-min' | 'po-pracy' | 'na-gosci' | 'wiosna' | 'rozgrzewa' | 'one-pan' | 'meal-prep' | 'atelier'
@@ -5020,6 +5022,7 @@ export const recipes: Recipe[] = [
     tip: 'Hibiskus daje kolor i kwas, ale trzymaj go krótko. Zbyt długie gotowanie zrobi sos cierpki.',
   },
 
+  ...regionalRecipes,
 ]
 
 export const moodFilters = [
@@ -5039,6 +5042,9 @@ export const cuisineFilters = [
   { key: 'azjatycka', label: 'azjatycka' },
   { key: 'śródziemnomorska', label: 'śródziemnomorska' },
   { key: 'bliskowschodnia', label: 'bliskowschodnia' },
+  { key: 'libańska', label: 'libańska' },
+  { key: 'turecka', label: 'turecka' },
+  { key: 'izraelska', label: 'izraelska' },
   { key: 'francuska', label: 'francuska' },
 ] as const
 

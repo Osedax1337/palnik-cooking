@@ -14,9 +14,11 @@ export function RecipeVisual({ recipe, large = false }: { recipe: Recipe; large?
         alt={recipe.title}
         fill
         className="object-cover transition duration-700 ease-out animate-fade-up-soft group-hover:scale-[1.06]"
-        sizes={large ? '(max-width: 1024px) 100vw, 45vw' : '(max-width: 1024px) 100vw, 33vw'}
+        sizes={large ? '(max-width: 1279px) 100vw, (max-width: 1535px) 52vw, 720px' : '(max-width: 1024px) 100vw, 33vw'}
         priority={large}
+        fetchPriority={large ? 'high' : undefined}
         quality={large ? 84 : 72}
+        unoptimized={large}
       />
     )
   }

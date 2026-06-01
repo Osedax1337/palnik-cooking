@@ -18,9 +18,11 @@ export function RecipeGallery({
         alt={alt}
         fill
         className="object-cover transition duration-700 ease-out animate-fade-up-soft group-hover:scale-[1.06]"
-        sizes={large ? '(max-width: 1024px) 100vw, 45vw' : '(max-width: 1024px) 100vw, 33vw'}
+        sizes={large ? '(max-width: 1279px) 100vw, (max-width: 1535px) 52vw, 720px' : '(max-width: 1024px) 100vw, 33vw'}
         priority={large}
+        fetchPriority={large ? 'high' : undefined}
         quality={large ? 84 : 72}
+        unoptimized={large}
       />
     )
   }
@@ -34,9 +36,11 @@ export function RecipeGallery({
             alt={`${alt} — ujęcie ${index + 1}`}
             fill
             className="object-cover transition duration-700 ease-out group-hover:scale-[1.05]"
-            sizes={large ? '(max-width: 1024px) 50vw, 24vw' : '(max-width: 1024px) 50vw, 16vw'}
+            sizes={large ? '(max-width: 1279px) 50vw, (max-width: 1535px) 26vw, 360px' : '(max-width: 1024px) 50vw, 16vw'}
             priority={large && index === 0}
+            fetchPriority={large && index === 0 ? 'high' : undefined}
             quality={large && index === 0 ? 82 : 68}
+            unoptimized={large && index === 0}
           />
         </div>
       ))}

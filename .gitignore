@@ -3,6 +3,10 @@ node_modules
 out
 .vercel
 .vercel.bak*
+.trash
+docs/qa/browser/
+docs/qa/regional-hero-audit*.csv
+docs/qa/regional-vs-atelier-hero-*.jpg
 .DS_Store
 *.log
 .env

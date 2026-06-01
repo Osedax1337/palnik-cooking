@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import {
   type Recipe,
@@ -148,20 +147,20 @@ function parseFridgeKeys(raw: string | null) {
 function getFirstMove(recipe: Recipe) {
   const first = recipe.steps[0] ?? 'Przygotuj blat, składniki i garnek/patelnię.'
   if (recipe.minutes <= 15) return `Najpierw mise en place: ${first}`
-  if (recipe.steps.some((step) => /piekarnik|piecz/i.test(step))) return `Odpal piekarnik i zacznij od: ${first}`
+  if (recipe.steps.some((step) => /piekarnik|(^|\s)(piecz|upiecz)/i.test(step))) return `Odpal piekarnik i zacznij od: ${first}`
   if (recipe.steps.some((step) => /ugotuj|makaron|ryż/i.test(step))) return `Wstaw wodę albo bazę od razu: ${first}`
   return `Pierwszy ruch: ${first}`
 }
 
 function getParallelTiming(recipe: Recipe) {
-  if (recipe.steps.some((step) => /piecz/i.test(step))) return 'Gdy piekarnik pracuje, przygotuj sos, zioła i talerze. Nie zostawiaj wszystkiego na koniec.'
+  if (recipe.steps.some((step) => /piekarnik|(^|\s)(piecz|upiecz)/i.test(step))) return 'Gdy piekarnik pracuje, przygotuj sos, zioła i talerze. Nie zostawiaj wszystkiego na koniec.'
   if (recipe.steps.some((step) => /ugotuj|makaron|ryż/i.test(step))) return 'W czasie gotowania bazy rób sos i krojenie. Końcówka ma się spotkać na patelni, nie w kolejce.'
   if (recipe.steps.some((step) => /smaż|podsmaż|patelni/i.test(step))) return 'Patelnia jest osią czasu: najpierw składniki wymagające koloru, świeże i kwaśne rzeczy dopiero na końcu.'
   return 'Czytaj kroki jak sekwencję przy blacie: przygotuj, zbuduj bazę, dopiero potem dopraw i wykończ.'
 }
 
 function getStepCoach(step: string, index: number, total: number) {
-  if (/piekarnik|piecz/i.test(step)) return 'To jest moment na sos, zioła i ogarnięcie blatu. Piekarnik pracuje, więc wykorzystaj ten czas.'
+  if (/piekarnik|(^|\s)(piecz|upiecz)/i.test(step)) return 'To jest moment na sos, zioła i ogarnięcie blatu. Piekarnik pracuje, więc wykorzystaj ten czas.'
   if (/ugotuj|makaron|ryż|wod/i.test(step)) return 'Wstaw bazę i równolegle szykuj resztę. Czekanie nad garnkiem nie dodaje smaku.'
   if (/smaż|podsmaż|patelni|zarumien/i.test(step)) return 'Patelnia lubi spokój. Daj składnikom złapać kolor, nie mieszaj jak DJ na panice.'
   if (/dopraw|sok|skórk|cytryn|ocet/i.test(step)) return 'Doprawiaj po trochu i próbuj. Kwas ma podnieść danie, nie zrobić alarm.'
@@ -185,7 +184,6 @@ function recipeTasteSignals(recipe: Recipe) {
 }
 
 export function RecipeDetail({ recipe }: { recipe: Recipe }) {
-  const searchParams = useSearchParams()
   const [portions, setPortions] = useState<number>(recipe.servings)
   const [shopping, setShopping] = useState<Record<string, boolean>>({})
   const [shoppingMode, setShoppingMode] = useState(false)
@@ -194,22 +192,14 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
   const [fridgeKeys, setFridgeKeys] = useState<Set<string>>(new Set())
   const [activeStep, setActiveStep] = useState(0)
 
-  // Hydrate persisted portions + shopping list once on client.
+  // Hydrate persisted state and URL-driven handoff once on client.
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
     const storedPortions = getPortions()[recipe.slug]
     if (storedPortions && [1, 2, 4].includes(storedPortions)) setPortions(storedPortions)
     const storedShopping = getShopping()[recipe.slug] ?? {}
     setShopping(storedShopping)
-    pushRecent(recipe.slug)
-    recipeTasteSignals(recipe).forEach((signal) => bumpTasteSignal(signal))
-    trackRecipeOpened(recipe.slug, searchParams.get('zestaw') === '1' ? 'compare_winner' : 'recipe_page', {
-      cuisine: recipe.cuisine,
-      collection_atelier: recipe.collections.includes('atelier'),
-    })
-    setHydrated(true)
-  }, [recipe, recipe.collections, recipe.cuisine, recipe.slug, searchParams])
 
-  useEffect(() => {
     const incomingPortions = Number(searchParams.get('porcje'))
     const shoppingModeParam = searchParams.get('lista')
     const fromCompare = searchParams.get('zestaw') === '1'
@@ -241,7 +231,15 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         return next
       })
     }
-  }, [recipe.ingredients, searchParams])
+
+    pushRecent(recipe.slug)
+    recipeTasteSignals(recipe).forEach((signal) => bumpTasteSignal(signal))
+    trackRecipeOpened(recipe.slug, fromCompare ? 'compare_winner' : 'recipe_page', {
+      cuisine: recipe.cuisine,
+      collection_atelier: recipe.collections.includes('atelier'),
+    })
+    setHydrated(true)
+  }, [recipe, recipe.collections, recipe.cuisine, recipe.ingredients, recipe.slug])
 
   useEffect(() => {
     if (hydrated) setPortionFor(recipe.slug, portions)
@@ -349,7 +347,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
 
   return (
     <main id="main-content" className={`min-h-screen overflow-x-hidden px-4 py-4 text-[#201714] selection:bg-[#201714] selection:text-[#fff7ee] sm:px-6 lg:px-8 lg:py-8 ${isAtelierRecipe ? 'bg-[radial-gradient(circle_at_top,#25131d_0%,#171317_24%,#fffaf3_62%)]' : 'bg-[#fffaf3]'}`}>
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <Link href={isAtelierRecipe ? '/atelier' : '/katalog'} className={`inline-flex items-center rounded-full px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-2 print:hidden ${isAtelierRecipe ? 'border border-white/10 bg-white/8 text-[#fff7ee] hover:bg-white/12 focus:ring-[#ffcf9f]/35' : 'border border-[#201714]/10 bg-white text-[#201714] hover:bg-[#fff3e7] focus:ring-[#201714]/15'}`}>
             ← {isAtelierRecipe ? 'Wróć do Atelier' : 'Wróć do katalogu'}
@@ -395,9 +393,9 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
           </div>
         </div>
 
-        <section className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+        <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.84fr)] xl:items-start">
           <div className={`overflow-hidden rounded-[2rem] shadow-[0_22px_70px_rgba(32,23,20,0.10)] sm:rounded-[2.4rem] ${isAtelierRecipe ? 'border border-[#8c3341]/10 bg-[linear-gradient(180deg,#fff8f1_0%,#fffdfa_54%,#f7edf4_100%)]' : 'palnik-detail-surface'}`}>
-            <div className="palnik-image-glow relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[5/4]">
+            <div className="palnik-image-glow relative aspect-[4/3] w-full sm:aspect-[16/10]">
               <RecipeVisual recipe={recipe} large />
               {isAtelierRecipe ? (
                 <div className="absolute left-4 top-4 rounded-full border border-[#ffcf9f]/25 bg-[#201714]/82 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f] backdrop-blur">
@@ -492,7 +490,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
             </div>
           </div>
 
-          <div id="gotowanie" className={`scroll-mt-4 rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.20)] sm:rounded-[2.35rem] sm:p-6 lg:sticky lg:top-6 lg:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
+          <div id="gotowanie" className={`scroll-mt-4 rounded-[2rem] p-5 text-[#fff7ee] shadow-[0_26px_80px_rgba(32,23,20,0.20)] sm:rounded-[2.35rem] sm:p-6 xl:sticky xl:top-6 xl:max-h-[calc(100vh-3rem)] xl:overflow-y-auto xl:p-8 ${isAtelierRecipe ? 'border border-[#ffcf9f]/10 bg-[linear-gradient(145deg,#201714_0%,#2c1620_52%,#121116_100%)]' : 'bg-[#201714]'}`}>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <h2 className="text-lg font-semibold tracking-[-0.03em]">Tryb gotowania</h2>
@@ -779,7 +777,7 @@ export function RecipeDetail({ recipe }: { recipe: Recipe }) {
         </section>
 
         {relatedRecipes.length > 0 ? (
-          <section className="mt-8 rounded-[2rem] bg-white p-6 shadow-sm lg:p-8">
+          <section className="mt-8 rounded-[2rem] bg-white p-6 shadow-sm xl:p-8">
             <div className="mb-4 flex items-end justify-between gap-3">
               <div>
                 <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8a4b2a]">dalej</p>
