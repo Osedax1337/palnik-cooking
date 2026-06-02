@@ -37,6 +37,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Wymieszaj warzywa z oliwą, sumakiem i solą.',
       'Dodaj pitę oraz granat tuż przed podaniem.',
     ],
+    stepImages: [
+      '/recipes/steps/fattoush-granat-step-1.webp',
+      '/recipes/steps/fattoush-granat-step-2.webp',
+      '/recipes/steps/fattoush-granat-step-3.webp',
+      '/recipes/steps/fattoush-granat-step-4.webp',
+    ],
     tip: 'Pita ma chrupać. Jeśli dodasz ją za wcześnie, zrobi się mokry kartonik.',
   },
   {
@@ -340,6 +346,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Wbij jajka i mieszaj krótko.',
       'Zdejmij, gdy jajka są jeszcze kremowe.',
     ],
+    stepImages: [
+      '/recipes/steps/menemen-papryka-step-1.webp',
+      '/recipes/steps/menemen-papryka-step-2.webp',
+      '/recipes/steps/menemen-papryka-step-3.webp',
+      '/recipes/steps/menemen-papryka-step-4.webp',
+    ],
     tip: 'Nie przesusz jajek. Menemen ma być soczysty, nie grudkowany jak stołówkowy dramat.',
   },
   {
@@ -638,6 +650,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Ugotuj jajka na twardo.',
       'Wymieszaj tahini z cytryną i wodą.',
       'Napełnij pity warzywami, jajkiem, bakłażanem i sosem.',
+    ],
+    stepImages: [
+      '/recipes/steps/sabich-baklazan-step-1.webp',
+      '/recipes/steps/sabich-baklazan-step-2.webp',
+      '/recipes/steps/sabich-baklazan-step-3.webp',
+      '/recipes/steps/sabich-baklazan-step-4.webp',
     ],
     tip: 'Bakłażan musi być miękki w środku. Półsurowy robi z sabicha ćwiczenie szczęki.',
   },
