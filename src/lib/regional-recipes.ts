@@ -687,6 +687,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Zrób wgłębienia i wbij jajka.',
       'Przykryj, aż białka się zetną.',
     ],
+    stepImages: [
+      '/recipes/steps/shakshuka-harissa-step-1.webp',
+      '/recipes/steps/shakshuka-harissa-step-2.webp',
+      '/recipes/steps/shakshuka-harissa-step-3.webp',
+      '/recipes/steps/shakshuka-harissa-step-4.webp',
+    ],
     tip: 'Sos ma być gęsty przed jajkami. Wodnista shakshuka to jajka na pomidorowym jeziorze.',
   },
   {
@@ -716,6 +722,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Podsmaż cebulę, dodaj przyprawy.',
       'Wrzuć kurczaka i smaż mocno, aż złapie brzegi.',
       'Podaj w picie albo z ryżem.',
+    ],
+    stepImages: [
+      '/recipes/steps/jerusalem-mixed-grill-step-1.webp',
+      '/recipes/steps/jerusalem-mixed-grill-step-2.webp',
+      '/recipes/steps/jerusalem-mixed-grill-step-3.webp',
+      '/recipes/steps/jerusalem-mixed-grill-step-4.webp',
     ],
     tip: 'Małe kawałki oznaczają więcej przypieczonych krawędzi. Matematyka w służbie obiadu.',
   },
@@ -925,6 +937,12 @@ const regionalRecipeEntries: Recipe[] = [
       'Część rozgnieć, część zostaw w całości.',
       'Dodaj tahini, cytrynę i czosnek.',
       'Podaj ciepłe z oliwą.',
+    ],
+    stepImages: [
+      '/recipes/steps/hummus-msabbaha-step-1.webp',
+      '/recipes/steps/hummus-msabbaha-step-2.webp',
+      '/recipes/steps/hummus-msabbaha-step-3.webp',
+      '/recipes/steps/hummus-msabbaha-step-4.webp',
     ],
     tip: 'Nie rób z tego idealnie gładkiej pasty. Całe ziarna są tu częścią uroku.',
   },
