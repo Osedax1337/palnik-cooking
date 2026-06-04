@@ -3626,7 +3626,7 @@ export const recipes: Recipe[] = [
     servings: 2,
     effort: 'średnio',
     dietTags: ['high-protein', 'bez glutenu'],
-    collections: ['atelier', 'na-gosci', '15-min'],
+    collections: ['atelier', 'na-gosci'],
     ingredients: [
       ing({ amount: 300, unit: 'g', name: 'krewetek', key: 'krewetki', scalable: true }),
       ing({ amount: 50, unit: 'g', name: 'masła', key: 'masło', scalable: true }),
@@ -3817,7 +3817,7 @@ export const recipes: Recipe[] = [
     servings: 2,
     effort: 'średnio',
     dietTags: ['high-protein', 'bez glutenu'],
-    collections: ['atelier', 'na-gosci', '15-min'],
+    collections: ['atelier', 'na-gosci'],
     ingredients: [
       ing({ amount: 220, unit: 'g', name: 'surowego łososia sashimi', key: 'łosoś sashimi', scalable: true }),
       ing({ amount: 0.5, name: 'gruszki nashi', key: 'gruszka nashi', scalable: true }),
@@ -4344,7 +4344,7 @@ export const recipes: Recipe[] = [
     servings: 2,
     effort: 'więcej ruchów',
     dietTags: ['high-protein', 'bez glutenu'],
-    collections: ['atelier', 'na-gosci', '15-min'],
+    collections: ['atelier', 'na-gosci'],
     ingredients: [
       ing({ amount: 8, unit: 'sztuk', name: 'przegrzebków', key: 'przegrzebki', scalable: true }),
       ing({ amount: 50, unit: 'g', name: 'zimnego masła', key: 'masło', scalable: true }),

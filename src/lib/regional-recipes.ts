@@ -121,7 +121,7 @@ const regionalRecipeEntries: Recipe[] = [
     servings: 2,
     effort: 'średnio',
     dietTags: ['bezmięsne', 'budżetowo'],
-    collections: ['na-gosci', 'na-gosci'],
+    collections: ['na-gosci'],
     ingredients: [
       ing({ amount: 250, unit: 'g', name: 'ciasta na pizzę', key: 'ciasto', scalable: true }),
       ing({ amount: 2, unit: 'łyżki', name: 'zaataru', key: 'zaatar', scalable: true }),
@@ -864,7 +864,7 @@ const regionalRecipeEntries: Recipe[] = [
     servings: 4,
     effort: 'średnio',
     dietTags: ['bezmięsne', 'comfort'],
-    collections: ['na-gosci', 'na-gosci'],
+    collections: ['na-gosci'],
     ingredients: [
       ing({ amount: 1, unit: 'opakowanie', name: 'ciasta francuskiego', key: 'ciasto francuskie', scalable: true }),
       ing({ amount: 150, unit: 'g', name: 'szpinaku', key: 'szpinak', scalable: true }),
