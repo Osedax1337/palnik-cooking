@@ -344,10 +344,14 @@ export function RecipeCatalogPage({
       const keys = fridgeParam.split(',').filter(Boolean)
       if (keys.length > 0) {
         setFridgeMode(true)
+        setFridgePanelOpen(true)
         setFridgeSelection((current) => {
           const next = new Set(keys)
           const same = current.size === next.size && [...current].every((k) => next.has(k))
           return same ? current : next
+        })
+        requestAnimationFrame(() => {
+          document.getElementById('lodowka')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
       }
     } else if (fridgeOpenParam === '1') {
