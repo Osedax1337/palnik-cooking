@@ -372,7 +372,12 @@ export function RecipeCatalogPage({
     if (fridgeMode && fridgeSelection.size > 0) {
       return baseFiltered
         .map((recipe) => ({ recipe, match: fridgeMatch(recipe, fridgeSelection) }))
-        .sort((a, b) => b.match.score - a.match.score || a.recipe.minutes - b.recipe.minutes)
+        .sort((a, b) =>
+          b.match.score - a.match.score ||
+          a.match.criticalMissing.length - b.match.criticalMissing.length ||
+          a.match.missing.length - b.match.missing.length ||
+          a.recipe.minutes - b.recipe.minutes
+        )
     }
     return baseFiltered
       .map((recipe) => ({ recipe, match: null as ReturnType<typeof fridgeMatch> | null }))
@@ -671,6 +676,27 @@ export function RecipeCatalogPage({
         .filter((entry) => entry.match && entry.match.total > 0)
         .slice(0, 3)
     : []
+  const fridgeShoppingList = fridgeBestMatches
+    .reduce((items, { recipe, match }, index) => {
+      match?.missing
+        .filter((ingredient) => !ingredient.optional)
+        .slice(0, 6)
+        .forEach((ingredient) => {
+          const current = items.get(ingredient.key) ?? {
+            key: ingredient.key,
+            label: ingredient.name,
+            recipes: [] as string[],
+            firstRank: index,
+          }
+          current.recipes.push(recipe.title)
+          current.firstRank = Math.min(current.firstRank, index)
+          items.set(ingredient.key, current)
+        })
+      return items
+    }, new Map<string, { key: string; label: string; recipes: string[]; firstRank: number }>())
+  const fridgeShoppingItems = [...fridgeShoppingList.values()]
+    .sort((a, b) => a.firstRank - b.firstRank || b.recipes.length - a.recipes.length || a.key.localeCompare(b.key))
+    .slice(0, 8)
   const fridgeTopMatch = fridgeBestMatches[0]?.match
   const fridgeTopRecipe = fridgeBestMatches[0]?.recipe
   const fridgeWeakMatch = Boolean(fridgeTopMatch && fridgeTopMatch.score > 0 && fridgeTopMatch.score < 0.35)
@@ -1393,6 +1419,7 @@ export function RecipeCatalogPage({
             </div>
 
             {fridgeMode && fridgeSelection.size > 0 ? (
+              <>
               <div className="mt-5 grid gap-3 lg:grid-cols-[0.95fr_1.05fr]">
                 <div key={[...fridgeSelection].join('-')} className="brain-reveal rounded-[1.55rem] border border-[#201714]/10 bg-[#fff8ee] p-4">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a4b2a]">diagnoza lodówki</p>
@@ -1452,6 +1479,35 @@ export function RecipeCatalogPage({
                   ))}
                 </div>
               </div>
+              {fridgeShoppingItems.length > 0 ? (
+                <div className="mt-3 rounded-[1.55rem] border border-[#201714]/10 bg-[#201714] p-4 text-[#fff7ee]">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#ffcf9f]">mini lista zakupów</p>
+                      <h3 className="mt-1 text-xl font-semibold tracking-[-0.04em]">Najkrótsza droga do top 3.</h3>
+                    </div>
+                    <p className="max-w-[34ch] text-xs leading-5 text-[#f3dfcf]/72">
+                      Zebrane z najlepszych dopasowań. Kliknij składnik, jeśli jednak masz go w kuchni.
+                    </p>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {fridgeShoppingItems.map((item) => (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() => toggleFridgeKey(item.key)}
+                        aria-label={`Dodaj składnik z listy zakupów do lodówki: ${item.key}`}
+                        className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-left text-xs font-semibold text-[#fff7ee] transition hover:bg-white/14 focus:outline-none focus:ring-2 focus:ring-[#ffcf9f]/35"
+                        title={`Potrzebne w: ${item.recipes.slice(0, 2).join(', ')}`}
+                      >
+                        + {item.key}
+                        <span className="ml-1 text-[#ffcf9f]/82">· {item.recipes.length}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              </>
             ) : (
               <div className="mt-5 rounded-[1.55rem] border border-dashed border-[#201714]/14 bg-[#fffaf3] p-4 text-sm leading-6 text-[#201714]/65">
                 <div className="grid gap-4 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
@@ -1734,12 +1790,24 @@ export function RecipeCatalogPage({
                       {isAtelier ? (
                         <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[#8c3341]">kontrast · tekstura · dobry powód</p>
                       ) : null}
-                      {match && match.total > 0 && match.missing.length > 0 ? (
-                        <p className="mt-3 text-xs text-[#201714]/55">
-                          {match.score === 1
-                            ? '🎯 masz wszystko'
-                            : `Dokup: ${match.missing.slice(0, 3).map((m) => m.key).join(', ')}${match.missing.length > 3 ? `, +${match.missing.length - 3}` : ''}`}
-                        </p>
+                      {match && match.total > 0 ? (
+                        <div className="mt-3 grid gap-2 rounded-[1rem] border border-[#201714]/8 bg-white/72 p-3 text-xs text-[#201714]/62">
+                          <div className="flex flex-wrap gap-2">
+                            <span className="rounded-full bg-[#201714] px-2.5 py-1 font-semibold uppercase tracking-[0.14em] text-[#fff7ee]">
+                              Masz {match.matched}/{match.total}
+                            </span>
+                            <span className={`rounded-full px-2.5 py-1 font-semibold uppercase tracking-[0.14em] ${match.criticalMissing.length === 0 ? 'bg-[#dff5e8] text-[#18623b]' : 'bg-[#fff3e7] text-[#c9572d]'}`}>
+                              {match.criticalMissing.length === 0 ? 'baza jest' : `klucz: ${match.criticalMissing.slice(0, 2).map((m) => m.key).join(', ')}`}
+                            </span>
+                          </div>
+                          {match.missing.length > 0 ? (
+                            <p>
+                              Dokup: <strong className="text-[#201714]">{match.missing.slice(0, 3).map((m) => m.key).join(', ')}</strong>{match.missing.length > 3 ? `, +${match.missing.length - 3}` : ''}
+                            </p>
+                          ) : (
+                            <p className="font-semibold text-[#18623b]">Możesz gotować bez zakupów.</p>
+                          )}
+                        </div>
                       ) : null}
                       <div className="mt-auto flex flex-wrap gap-2 pt-5">
                         <Link href={recipeHref(recipe.slug)} className="inline-flex items-center rounded-full bg-[#8a4b2a] px-4 py-2.5 text-sm font-semibold text-[#fff7ee] transition duration-200 hover:bg-[#724022] focus:outline-none focus:ring-2 focus:ring-[#8a4b2a]/30">

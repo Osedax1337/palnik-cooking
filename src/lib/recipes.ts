@@ -5147,15 +5147,39 @@ export function buildFridgePalette() {
     .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key))
 }
 
+function fridgeIngredientWeight(ingredient: Ingredient, index: number) {
+  if (ingredient.optional) return 0.35
+  if (index <= 2) return 1.5
+  if (index <= 4) return 1.05
+  return 0.75
+}
+
 export function fridgeMatch(recipe: Recipe, selected: Set<string>) {
   const required = recipe.ingredients.filter((ing) => !ing.pantry)
-  if (required.length === 0) return { score: 1, matched: 0, total: 0, missing: [] as Ingredient[] }
+  if (required.length === 0) {
+    return {
+      score: 1,
+      matched: 0,
+      total: 0,
+      missing: [] as Ingredient[],
+      criticalMissing: [] as Ingredient[],
+      matchedWeight: 0,
+      totalWeight: 0,
+    }
+  }
   const matched = required.filter((ing) => selected.has(ing.key))
   const missing = required.filter((ing) => !selected.has(ing.key))
+  const totalWeight = required.reduce((sum, ingredient, index) => sum + fridgeIngredientWeight(ingredient, index), 0)
+  const matchedWeight = required.reduce((sum, ingredient, index) => {
+    return selected.has(ingredient.key) ? sum + fridgeIngredientWeight(ingredient, index) : sum
+  }, 0)
   return {
-    score: matched.length / required.length,
+    score: totalWeight > 0 ? matchedWeight / totalWeight : matched.length / required.length,
     matched: matched.length,
     total: required.length,
     missing,
+    criticalMissing: required.slice(0, 3).filter((ing) => !ing.optional && !selected.has(ing.key)),
+    matchedWeight,
+    totalWeight,
   }
 }
